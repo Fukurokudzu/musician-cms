@@ -10,5 +10,6 @@ class CreateReleases < ActiveRecord::Migration[7.0]
 
       t.timestamps
     end
+    add_index :releases, :title
   end
 end

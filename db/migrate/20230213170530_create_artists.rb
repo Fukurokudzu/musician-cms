@@ -8,5 +8,6 @@ class CreateArtists < ActiveRecord::Migration[7.0]
 
       t.timestamps
     end
+    add_index :artists, :title
   end
 end

@@ -6,5 +6,6 @@ class CreateTracks < ActiveRecord::Migration[7.0]
 
       t.timestamps
     end
+    add_index :tracks, :title
   end
 end

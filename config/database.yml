@@ -23,7 +23,9 @@ default: &default
 
 development:
   <<: *default
-  database: musician_cms_development
+  database: musician_development
+  username: musician
+  password: <%= ENV["MUSICIAN_CMS_DATABASE_PASSWORD"] %>
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
@@ -81,6 +83,6 @@ test:
 #
 production:
   <<: *default
-  database: musician_cms_production
-  username: musician_cms
+  database: musician_production
+  username: musician
   password: <%= ENV["MUSICIAN_CMS_DATABASE_PASSWORD"] %>

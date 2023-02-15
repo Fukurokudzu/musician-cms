@@ -75,3 +75,5 @@ group :test do
 end
 
 gem "wahwah", "~> 1.3"
+
+gem "rails-settings-cached", "~> 2.8"
