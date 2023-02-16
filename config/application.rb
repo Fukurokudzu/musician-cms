@@ -21,5 +21,6 @@ module MusicianCms
     config.time_zone = "Tashkent"
     config.i18n.default_locale = :en
     config.i18n.available_locales = [:en, :ru]
+    config.active_job.queue_adapter = :resque
   end
 end

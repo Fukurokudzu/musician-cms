@@ -13,7 +13,13 @@ class ArtistsController < ApplicationController
     end
   end
 
-  def show
+  def index
+    @artist = Artist.first
+  end
+
+  def scan
+    artist = Artist.first
+    ScanLibJob.perform_later(artist.title)
   end
 
   private
