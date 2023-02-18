@@ -30,14 +30,27 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
-  app:
+
+  admin:
+    tabs:
+      system: "System"
+      artists: "Artists"
+      releases: "Releases"
+      credentials: "Credentials"
+
+  settings:
+    email: "Your email"
+    timezone: "Time zone"
+    locale: "Locale"
+    update: "Update"
+    edit: "Edit"
 
   flash:
     alert:
       login: "Email or password are incorrect"
       settings:
-        email_empty: "'Email' field can't be empty"
-        error: "'Email' field not set or this address is already taken"
+        email_empty: "Email field can't be empty"
+        error: "Email field not set or this address is already taken"
 
   login:
     login_btn: "Login"

@@ -1,0 +1,16 @@
+<div id="tabs">
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link active" aria-current="page" href="#"><%= t('admin.tabs.system') %></a>
+    </li>
+    <li class="nav-item">
+      <%= link_to(t('admin.tabs.artists'), root_path, class: "nav-link") %>
+    </li>
+    <li class="nav-item">
+    <%= link_to(t('admin.tabs.releases'), root_path, class: "nav-link") %>
+    </li>
+    <li class="nav-item">
+      <%= link_to(t('admin.tabs.credentials'), root_path, class: "nav-link") %>
+    </li>
+  </ul>
+</div>

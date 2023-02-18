@@ -13,12 +13,13 @@ class Setting < RailsSettings::Base
   scope :application do
     field :app_name, default: "Musician CMS", validates: { presence: true, length: { in: 2..30 } }
     field :host, default: "https://example.com"
-    field :default_locale, default: "en", validates: { presence: true }, option_values: %w[en ru]
+    field :locale, default: "en", validates: { presence: true }, option_values: %w[en ru]
     field :theme, default: "default"
     field :page_title, default: "Musician CMS"
     field :description, default: ""
     field :timezone, default: ""
     field :cover_filenames, default: "cover artwork"
+    field :email_pattern, default: ".*@.*"
   end
   
   scope :admin do

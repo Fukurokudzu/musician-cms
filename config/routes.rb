@@ -12,7 +12,9 @@ Rails.application.routes.draw do
   
   resources :releases
   
+  # resources :admin, only: [:index, :update] do
   get :admin, to: 'admin#index'
+  put :admin, to: 'admin#update'
 
   post :sessions, to: 'sessions#create'
   get :sign_in, to: 'sessions#new', as: 'sign_in'

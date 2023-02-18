@@ -1,4 +1,19 @@
 ru:
+
+  admin:
+    tabs:
+      system: "Приложение"
+      artists: "Исполнители"
+      releases: "Релизы"
+      credentials: "Учётные данные"
+
+  settings:
+    email: "Почта"
+    timezone: "Часовой пояс"
+    update: "Обновить"
+    locale: "Язык"
+    edit: "Редактировать"
+
   flash:
     alert:
       login: "Электронная почта либо пароль введены не верно"
