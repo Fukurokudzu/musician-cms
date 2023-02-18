@@ -12,16 +12,18 @@ class Setting < RailsSettings::Base
 
   scope :application do
     field :app_name, default: "Musician CMS", validates: { presence: true, length: { in: 2..30 } }
-    field :host, default: "http://example.com"
+    field :host, default: "https://example.com"
     field :default_locale, default: "en", validates: { presence: true }, option_values: %w[en ru]
     field :theme, default: "default"
     field :page_title, default: "Musician CMS"
     field :description, default: ""
     field :timezone, default: ""
+    field :cover_filenames, default: "cover artwork"
   end
   
   scope :admin do
     field :admin_email, default: "admin@admin", validates: { presence: true }
-    field :admin_password, default: "admin", validates: { presence: true }
+    field :admin_hashed_password, default: "$2a$12$.GeWsTtueFtVJMr07iJweOYpuOsMWeoFpm.KJhsM4x87TDEng4s22", validates: { presence: true }
+    field :admin_salt, default: "$2a$12$.GeWsTtueFtVJMr07iJweO", validates: { presence: true }
   end
 end
