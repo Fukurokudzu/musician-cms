@@ -30,4 +30,18 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  app:
+
+  flash:
+    alert:
+      login: "Email or password are incorrect"
+      settings:
+        email_empty: "'Email' field can't be empty"
+        error: "'Email' field not set or this address is already taken"
+
+  login:
+    login_btn: "Login"
+    register_link: "or sign up!"
+    new_login: "Login information"
+    signout: "Sign out"
+    remember_me: "Remember me"

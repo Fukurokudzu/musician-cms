@@ -19,7 +19,13 @@
   <%= render('layouts/header') %>
 
     <main class="d-flex flex-column min-vh-100">
+
+      <turbo-frame id="flash">
+        <%= render('layouts/flash')%>
+      </turbo-frame>
+
       <%= yield %>
+      
     </main>
     
   <%= render('layouts/footer') %>

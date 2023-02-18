@@ -1,6 +1,6 @@
 <h2><%= t('login.new_login') %></h2>
 
-<%= form_for(:session, url: session_path) do |f| %>
+<%= form_with(url: sessions_path) do |f| %>
   <div class="field mb-3 mt-3">
     <%= f.email_field :admin_email, autofocus: true, autocomplete: "email", class: "form-control",
     value: "admin@admin", placeholder: t('register.email') %>
@@ -13,6 +13,5 @@
 
   <div class="actions mb-3">
     <%= f.submit t('login.login_btn'), class: :"btn btn-primary" %>
-    <%= link_to t('login.register_link'), session_path %>
   </div>
 <% end %>

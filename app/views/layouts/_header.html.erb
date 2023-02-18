@@ -15,7 +15,7 @@
             <%= link_to(t('app.profile'), root_path, class: "nav-link") %>
           </li>
           <li class="nav-item text-nowrap">
-            <%= link_to(t('login.signout'), root_path, class: "nav-link", data: { turbo_method: :delete}) %>
+            <%= link_to(t('login.signout'), sign_out_path, class: "nav-link", data: { turbo_method: :delete}) %>
           </li>
         </ul>
       </div>

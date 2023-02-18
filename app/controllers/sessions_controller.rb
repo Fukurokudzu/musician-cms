@@ -4,17 +4,19 @@ class SessionsController < ApplicationController
   end
 
   def create
-    auth = Auth.new(allowed_params)
+    auth = Auth.new(allowed_params[:admin_email], allowed_params[:admin_password])
     if auth.hashed_id
       session[:hashed_id] = auth.hashed_id
       redirect_to(controller: :admin)
     else
-      #TODO Wrong user / pass message
+      flash.now[:error] = t('flash.alert.login')
+      render turbo_stream: turbo_stream.update("flash", partial: "layouts/flash")
     end
   end
 
   def destroy
     session[:hashed_id] = nil
+    redirect_to(root_path)
   end
 
   private

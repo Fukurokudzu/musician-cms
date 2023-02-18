@@ -14,9 +14,9 @@ Rails.application.routes.draw do
   
   get :admin, to: 'admin#index'
 
-  post :session, to: 'sessions#create'
-  get :session, to: 'session#new'
-  delete :session, to: 'session#destroy'
+  post :sessions, to: 'sessions#create'
+  get :sign_in, to: 'sessions#new', as: 'sign_in'
+  delete :sign_out, to: 'sessions#destroy', as: 'sign_out'
   
   # resque server monitoring
   mount Resque::Server.new, at: '/jobs'
