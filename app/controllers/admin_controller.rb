@@ -1,14 +1,19 @@
 class AdminController < ApplicationController
 
+  before_action :authorize
+
   def index
-    if admin?
-      
-    else
-      render('/sessions/new')
-    end
+  end
+
+  def update
+    
   end
   
   private
+
+  def authorize
+    render('/sessions/new') unless admin?
+  end
 
   def admin?
     session[:hashed_id] ||= nil

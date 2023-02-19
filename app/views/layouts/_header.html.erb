@@ -1,7 +1,7 @@
 <header class="bg-secondary">
   <nav class="navbar navbar-expand-sm ">
     <div class="container-fluid">
-      <%= link_to(t('app.title'), root_path, class: "navbar-brand text-nowrap h3") %>
+      <%= link_to(Setting.app_name, root_path, class: "navbar-brand text-nowrap h3") %>
       <%= button_tag("", type: "button", class: "navbar-toggler collapsed", data: { "bs-toggle": "collapse", "bs-target": ".multi-collapse"}, aria: { controls: "multiCollapse1 multiCollapse2", expanded: "false"}) do %>
       <%= content_tag(:span, "", class: "navbar-toggler-icon") %>
       <% end %>
@@ -9,7 +9,7 @@
       <div class="navbar-collapse multi-collapse ms-3 collapse" id="multiCollapse1">
         <ul class="navbar-nav">
           <li class="nav-item text-nowrap">
-            <%= link_to(t('projects.projects'), root_path, class: "nav-link") %>
+            <%= link_to('Admin', admin_path, class: "nav-link") %>
           </li>
           <li class="nav-item text-nowrap">
             <%= link_to(t('app.profile'), root_path, class: "nav-link") %>

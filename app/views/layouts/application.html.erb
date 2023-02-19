@@ -14,18 +14,18 @@
     integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
   </head>
   
-  <body>
+  <body class="d-flex flex-column min-vh-100">
   
   <%= render('layouts/header') %>
 
-    <main class="d-flex flex-column min-vh-100">
+    <main class="container mt-3">
 
       <turbo-frame id="flash">
         <%= render('layouts/flash')%>
       </turbo-frame>
 
       <%= yield %>
-      
+
     </main>
     
   <%= render('layouts/footer') %>
