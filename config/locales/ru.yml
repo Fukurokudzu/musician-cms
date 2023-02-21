@@ -6,6 +6,8 @@ ru:
       artists: "Исполнители"
       releases: "Релизы"
       credentials: "Учётные данные"
+      library: "Библиотека"
+
 
   settings:
     email: "Почта"

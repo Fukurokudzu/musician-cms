@@ -9,11 +9,21 @@ class ScanLibJob < ApplicationJob
   def perform(artist_title)
 
     p "======================= JOB ======================"
-    releases = ScanLibHelper.get_releases_list(artist_title)
-    releases.each do |release_path|
-      tracks = ScanLibHelper.get_tracks_list(release_path)
-      tracks.each do |track_path|
-        tag = WahWah.open(track_path)
+
+    library_path = Rails.root.join('app', 'music')
+    artists = get_folders_list(library_path)
+
+    artists.each_pair do |artist, artist_path|
+      releases = get_folders_list(artist_path)
+
+      releases.each_pair do |release, release_path|
+        
+        tracks = get_tracks_list(release_path)
+        tracks.each_pair do |track, track_path|
+          tag = WahWah.open(track_path)
+          p tag.title unless tag.title.nil? 
+        end
+        p covers = get_release_cover(release_path)
       end
     end
 

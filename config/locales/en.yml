@@ -37,6 +37,7 @@ en:
       artists: "Artists"
       releases: "Releases"
       credentials: "Credentials"
+      library: "Library"
 
   settings:
     email: "Your email"

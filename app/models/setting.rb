@@ -14,9 +14,6 @@ class Setting < RailsSettings::Base
     field :app_name, default: "Musician CMS", validates: { presence: true, length: { in: 2..30 } }
     field :host, default: "https://example.com"
     field :locale, default: "en", validates: { presence: true }, option_values: %w[en ru]
-    field :theme, default: "default"
-    field :page_title, default: "Musician CMS"
-    field :description, default: "Application description for search engines"
     field :timezone, default: ""
     field :cover_filenames, default: "cover artwork"
     field :email_pattern, default: ".*@.*"
@@ -26,5 +23,13 @@ class Setting < RailsSettings::Base
     field :admin_email, default: "admin@admin", validates: { presence: true }
     field :admin_hashed_password, default: "$2a$12$.GeWsTtueFtVJMr07iJweOYpuOsMWeoFpm.KJhsM4x87TDEng4s22", validates: { presence: true }
     field :admin_salt, default: "$2a$12$.GeWsTtueFtVJMr07iJweO", validates: { presence: true }
+  end
+
+  scope :site do
+    field :theme, default: "default"
+    field :page_title, default: "Musician CMS", validates: { presence: true, length: { in: 2..30 } }
+    field :description, default: "Application description for search engines"
+    field :footer_email, default: "it.fukurokudzu@gmail.com"
+    field :footer_year, default: "2023"
   end
 end

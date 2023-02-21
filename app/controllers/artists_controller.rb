@@ -17,11 +17,6 @@ class ArtistsController < ApplicationController
     @artist = Artist.first
   end
 
-  def scan
-    artist = Artist.first
-    ScanLibJob.perform_later(artist.title)
-  end
-
   private
 
   def check_params

@@ -6,16 +6,13 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root "artists#index"
 
-  resources :artists do
-    post :scan
-  end
-  
+  resources :artists
   resources :releases
   
   get :admin, to: 'admin#index'
- 
+  
   namespace :admin do
-    resource :system, :artists, :releases, :credentials, only: [:show, :update, :destroy]
+    resource :system, :library, :artists, :releases, :credentials, only: [:show, :update, :destroy]
   end
 
   post :sessions, to: 'sessions#create'
