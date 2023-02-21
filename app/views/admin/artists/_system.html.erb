@@ -1,4 +1,4 @@
-<%= form_for(:admin, html: { method: :put }) do |f| %>
+<%= form_for(Setting.new, url: admin_artists_path, method: :put) do |f| %>
   <div class="mb-3 mt-3">
     <%= f.email_field(:admin_email, required: true, pattern: Setting.email_pattern, value: Setting.admin_email,
     class: "form-control col-auto border-0 bg-secondary-subtle") %>

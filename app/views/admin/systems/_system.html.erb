@@ -1,0 +1,22 @@
+<%= form_for(Setting.new, url: admin_system_path, method: :put) do |f| %>
+  <div class="mb-3 mt-3">
+    <%= f.email_field(:admin_email, required: true, pattern: Setting.email_pattern, value: Setting.admin_email,
+    class: "form-control") %>
+  </div>
+  <div class="mb-3 mt-3">
+    <%= f.text_field(:app_name, required: true, value: Setting.app_name,
+    class: "form-control") %>
+  </div>
+  <div class="mb-3 mt-3">
+    <%= f.text_area(:description, value: Setting.description,
+    class: "form-control") %>
+  </div>
+  <div class="field mb-3 mt-3">
+    <%= f.time_zone_select(:timezone, nil, { default: "Setting.timezone" }, { class: "form-select" }) %>
+  </div>
+  <div class="field mb-3 mt-3">
+    <%= f.label(t('settings.locale')) %>:
+    <%= f.select(:locale, I18n.available_locales.map(&:to_s), { class: "form-select" }) %>
+  </div>
+  <%= f.submit t("settings.update"), class: :"btn btn-primary" %>
+<% end %>

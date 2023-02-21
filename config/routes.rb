@@ -15,7 +15,7 @@ Rails.application.routes.draw do
   get :admin, to: 'admin#index'
  
   namespace :admin do
-    resources :system, :artists, :releases, :credentials, only: [:index, :update, :destroy]
+    resource :system, :artists, :releases, :credentials, only: [:show, :update, :destroy]
   end
 
   post :sessions, to: 'sessions#create'

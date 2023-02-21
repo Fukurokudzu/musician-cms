@@ -82,7 +82,3 @@ gem "wahwah", "~> 1.3"
 gem "rails-settings-cached", "~> 2.8"
 
 gem "resque", "~> 2.4"
-
-
-
-gem "rails_admin", "~> 3.1"

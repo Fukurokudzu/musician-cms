@@ -16,7 +16,7 @@ class Setting < RailsSettings::Base
     field :locale, default: "en", validates: { presence: true }, option_values: %w[en ru]
     field :theme, default: "default"
     field :page_title, default: "Musician CMS"
-    field :description, default: ""
+    field :description, default: "Application description for search engines"
     field :timezone, default: ""
     field :cover_filenames, default: "cover artwork"
     field :email_pattern, default: ".*@.*"

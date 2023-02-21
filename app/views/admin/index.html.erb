@@ -1,2 +1,8 @@
-<%= render('tabs') %>
-<%= render('admin/system#index') %>
+<div id="tabs">
+  <%= render('tabs', active_tab: t('admin.tabs.system')) %>
+</div>
+
+<%= turbo_stream_from("admin_body") %>
+<div id="admin_body">
+  <%= render('admin/systems/system') %>
+</div>

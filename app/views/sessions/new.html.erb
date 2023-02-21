@@ -2,8 +2,8 @@
 
 <%= form_with(url: sessions_path) do |f| %>
   <div class="field mb-3 mt-3">
-    <%= f.email_field :admin_email, autofocus: true, required: true, pattern: Setting.email_pattern, autocomplete: "email", class: "form-control",
-    value: "admin@admin", placeholder: t('register.email') %>
+    <%= f.email_field :admin_email, autofocus: true, required: true, pattern: Setting.email_pattern,
+    autocomplete: "email", class: "form-control", value: "admin@admin", placeholder: t('register.email') %>
   </div>
 
   <div class="field mb-3 mt-3">
