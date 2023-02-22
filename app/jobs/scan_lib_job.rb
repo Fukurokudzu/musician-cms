@@ -17,13 +17,13 @@ class ScanLibJob < ApplicationJob
       releases = get_folders_list(artist_path)
 
       releases.each_pair do |release, release_path|
-        
         tracks = get_tracks_list(release_path)
-        tracks.each_pair do |track, track_path|
-          tag = WahWah.open(track_path)
-          p tag.title unless tag.title.nil? 
-        end
-        p covers = get_release_cover(release_path)
+        #REMOVE later
+        # tracks.each_pair do |track, track_path|
+        #   tag = WahWah.open(track_path)
+        #   p tag.title unless tag.title.nil? 
+        # end
+        covers = get_release_cover(release_path)
       end
     end
 
