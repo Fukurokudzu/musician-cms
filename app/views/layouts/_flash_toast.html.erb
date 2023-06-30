@@ -1,0 +1,12 @@
+<% flash.each do |type, message| %>
+  <% type == "error" ? type_class = 'bg-warning' : type_class = 'bg-success-subtle' %>
+  <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-controller="flash">
+    <div class="toast-header <%= type_class %>">
+      <strong class="me-auto">TimeTracker</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body bg-light">
+      <%= message %>
+    </div>
+  </div>
+<% end %>

@@ -24,8 +24,8 @@ default: &default
 development:
   <<: *default
   database: musician_development
-  username: musician
-  password: <%= ENV["MUSICIAN_CMS_DATABASE_PASSWORD"] %>
+  username: <%= Rails.application.credentials.postgresql[:db_username] %>
+  password: <%= Rails.application.credentials.postgresql[:db_password] %>
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
@@ -87,5 +87,5 @@ test:
 production:
   <<: *default
   database: musician_production
-  username: musician
-  password: <%= ENV["MUSICIAN_CMS_DATABASE_PASSWORD"] %>
+  username: <%= Rails.application.credentials.postgresql[:db_username] %>
+  password: <%= Rails.application.credentials.postgresql[:db_password] %>

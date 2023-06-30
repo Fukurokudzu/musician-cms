@@ -1,0 +1,9 @@
+Metrics/BlockLength:
+  Enabled: false
+  
+Metrics/MethodLength:
+  Enabled: false
+
+Metrics/AbcSize(RuboCop):
+  Enabled: false
+
