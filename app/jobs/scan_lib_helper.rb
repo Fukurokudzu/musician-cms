@@ -15,7 +15,7 @@ module ScanLibHelper
     path = Pathname.new(path)
     tracks = {}
     Dir.chdir(path) do
-      Dir.glob('*.{mp3}').map do |file|
+      Dir.glob(track_pattern).map do |file|
         tracks[file] = File.absolute_path(file)
       end
     end
@@ -25,11 +25,21 @@ module ScanLibHelper
   def get_release_cover(path)
     path = Pathname.new(path)
     covers = {}
-    cover_filenames = Setting.cover_filenames.split(" ").join(",")
     Dir.chdir(path)
-    Dir.glob("{#{cover_filenames}}.{jpg,jpeg,png}").map do |file|
+    Dir.glob(cover_pattern).map do |file|
       covers[file] = File.absolute_path(file)
     end
     covers
+  end
+
+  private
+
+  def cover_pattern
+    cover_filenames = Setting.cover_filenames.join(',')
+    "{#{cover_filenames}}.{#{Setting.cover_extensions.join(',')}}"
+  end
+
+  def track_pattern
+    "*.{#{Setting.track_extensions.join(',')}}"
   end
 end

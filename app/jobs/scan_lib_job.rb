@@ -10,7 +10,7 @@ class ScanLibJob < ApplicationJob
 
     p "======================= JOB ======================"
 
-    library_path = Rails.root.join('app', 'music')
+    library_path = Rails.root.join(Setting.library_path)
     artists = get_folders_list(library_path)
 
     artists.each_pair do |artist, artist_path|
