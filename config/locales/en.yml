@@ -44,6 +44,8 @@ en:
     timezone: "Time zone"
     locale: "Locale"
     update: "Update"
+    create: "Create"
+    delete: "Delete"
     edit: "Edit"
 
   flash:

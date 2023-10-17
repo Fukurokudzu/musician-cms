@@ -5,6 +5,7 @@ class Admin::LibrariesController < ApplicationController
   end
 
   def update
+    # FIXME: artist = Artist.find(params[:id])
     artist = Artist.first
     ScanLibJob.perform_later(artist.title)
     flash.now[:success] = "Scan job started..."

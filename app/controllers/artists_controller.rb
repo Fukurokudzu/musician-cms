@@ -14,12 +14,12 @@ class ArtistsController < ApplicationController
   end
 
   def index
-    @artist = Artist.first
+    @artists = Artist.all
   end
 
   private
 
   def check_params
-    params.require(:artist).permit(:title)
+    params.require(:artist).permit(:title, :first_name, :last_name, :role)
   end
 end
