@@ -1,1 +1,4 @@
 <%= button_to('New artist', new_admin_artist_path, method: :get, class: 'btn btn-light align-middle') %>
+
+<h1>Artists</h1>
+<%= render partial: 'artist', collection: @artists %>

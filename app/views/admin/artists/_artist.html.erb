@@ -1,0 +1,3 @@
+<p> Artist: 
+<%= link_to artist.title, [:admin, artist] %></p>
+<%= link_to "remove", [:admin, artist], data: { turbo_method: :delete } %>
