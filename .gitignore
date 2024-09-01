@@ -35,3 +35,6 @@
 
 # Ignore music assets
 /app/music/*
+
+# Ignore idea files
+/.idea
