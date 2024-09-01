@@ -6,8 +6,7 @@ class Admin::LibrariesController < ApplicationController
 
   def update
     # FIXME: artist = Artist.find(params[:id])
-    artist = Artist.first
-    ScanLibJob.perform_later(artist.title)
+    ScanLibJob.perform_later
     flash.now[:success] = "Scan job started..."
     render turbo_stream: turbo_stream.update("flash", partial: "layouts/flash")
   end

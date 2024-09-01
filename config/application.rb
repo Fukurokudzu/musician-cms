@@ -18,10 +18,10 @@ module MusicianCms
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
-    config.time_zone = "Tashkent"
+    config.time_zone = "Belgrade"
     config.i18n.default_locale = :en
     config.i18n.available_locales = [:en, :ru]
-    config.active_job.queue_adapter = :resque
+    config.active_job.queue_adapter = :sidekiq
 
     config.generators do |g|
       g.test_framework(

@@ -1,7 +1,8 @@
-require 'resque/server'
-
 Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+
+  require 'sidekiq/web'
+  mount Sidekiq::Web => '/sidekiq'
 
   # Defines the root path route ("/")
   root "artists#index"
@@ -19,7 +20,4 @@ Rails.application.routes.draw do
   post :sessions, to: 'sessions#create'
   get :sign_in, to: 'sessions#new', as: 'sign_in'
   delete :sign_out, to: 'sessions#destroy', as: 'sign_out'
-  
-  # resque server monitoring
-  mount Resque::Server.new, at: '/jobs'
 end
