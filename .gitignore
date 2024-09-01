@@ -35,5 +35,6 @@
 
 # Ignore music assets
 /app/music/*
-/config/credentials/production.key
-config/credentials/production.yml.enc
+
+# Ignore idea files
+/.idea
