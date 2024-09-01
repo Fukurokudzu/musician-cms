@@ -1,5 +1,7 @@
 class Admin::ArtistsController < ArtistsController
 
+  before_action :set_all_artists, only: [:index, :create, :destroy]
+
   def new
     @artist = Artist.new
     render turbo_stream: turbo_stream.update("admin_body", partial: "new")
@@ -12,6 +14,7 @@ class Admin::ArtistsController < ArtistsController
   def create
     @artist = Artist.new(check_params)
     if @artist.save
+      @artists = Artist.all
       render turbo_stream: turbo_stream.update("admin_body", partial: "index")
     else
       render turbo_stream: turbo_stream.update("admin_body", partial: "index")
@@ -19,14 +22,20 @@ class Admin::ArtistsController < ArtistsController
   end
 
   def index
-    @artists = Artist.all
     render turbo_stream: turbo_stream.update("admin_body", partial: "index")
   end
 
   def destroy
     @artist = Artist.find(params[:id])
-    @artist.destroy
-    render turbo_stream: turbo_stream.update("admin_body", partial: "index")
+    if @artist.destroy
+      render turbo_stream: turbo_stream.update("admin_body", partial: "index")
+    end
+  end
+
+  private
+
+  def set_all_artists
+    @artists = Artist.all
   end
 
 end
