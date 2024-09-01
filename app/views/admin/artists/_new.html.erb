@@ -1,0 +1,23 @@
+<%= form_for [:admin, @artist] do |f| %>
+  <div class="mb-3 mt-3">
+    <%= f.label :title, t("title") %>
+    <%= f.text_field :title, class: :"form-control" %>
+  </div>
+
+  <div class="mb-3 mt-3">
+    <%= f.label :first_name, t("first_name") %>
+    <%= f.text_field :first_name, class: :"form-control" %>
+  </div>
+
+  <div class="mb-3 mt-3">
+    <%= f.label :last_name, t("last_name") %>
+    <%= f.text_field :last_name, class: :"form-control" %>
+  </div>
+
+  <div class="mb-3 mt-3">
+    <%= f.label :role, t("role") %>
+    <%= f.text_area :role, class: :"form-control" %>
+  </div>
+
+  <%= f.submit t("settings.create"), class: :"btn btn-primary" %>
+<% end %>

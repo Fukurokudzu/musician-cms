@@ -9,8 +9,7 @@ class SessionsController < ApplicationController
       session[:hashed_id] = auth.hashed_id
       redirect_to(controller: :admin)
     else
-      flash.now[:error] = t('flash.alert.login')
-      render turbo_stream: turbo_stream.update("flash", partial: "layouts/flash")
+      show_flash(t('flash.alert.login', project_title: @project.title))
     end
   end
 

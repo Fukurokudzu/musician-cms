@@ -2,6 +2,11 @@ class ApplicationController < ActionController::Base
 
   around_action :switch_locale
 
+  def show_flash(type = :success, message)
+    flash.now[type] = message
+    render turbo_stream: turbo_stream.prepend("flash_toast", partial: "layouts/flash_toast")
+  end
+
   private
 
   def switch_locale(&action)

@@ -6,7 +6,6 @@ class AdminController < ApplicationController
   end
 
   def update
-    
   end
   
   private

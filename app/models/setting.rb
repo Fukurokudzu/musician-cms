@@ -15,8 +15,11 @@ class Setting < RailsSettings::Base
     field :host, default: "https://example.com"
     field :locale, default: "en", validates: { presence: true }, option_values: %w[en ru]
     field :timezone, default: ""
-    field :cover_filenames, default: "cover artwork"
-    field :email_pattern, default: ".*@.*"
+    field :cover_filenames, default: %w[cover artwork], validates: { presence: true }
+    field :cover_extensions, default: %w[jpg jpeg png], validates: { presence: true }
+    field :track_extensions, default: %w[mp3 wav wave], validates: { presence: true }
+    field :email_pattern, default: ".*@.*", validates: { presence: true }
+    field :library_path, default: "app/music", validates: { presence: true }
   end
   
   scope :admin do

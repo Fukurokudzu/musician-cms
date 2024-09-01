@@ -1,1 +1,6 @@
-<%= render('system') %>
+<p>Artist: <%= @artist.title %></p>
+<p><%= @artist.first_name %></p>
+<p><%= @artist.last_name %></p>
+<p><%= @artist.role %></p>
+
+<%= link_to "remove", [:admin, @artist], data: { turbo_method: :delete } %>
