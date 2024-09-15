@@ -1,17 +1,19 @@
-<h2><%= t('login.new_login') %></h2>
+<div class="admin">
+  <h2><%= t('login.new_login') %></h2>
 
-<%= form_with(url: sessions_path) do |f| %>
-  <div class="field mb-3 mt-3">
-    <%= f.email_field :admin_email, autofocus: true, required: true, pattern: Setting.email_pattern,
-    autocomplete: "email", class: "form-control", value: "admin@admin", placeholder: t('register.email') %>
-  </div>
+  <%= form_with(url: sessions_path) do |f| %>
+    <div class="field mb-3 mt-3">
+      <%= f.email_field :admin_email, autofocus: true, required: true, pattern: Setting.email_pattern,
+      autocomplete: "email", class: "form-control", value: "admin@admin", placeholder: t('register.email') %>
+    </div>
 
-  <div class="field mb-3 mt-3">
-    <%= f.password_field :admin_password, autocomplete: "password",
-      class: "form-control", value: "admin", placeholder: t('register.password') %>
-  </div>
+    <div class="field mb-3 mt-3">
+      <%= f.password_field :admin_password, autocomplete: "password",
+        class: "form-control", value: "admin", placeholder: t('register.password') %>
+    </div>
 
-  <div class="actions mb-3">
-    <%= f.submit t('login.login_btn'), class: :"btn btn-primary" %>
-  </div>
-<% end %>
+    <div class="actions mb-3">
+      <%= f.submit t('login.login_btn'), class: :"btn btn-primary" %>
+    </div>
+  <% end %>
+</div>
