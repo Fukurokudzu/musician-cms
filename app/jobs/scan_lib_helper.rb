@@ -20,7 +20,9 @@ module ScanLibHelper
   def self.get_release_cover(path)
     Dir.chdir(Pathname.new(path)) do
       cover_file = Dir.glob(cover_pattern).first
-      File.absolute_path(cover_file) if cover_file
+      return nil unless cover_file
+
+      File.absolute_path(cover_file)
     end
   end
 
