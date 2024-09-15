@@ -4,5 +4,6 @@ class ReleasesController < ApplicationController
 
   def show
     @release = Release.find(params[:id])
+    @tracks = @release.tracks
   end
 end
