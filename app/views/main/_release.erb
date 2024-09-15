@@ -1,6 +1,7 @@
-<div class="release">
-  <%= release.title %>
+<div class="release-container">
   <% if release.cover.attached? %>
-    <%= image_tag release.cover %>
+    <%= link_to release_path(release) do  %>
+      <%= image_tag release.cover, class: 'cover', id: release.id.to_s + '_cover' %>
+    <% end %>
   <% end %>
 </div>

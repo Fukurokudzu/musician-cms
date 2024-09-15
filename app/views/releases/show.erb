@@ -1,0 +1,4 @@
+<%= @release.title %>
+<% if @release.cover.attached? %>
+  <%= image_tag @release.cover, class: 'cover', id: @release.id.to_s + '_cover' %>
+<% end %>

@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   helper_method :admin?
+  before_action :set_page_title
   around_action :switch_locale
 
   def show_flash(type = :success, message)
@@ -29,4 +30,7 @@ class ApplicationController < ActionController::Base
     I18n.available_locales.map(&:to_s).include?(Setting.locale)
   end
 
+  def set_page_title
+    @page_title = Setting.page_title
+  end
 end
