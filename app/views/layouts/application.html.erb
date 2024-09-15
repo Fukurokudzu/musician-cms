@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Fukurokudzu's music</title>
+    <title><%= Setting.page_title %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -17,8 +17,9 @@
   <body class="d-flex flex-column min-vh-100">
 
   <%= render('layouts/header') if admin? %>
+  <%= render(partial: 'shared/header') %>
 
-    <main class="container mt-3">
+    <main class="container-fluid">
 
       <turbo-frame id="flash">
         <%= render('layouts/flash')%>
