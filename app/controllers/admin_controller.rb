@@ -7,7 +7,7 @@ class AdminController < ApplicationController
 
   def update
   end
-  
+
   private
 
   def authorize
@@ -15,6 +15,6 @@ class AdminController < ApplicationController
   end
 
   def admin?
-    session[:hashed_id] ||= nil
+    session[:hashed_id] == Setting.admin_hashed_password ||= nil
   end
 end

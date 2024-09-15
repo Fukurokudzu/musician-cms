@@ -16,7 +16,8 @@
 
   <body class="d-flex flex-column min-vh-100">
 
-  <%= render('layouts/header') if admin? %>
+  <%= render('layouts/admin_header') if admin? %>
+
   <%= render(partial: 'shared/header') %>
 
     <main class="container-fluid">
