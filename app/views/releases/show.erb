@@ -1,4 +1,11 @@
-<%= @release.title %>
-<% if @release.cover.attached? %>
-  <%= image_tag @release.cover, class: 'cover', id: @release.id.to_s + '_cover' %>
-<% end %>
+<div class="release-show-container">
+  <h1><%= @release.title %></h1>
+  <% if @release.cover.attached? %>
+    <%= image_tag @release.cover, class: 'release-show-cover', id: @release.id.to_s + '_cover' %>
+  <% end %>
+  <div class="tracks-container">
+    <ul>
+      <%= render(partial: 'track', collection: @release.tracks) %>
+    </ul>
+  </div>
+</div>

@@ -21,7 +21,7 @@ class Setting < RailsSettings::Base
     field :email_pattern, default: ".*@.*", validates: { presence: true }
     field :library_path, default: "app/music", validates: { presence: true }
   end
-  
+
   scope :admin do
     field :admin_email, default: "admin@admin", validates: { presence: true }
     field :admin_hashed_password, default: "$2a$12$.GeWsTtueFtVJMr07iJweOYpuOsMWeoFpm.KJhsM4x87TDEng4s22", validates: { presence: true }
@@ -34,5 +34,10 @@ class Setting < RailsSettings::Base
     field :description, default: "Application description for search engines"
     field :footer_email, default: "it.fukurokudzu@gmail.com"
     field :footer_year, default: "2023"
+  end
+
+  scope :theme do
+    field :links_color, default: "#000000"
+    field :text_color, default: "#ffffff"
   end
 end
