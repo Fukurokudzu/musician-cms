@@ -14,7 +14,7 @@ class Admin::SystemsController < ApplicationController
   private
 
   def check_params
-    params.require(:setting).permit(:admin_email, :description, :app_name, :timezone, :locale) 
+    params.require(:setting).permit(:admin_email, :description, :app_name, :timezone, :locale, :library_path)
   end
 
   def update_system_settings(checked_params)
