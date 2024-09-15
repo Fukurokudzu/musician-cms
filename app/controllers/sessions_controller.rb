@@ -1,5 +1,4 @@
 class SessionsController < ApplicationController
-
   def new
   end
 
@@ -9,7 +8,7 @@ class SessionsController < ApplicationController
       session[:hashed_id] = auth.hashed_id
       redirect_to(controller: :admin)
     else
-      show_flash(t('flash.alert.login', project_title: @project.title))
+      show_flash(t('flash.alert.login'))
     end
   end
 
@@ -23,5 +22,4 @@ class SessionsController < ApplicationController
   def allowed_params
     params.permit(:admin_email, :admin_password)
   end
-
 end
