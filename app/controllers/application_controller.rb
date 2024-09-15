@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-
+  helper_method :admin?
   around_action :switch_locale
 
   def show_flash(type = :success, message)
@@ -9,8 +9,11 @@ class ApplicationController < ActionController::Base
 
   private
 
-  def switch_locale(&action)
+  def admin?
+    session[:hashed_id] == Setting.admin_hashed_password
+  end
 
+  def switch_locale(&action)
     if locale_set?
       locale = Setting.locale
     elsif I18n.available_locales.map(&:to_s).include?(params[:locale])
@@ -18,12 +21,12 @@ class ApplicationController < ActionController::Base
     else
       locale = I18n.default_locale
     end
-    
+
     I18n.with_locale(locale, &action)
   end
 
   def locale_set?
     I18n.available_locales.map(&:to_s).include?(Setting.locale)
   end
-  
+
 end

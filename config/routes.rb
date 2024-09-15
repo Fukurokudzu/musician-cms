@@ -5,13 +5,13 @@ Rails.application.routes.draw do
   mount Sidekiq::Web => '/sidekiq'
 
   # Defines the root path route ("/")
-  root "artists#index"
+  root "main#index"
 
   resources :artists
   resources :releases
-  
+
   get :admin, to: 'admin#index'
-  
+
   namespace :admin do
     resource :system, :library, :releases, :credentials
     resources :artists
