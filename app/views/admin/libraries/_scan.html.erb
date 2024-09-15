@@ -1,1 +1,7 @@
-<%= button_to('scan', admin_library_path, method: :put, class: 'btn btn-light align-middle') %>
+<%= form_for(Setting.new, url: admin_system_path, method: :put) do |f| %>
+  <div class="mb-3 mt-3">
+    <%= f.text_field(:library_path, required: true, value: Setting.library_path,
+                     class: "form-control") %>
+  </div>
+<% end %>
+  <%= button_to('scan', admin_library_path, method: :put, class: 'btn btn-light align-middle') %>

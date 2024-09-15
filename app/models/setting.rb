@@ -37,7 +37,9 @@ class Setting < RailsSettings::Base
   end
 
   scope :theme do
+    field :artist_title_color, default: "#ffffff"
     field :links_color, default: "#000000"
     field :text_color, default: "#ffffff"
+    field :main_menu_bg_color, default: "#000000"
   end
 end
