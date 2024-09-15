@@ -12,12 +12,8 @@ class Library
 
   def get_artist_folders
     raise("Library #{path} path not found") unless Dir.exist?(path)
-    folders = get_folders_list(path)
+    folders = ScanLibHelper.get_folders_list(path)
     raise("No artist folders found in #{path}") if folders.empty?
     folders
-  end
-
-  def get_folders_list(path)
-    ScanLibHelper.get_folders_list(path)
   end
 end

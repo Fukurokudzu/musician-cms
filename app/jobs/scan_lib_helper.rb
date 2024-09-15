@@ -1,5 +1,5 @@
 module ScanLibHelper
-  def get_folders_list(path)
+  def self.get_folders_list(path)
     folders_list = {}
     Dir.chdir(Pathname.new(path)) do
       Dir.glob('*').map do |folder|
@@ -9,7 +9,7 @@ module ScanLibHelper
     folders_list
   end
 
-  def get_tracks_list(path)
+  def self.get_tracks_list(path)
     Dir.chdir(Pathname.new(path)) do
       Dir.glob(track_pattern).each_with_object({}) do |file, tracks|
         tracks[file] = File.absolute_path(file)
@@ -17,22 +17,34 @@ module ScanLibHelper
     end
   end
 
-  def get_release_cover(path)
+  def self.get_release_cover(path)
     Dir.chdir(Pathname.new(path)) do
-      Dir.glob(cover_pattern).each_with_object({}) do |file, covers|
-        covers[file] = File.absolute_path(file)
-      end
+      cover_file = Dir.glob(cover_pattern).first
+      File.absolute_path(cover_file) if cover_file
     end
   end
 
   private
 
-  def cover_pattern
-    cover_filenames = Setting.cover_filenames.join(',')
-    "{#{cover_filenames}}.{#{Setting.cover_extensions.join(',')}}"
+  def self.cover_pattern
+    cover_filenames = Setting.cover_filenames
+    cover_extensions = Setting.cover_extensions
+
+    cover_filenames.map! { |filename| filename.downcase + '*' }
+    cover_filenames += cover_filenames.map { |filename| add_capital_letters(filename) }
+    cover_filenames += cover_filenames.map { |filename| filename.upcase }
+
+    cover_extensions += cover_extensions.map { |extension| add_capital_letters(extension) }
+    cover_extensions += cover_extensions.map { |extension| extension.upcase }
+
+    "{#{cover_filenames.join(',')}}.{#{cover_extensions.join(',')}}"
   end
 
-  def track_pattern
+  def self.track_pattern
     "*.{#{Setting.track_extensions.join(',')}}"
+  end
+
+  def self.add_capital_letters(string)
+    string.capitalize
   end
 end
