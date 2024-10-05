@@ -15,13 +15,13 @@ class ApplicationController < ActionController::Base
   end
 
   def switch_locale(&action)
-    if locale_set?
-      locale = Setting.locale
-    elsif I18n.available_locales.map(&:to_s).include?(params[:locale])
-      locale = params[:locale] || I18n.default_locale
-    else
-      locale = I18n.default_locale
-    end
+    locale = if locale_set?
+               Setting.locale
+             elsif I18n.available_locales.map(&:to_s).include?(params[:locale])
+               params[:locale] || I18n.default_locale
+             else
+               I18n.default_locale
+             end
 
     I18n.with_locale(locale, &action)
   end

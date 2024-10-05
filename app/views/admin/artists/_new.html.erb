@@ -16,7 +16,7 @@
 
   <div class="mb-3 mt-3">
     <%= f.label :role, t("role") %>
-    <%= f.text_area :role, class: :"form-control" %>
+    <%= f.select :role, Artist.roles.keys.map(&:capitalize), {}, class: :"form-control" %>
   </div>
 
   <%= f.submit t("settings.create"), class: :"btn btn-primary" %>

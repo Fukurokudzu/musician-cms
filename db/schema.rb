@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_09_15_210605) do
+ActiveRecord::Schema[7.0].define(version: 2024_10_03_153156) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -46,9 +46,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_15_210605) do
     t.string "title"
     t.string "first_name"
     t.string "last_name"
-    t.string "role"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "role", default: 0
     t.index ["title"], name: "index_artists_on_title"
   end
 

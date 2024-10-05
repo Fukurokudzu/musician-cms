@@ -26,8 +26,6 @@ module ScanLibHelper
     end
   end
 
-  private
-
   def self.cover_pattern
     cover_filenames = Setting.cover_filenames
     cover_extensions = Setting.cover_extensions

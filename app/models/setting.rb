@@ -33,7 +33,7 @@ class Setting < RailsSettings::Base
     field :page_title, default: "Musician CMS", validates: { presence: true, length: { in: 2..30 } }
     field :description, default: "Application description for search engines"
     field :footer_email, default: "it.fukurokudzu@gmail.com"
-    field :footer_year, default: "2023"
+    field :footer_year, default: "2024"
   end
 
   scope :theme do
@@ -41,5 +41,7 @@ class Setting < RailsSettings::Base
     field :links_color, default: "#000000"
     field :text_color, default: "#ffffff"
     field :main_menu_bg_color, default: "#000000"
+    field :player_bg_color, default: "#000000"
+    field :accent_color, default: "#d35400"
   end
 end
