@@ -28,9 +28,11 @@
 
       <%= yield %>
 
+      <%= render(partial: 'layouts/player') %>
+
     </main>
 
-  <%= render('layouts/footer') %>
+    <%= render('layouts/footer') %>
 
   </body>
 </html>

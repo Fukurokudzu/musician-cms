@@ -21,8 +21,8 @@ class ReleaseManager
   private
 
   def get_tags(tracks)
-    tracks.each_with_object({}) do |(track, track_path), tags|
-      tags[track] = WahWah.open(track_path).title
+    tracks.transform_values do |track_path|
+      WahWah.open(track_path).title
     end
   end
 
