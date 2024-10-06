@@ -1,5 +1,5 @@
 <div class="release-show-container">
-  <div class="tracks-container">
+  <div class="tracks-container" data-release-id="<%= @release.id %>">
     <h1><%= @release.title %></h1>
     <ul>
       <%= render(partial: 'track', collection: @release.tracks) %>

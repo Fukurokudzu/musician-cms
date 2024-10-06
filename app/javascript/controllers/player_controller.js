@@ -2,50 +2,141 @@ import { Controller } from '@hotwired/stimulus'
 import { Turbo } from '@hotwired/turbo-rails'
 
 export default class extends Controller {
-    static targets = ["audio", "playPause", "seekSlider", "volumeSlider", "currentTime", "duration", "artistTitle", "trackTitle", "mute",  "releaseLink", "progress"];
-    isUpdatingTrack = false; // Add a flag to prevent multiple requests
+    static targets = ["audio", "playPause", "seekSlider", "volumeSlider", "currentTime", "duration", "artistTitle", "trackTitle", "mute", "releaseLink", "progress"];
+    isUpdatingTrack = false;
+    isFetchingTrackData = false; // Flag to prevent multiple API calls
+    releaseTracks = [];
+    eventListenersAdded = false; // Flag to check if event listeners are added
 
     connect() {
+        document.addEventListener('turbo:load', this.initializeEventListeners.bind(this));
+        this.initializeEventListeners();
+    }
+
+    initializeEventListeners() {
+        this.removeEventListeners(); // Ensure previous listeners are removed
+
         this.trackLinks = document.querySelectorAll('.play-track');
         this.trackLinks.forEach(link => {
-            link.addEventListener('click', (event) => this.playTrack(event));
+            link.addEventListener('click', this.playTrack.bind(this));
         });
 
         this.nextTrackButton = document.querySelector('#next-track');
         if (this.nextTrackButton) {
-            this.nextTrackButton.removeEventListener('click', this.nextTrack.bind(this));
             this.nextTrackButton.addEventListener('click', this.nextTrack.bind(this));
         }
 
         this.previousTrackButton = document.querySelector('#previous-track');
         if (this.previousTrackButton) {
-            this.previousTrackButton.removeEventListener('click', this.previousTrack.bind(this));
             this.previousTrackButton.addEventListener('click', this.previousTrack.bind(this));
         }
 
-        if (this.audioTarget) {
-            this.audioTarget.addEventListener("timeupdate", () => this.updateTime());
-            this.audioTarget.addEventListener("loadedmetadata", () => this.updateDuration());
+        if (this.hasAudioTarget) {
+            this.audioTarget.addEventListener("timeupdate", this.updateTime.bind(this));
+            this.audioTarget.addEventListener("loadedmetadata", this.updateDuration.bind(this));
+        }
+
+        this.eventListenersAdded = true; // Set the flag to true after adding event listeners
+    }
+
+    removeEventListeners() {
+        if (!this.eventListenersAdded) return;
+
+        this.trackLinks.forEach(link => {
+            link.removeEventListener('click', this.playTrack.bind(this));
+        });
+
+        if (this.nextTrackButton) {
+            this.nextTrackButton.removeEventListener('click', this.nextTrack.bind(this));
+        }
+
+        if (this.previousTrackButton) {
+            this.previousTrackButton.removeEventListener('click', this.previousTrack.bind(this));
+        }
+
+        if (this.hasAudioTarget) {
+            this.audioTarget.removeEventListener("timeupdate", this.updateTime.bind(this));
+            this.audioTarget.removeEventListener("loadedmetadata", this.updateDuration.bind(this));
+        }
+
+        this.eventListenersAdded = false; // Reset the flag
+    }
+
+    async playTrack(event) {
+        event.preventDefault();
+        const link = event.currentTarget;
+        const trackId = link.getAttribute('data-track-id');
+
+        await this.loadTrackData(trackId);
+    }
+
+    async loadTrackData(trackId) {
+        if (this.isFetchingTrackData) return; // Prevent multiple calls
+        this.isFetchingTrackData = true;
+
+        try {
+            const data = await this.fetchTrackData(trackId);
+            const { track, release_tracks } = data;
+
+            this.releaseTracks = [];
+            this.releaseTracks = release_tracks;
+            console.log("Release tracks:", this.releaseTracks);
+            this.updateAudioSource(track.data_src, track.artist, track.title);
+            await this.updateTrackDisplay(track.id);
+        } catch (error) {
+            console.error('Error loading track data:', error);
+        } finally {
+            this.isFetchingTrackData = false; // Reset the flag
         }
     }
 
-    playTrack(event) {
-        event.preventDefault();
-        const link = event.currentTarget;
-        const newSrc = link.getAttribute('data-src');
-        const trackId = link.getAttribute('data-track-id');
+    async fetchTrackData(trackId) {
+        const response = await fetch(`/tracks/${trackId}`);
+        return await response.json();
+    }
 
-        if (!newSrc) {
-            console.error("No valid source found for the audio element.");
+    async updateTrackDisplay(trackId) {
+        if (this.isUpdatingTrack) return;
+        this.isUpdatingTrack = true;
+
+        const csrfTokenElement = document.querySelector('meta[name="csrf-token"]');
+        if (!csrfTokenElement) {
+            console.error("CSRF token not found.");
+            this.isUpdatingTrack = false;
+            return;
+        }
+        const csrfToken = csrfTokenElement.getAttribute('content');
+        if (!csrfToken) {
+            console.error("CSRF token content not found.");
+            this.isUpdatingTrack = false;
             return;
         }
 
-        if (this.audioTarget.src !== newSrc) {
-            this.updateAudioSource(newSrc, link.dataset.artist, link.dataset.track);
-            this.updateTrackInfo(trackId);
-        } else {
-            this.togglePlayPause();
+        try {
+            const data = await this.updateTrack(trackId, csrfToken);
+            if (data.release_url) {
+                this.releaseLinkTarget.setAttribute('data-release-url', data.release_url);
+            } else {
+                console.error("Failed to update track display.");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        } finally {
+            this.isUpdatingTrack = false;
         }
+    }
+
+    async updateTrack(trackId, csrfToken) {
+        const response = await fetch(`/player/update_track`, {
+            method: "PATCH",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "X-CSRF-Token": csrfToken
+            },
+            body: JSON.stringify({ id: trackId })
+        });
+        return await response.json();
     }
 
     togglePlayPause() {
@@ -108,71 +199,66 @@ export default class extends Controller {
         this.changeTrack(-1);
     }
 
-    changeTrack(direction) {
+    async changeTrack(direction) {
+        if (this.isChangingTrack) return; // Prevent multiple calls
+        this.isChangingTrack = true;
+
         const trackInfoDiv = document.querySelector('.track-info');
-        const currentTrackId = trackInfoDiv.getAttribute('data-track-id');
-        const trackElements = document.querySelectorAll('.play-track');
+        const currentTrackId = parseInt(trackInfoDiv.getAttribute('data-track-id'));
 
-        let currentIndex = -1;
+        let currentIndex = this.releaseTracks.findIndex(track => track.id === currentTrackId);
 
-        for (let i = 0; i < trackElements.length; i++) {
-            if (trackElements[i].getAttribute('data-track-id') === currentTrackId) {
-                currentIndex = i;
-                break;
+        if (currentIndex === -1) {
+            console.error("Current track not found in release tracks.");
+            await this.loadTrackData(currentTrackId); // Fetch updated release tracks
+
+            currentIndex = this.releaseTracks.findIndex(track => track.id === currentTrackId);
+
+            if (currentIndex === -1) {
+                console.error("Current track still not found after fetching.");
+                this.isChangingTrack = false;
+                return;
             }
         }
 
-        const nextIndex = (currentIndex + direction + trackElements.length) % trackElements.length;
-        const nextElement = trackElements[nextIndex];
-        const newSrc = nextElement.getAttribute('data-src');
-        if (!newSrc) {
-            console.error("No valid source found for the audio element.");
+        if (this.releaseTracks.length === 0) {
+            console.error("No tracks available.");
+            this.isChangingTrack = false;
             return;
         }
 
-        this.updateAudioSource(newSrc, nextElement.dataset.artist, nextElement.dataset.track);
-        this.updateTrackInfo(nextElement.getAttribute('data-track-id'));
+        let nextIndex = currentIndex + direction;
+        console.log("Current index:", currentIndex);
+        console.log("Next index:", nextIndex);
+
+        if (nextIndex >= this.releaseTracks.length) {
+            nextIndex = 0; // Wrap around to the first track
+        } else if (nextIndex < 0) {
+            nextIndex = this.releaseTracks.length - 1; // Wrap around to the last track
+        }
+
+        const nextTrack = this.releaseTracks[nextIndex];
+
+        if (!nextTrack) {
+            console.error("Next track not found.");
+            this.isChangingTrack = false;
+            return;
+        }
+
+        this.audioTarget.addEventListener('loadeddata', () => {
+            this.isChangingTrack = false; // Reset the flag once the new track is loaded
+        }, { once: true });
+
+        this.updateAudioSource(nextTrack.data_src, nextTrack.artist, nextTrack.title);
+        await this.updateTrackDisplay(nextTrack.id);
+        trackInfoDiv.setAttribute('data-track-id', nextTrack.id);
     }
 
     updateAudioSource(newSrc, artist, track) {
         this.audioTarget.src = newSrc;
         this.audioTarget.play();
         this.playPauseTarget.innerHTML = '<i class="fas fa-pause"></i>'; // Pause icon
-        this.artistTitleTarget.textContent = artist;
+        this.artistTitleTarget.textContent = artist.title;
         this.trackTitleTarget.textContent = track;
-    }
-
-    updateTrackInfo(trackId) {
-        if (this.isUpdatingTrack) return; // Prevent multiple requests
-        this.isUpdatingTrack = true;
-
-        const csrfTokenElement = document.querySelector('meta[name="csrf-token"]');
-        if (!csrfTokenElement) {
-            console.error("CSRF token not found.");
-            this.isUpdatingTrack = false;
-            return;
-        }
-        const csrfToken = csrfTokenElement.getAttribute('content');
-
-        fetch(`/player/update_track`, {
-            method: "PATCH",
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json",
-                "X-CSRF-Token": csrfToken
-            },
-            body: JSON.stringify({ id: trackId })
-        }).then(response => response.json())
-            .then(data => {
-                if (data.release_url) {
-                    this.releaseLinkTarget.setAttribute('data-release-url', data.release_url);
-                } else {
-                    console.error("Failed to update track info.");
-                }
-                this.isUpdatingTrack = false;
-            }).catch(error => {
-            console.error("Error:", error);
-            this.isUpdatingTrack = false;
-        });
     }
 }

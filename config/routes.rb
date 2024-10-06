@@ -9,6 +9,7 @@ Rails.application.routes.draw do
 
   resources :artists
   resources :releases
+  resources :tracks
 
   get :admin, to: 'admin#index'
 

@@ -2,7 +2,6 @@ class PlayerController < ApplicationController
   def show
     @track = params[:id] ? Track.find(params[:id]) : Track.all.sample
     @release = @track.release
-    # render partial: 'player'
   end
 
   def update_track
