@@ -20,4 +20,7 @@ Rails.application.routes.draw do
   post :sessions, to: 'sessions#create'
   get :sign_in, to: 'sessions#new', as: 'sign_in'
   delete :sign_out, to: 'sessions#destroy', as: 'sign_out'
+
+  get '/player', to: 'player#show'
+  patch '/player/update_track', to: 'player#update_track'
 end

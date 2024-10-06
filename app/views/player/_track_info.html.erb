@@ -1,0 +1,4 @@
+<div data-player-target="releaseLink" data-action="click->player#navigateToRelease" data-release-url="<%= url_for(track.release) %>">
+  <span data-player-target="artistTitle" id="artist-title"><%= track.artists.first.title %></span>
+  <span data-player-target="trackTitle" id="track-title"><%= track.title %></span>
+</div>

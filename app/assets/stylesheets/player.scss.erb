@@ -1,0 +1,51 @@
+#player {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 2rem;
+  color: <%= Setting.text_color %>;
+  width: 100%;
+}
+
+#play-pause, #mute {
+  background-color: <%= Setting.accent_color %>;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+#play-pause:hover, #mute:hover {
+  background-color: <%= Setting.accent_color %>;
+}
+
+.time {
+  font-size: 14px;
+}
+
+#seek-slider, #volume-slider {
+  -webkit-appearance: none;
+  width: 100px;
+  height: 5px;
+  background: #666666;
+  outline: none;
+  opacity: 0.7;
+  transition: opacity .2s;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.track-info {
+  display: flex;
+  justify-content: flex-end;
+  align-content: center;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.track-info:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}

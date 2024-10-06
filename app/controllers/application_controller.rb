@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   helper_method :admin?
-  before_action :set_page_title
+  before_action :set_page_title, :set_track
   around_action :switch_locale
 
   def show_flash(type = :success, message)
@@ -32,5 +32,12 @@ class ApplicationController < ActionController::Base
 
   def set_page_title
     @page_title = Setting.page_title
+  end
+
+  def set_track
+    @track ||= Track.find_by(id: session[:current_track_id]) if session[:current_track_id].present?
+    @track ||= Track.all.sample
+
+    @release = @track.release
   end
 end

@@ -1,0 +1,9 @@
+<div class="player-control" >
+  <audio data-player-target="audio" src="<%= url_for(track.audio_file) %>"></audio>
+  <button data-player-target="playPause" data-action="player#togglePlayPause" id="play-pause">Play</button>
+  <input type="range" data-player-target="seekSlider" data-action="player#seek" id="seek-slider" max="100" value="0">
+  <span data-player-target="currentTime" id="current-time" class="time">0:00</span>&nbsp;/&nbsp;
+  <span data-player-target="duration" id="duration" class="time">0:00</span>
+  <input type="range" data-player-target="volumeSlider" data-action="player#adjustVolume" id="volume-slider" max="100" value="100">
+  <button data-player-target="mute" data-action="player#muteUnmute" id="mute">Mute</button>
+</div>

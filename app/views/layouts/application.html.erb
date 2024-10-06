@@ -27,7 +27,7 @@
 
       <%= yield %>
 
-      <%= render(partial: 'layouts/player') %>
+      <%= render partial: 'player/player', locals: { track: @track } %>
 
     </main>
 
