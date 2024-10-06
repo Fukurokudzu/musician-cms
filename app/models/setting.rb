@@ -40,8 +40,9 @@ class Setting < RailsSettings::Base
     field :artist_title_color, default: "#ffffff"
     field :links_color, default: "#000000"
     field :text_color, default: "#ffffff"
-    field :main_menu_bg_color, default: "#000000"
-    field :player_bg_color, default: "#000000"
+    field :main_menu_bg_color, default: "#16191e"
+    field :footer_bg_color, default: "#16191e"
+    field :player_bg_color, default: "#101011"
     field :accent_color, default: "#d35400"
   end
 end

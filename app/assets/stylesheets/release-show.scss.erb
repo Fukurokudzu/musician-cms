@@ -1,0 +1,29 @@
+.release-show-container {
+  margin-top: 1rem;
+  width: 90%;
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 1rem;
+  color: <%= Setting.text_color %>;
+}
+
+.release-show-container ul {
+  list-style-type: none;
+}
+
+.release-show-container a {
+  color: <%= Setting.links_color %>;
+  cursor: pointer;
+}
+
+.release-show-container a.play-track:hover {
+}
+
+.release-show-cover img {
+  max-width: 500px;
+  max-height: 500px;
+}
+

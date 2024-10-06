@@ -1,1 +1,5 @@
-<li><%= track.title %></li>
+<li>
+  <a class="play-track" data-src="<%= url_for(track.audio_file) if track.audio_file.attached? %>">
+    <%= track.release.artist.title.downcase %> - <%= track.title.downcase %>
+  </a>
+</li>
