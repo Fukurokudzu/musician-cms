@@ -4,4 +4,7 @@
       <%= image_tag release.cover, class: 'cover', id: release.id.to_s + '_cover' %>
     <% end %>
   <% end %>
+  <div class="release-info">
+    <%= link_to release.title, release_path(release) %>
+  </div>
 </div>

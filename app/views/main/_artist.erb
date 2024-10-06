@@ -1,4 +1,4 @@
 <div class="releases-container">
-  <%= render(partial: 'main/release', collection: artist.releases) %>
+  <%= render(partial: 'main/release', collection: artist.releases.order(release_date: :desc, title: :asc)) %>
 </div>
 

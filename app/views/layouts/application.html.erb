@@ -16,11 +16,10 @@
 
   <body class="d-flex flex-column min-vh-100">
 
-  <%= render('layouts/admin_header') if admin? %>
-
-  <%= render(partial: 'layouts/header') %>
-
     <main class="container-fluid">
+      <%= render('layouts/admin_header') if admin? %>
+
+      <%= render(partial: 'layouts/header') %>
 
       <turbo-frame id="flash">
         <%= render('layouts/flash')%>

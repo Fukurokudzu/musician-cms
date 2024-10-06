@@ -1,11 +1,18 @@
 <div class="release-show-container">
-  <h1><%= @release.title %></h1>
-  <% if @release.cover.attached? %>
-    <%= image_tag @release.cover, class: 'release-show-cover', id: @release.id.to_s + '_cover' %>
-  <% end %>
   <div class="tracks-container">
+    <h1><%= @release.title %></h1>
     <ul>
       <%= render(partial: 'track', collection: @release.tracks) %>
     </ul>
+  </div>
+  <div class="release-show-cover">
+    <% if @release.cover.attached? %>
+      <%= image_tag @release.cover, id: @release.id.to_s + '_cover' %>
+    <% end %>
+  </div>
+  <div class="release-show-info">
+    <p><%= @release.description %></p>
+    <p><%= "released on " + @release.release_date.strftime("%-d %B %Y") if @release.release_date %>
+    <%= " by " + @release.publisher if @release.publisher %></p>
   </div>
 </div>
