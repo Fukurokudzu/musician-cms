@@ -1,51 +1,113 @@
 #player {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  height: 2rem;
+  display: grid;
+  grid-template-rows: auto auto;
+  width: 100%;
+  background-color: <%= Setting.main_menu_bg_color %>;
   color: <%= Setting.text_color %>;
+  padding: 1rem;
+  margin-top: 1rem;
+  position: fixed;
+  bottom: 2rem;
+  left: 0;
+  z-index: 1000;
+}
+
+.player-controls {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
   width: 100%;
 }
 
-#play-pause, #mute {
+.player-controls button {
   background-color: <%= Setting.accent_color %>;
   color: white;
   border: none;
-  padding: 5px 10px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  opacity: 0.7;
 }
 
-#play-pause:hover, #mute:hover {
-  background-color: <%= Setting.accent_color %>;
+.player-controls button:hover {
+  opacity: 1;
+  transition: opacity 0.2s;
 }
 
-.time {
-  font-size: 14px;
+#seek-slider {
+  grid-column: 1 / -1;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 0.2rem;
+  background: #666666;
+  outline: none;
+  opacity: 1;
+  transition: opacity .2s;
+  margin-bottom: 1rem;
 }
 
-#seek-slider, #volume-slider {
+#seek-slider::-webkit-slider-thumb, #volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 1rem;
+  height: 1rem;
+  background: <%= Setting.accent_color %>;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+#seek-slider::-moz-range-thumb, #volume-slider::-moz-range-thumb {
+  width: 1rem;
+  height: 1rem;
+  background: <%= Setting.accent_color %>;
+  cursor: pointer;
+  border-radius: 50%;
+  opacity: 0.7;
+}
+
+#seek-slider::-moz-range-thumb:hover, #volume-slider::-moz-range-thumb:hover {
+  opacity: 1;
+  transition: opacity 0.2s;
+}
+
+#volume-slider {
   -webkit-appearance: none;
   width: 100px;
   height: 5px;
   background: #666666;
   outline: none;
-  opacity: 0.7;
+  opacity: 1;
   transition: opacity .2s;
 }
 
-.hidden {
-  display: none !important;
-}
-
 .track-info {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  padding: 1rem;
+  height: 2rem;
   display: flex;
   justify-content: flex-end;
-  align-content: center;
-  flex-direction: column;
-  gap: 5px;
+  align-items: center;
+  font-size: 0.8rem;
 }
 
 .track-info:hover {
   cursor: pointer;
   text-decoration: underline;
+}
+
+#track-time {
+  grid-column: 2;
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.controls-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }

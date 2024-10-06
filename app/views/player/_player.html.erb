@@ -1,6 +1,4 @@
 <div id="player" data-controller="player">
-  <turbo-frame id="player-frame" data-turbo-permanent>
     <%= render partial: 'player/controls', locals: { track: @track } %>
     <%= render partial: 'player/track_info', locals: { track: @track } %>
-  </turbo-frame>
 </div>
