@@ -36,8 +36,8 @@ class ApplicationController < ActionController::Base
 
   def set_track
     @track ||= Track.find_by(id: session[:current_track_id]) if session[:current_track_id].present?
-    @track ||= Track.all.sample
+    @track ||= Track.all.sample || Track.find_by(name: 'Default Track')
 
-    @release = @track.release
+    @release = @track.release if @track.present?
   end
 end
