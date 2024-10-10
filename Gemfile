@@ -53,6 +53,9 @@ gem "sassc-rails"
 
 gem "kramdown"
 gem 'kramdown-parser-gfm'
+gem "wahwah", "~> 1.3"
+gem "rails-settings-cached"
+gem "sidekiq", "~> 6.2"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -79,9 +82,3 @@ group :test do
   gem "selenium-webdriver"
   gem "webdrivers"
 end
-
-gem "wahwah", "~> 1.3"
-
-gem "rails-settings-cached", "~> 2.8"
-
-gem "sidekiq", "~> 6.2"
