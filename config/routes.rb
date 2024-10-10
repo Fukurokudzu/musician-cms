@@ -14,7 +14,7 @@ Rails.application.routes.draw do
   get :admin, to: 'admin#index'
 
   namespace :admin do
-    resource :system, :library, :releases, :credentials
+    resource :system, :library, :releases, :credentials, :themes
     resources :artists
   end
 

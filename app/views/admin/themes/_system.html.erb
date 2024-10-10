@@ -1,0 +1,54 @@
+<%= form_for(Setting.new, url: admin_system_path, method: :put) do |f| %>
+
+  <div class="mb-3 mt-3">
+    <label for="artist_title_color">Artist title</label>
+    <%= f.color_field(:artist_title_color, required: true, pattern: Setting.artist_title_color, value: Setting.artist_title_color,
+                      class: "form-control") %>
+  </div>
+
+  <div class="mb-3 mt-3">
+    <label for="artist_title_color">Text</label>
+    <%= f.color_field(:text_color, required: true, pattern: Setting.text_color, value: Setting.text_color,
+                      class: "form-control") %>
+  </div>
+
+  <div class="mb-3 mt-3">
+    <label for="artist_title_color">Main menu background</label>
+    <%= f.color_field(:main_menu_bg_color, required: true, pattern: Setting.main_menu_bg_color, value: Setting.main_menu_bg_color,
+                      class: "form-control") %>
+  </div>
+
+  <div class="mb-3 mt-3">
+    <label for="artist_title_color">Footer backgound</label>
+    <%= f.color_field(:footer_bg_color, required: true, pattern: Setting.footer_bg_color, value: Setting.footer_bg_color,
+                      class: "form-control") %>
+  </div>
+
+  <div class="mb-3 mt-3">
+    <label for="artist_title_color">PLayer backgound</label>
+    <%= f.color_field(:player_bg_color, required: true, pattern: Setting.player_bg_color, value: Setting.player_bg_color,
+                      class: "form-control") %>
+  </div>
+
+  <div class="mb-3 mt-3">
+    <label for="artist_title_color">Color accent</label>
+    <%= f.color_field(:accent_color, required: true, pattern: Setting.accent_color, value: Setting.accent_color,
+                      class: "form-control") %>
+  </div>
+
+  <div class="mb-3 mt-3">
+    <label for="artist_title_color">Links color</label>
+    <%= f.color_field(:a_color, required: true, pattern: Setting.a_color, value: Setting.a_color,
+                      class: "form-control") %>
+  </div>
+
+  <%= f.submit t("settings.update"), class: :"btn btn-primary" %>
+<% end %>
+
+<!--field :artist_title_color, default: "#ffffff"-->
+<!--field :text_color, default: "#ffffff"-->
+<!--field :main_menu_bg_color, default: "#16191e"-->
+<!--field :footer_bg_color, default: "#16191e"-->
+<!--field :player_bg_color, default: "#101011"-->
+<!--field :accent_color, default: "#d35400"-->
+<!--field :a_color, default: "#ffffff"-->
