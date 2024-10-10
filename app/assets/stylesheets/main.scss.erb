@@ -25,7 +25,7 @@ main {
 }
 
 a {
-    color: <%= Setting.links_color %>;
+    color: <%= Setting.a_color %>;
     text-decoration: none !important;
 }
 
@@ -73,12 +73,18 @@ header {
     grid-auto-flow: dense;
 }
 
+.main-artist-title {
+    grid-column: 1 / -1;
+    color: <%= Setting.artist_title_color %>;
+}
+
+
 .releases-container img:hover {
     -webkit-filter: brightness(1.2);
 }
 
 .releases-container a {
-    color: <%= Setting.links_color %>;
+    color: <%= Setting.a_color %>;
 }
 
 .cover {
