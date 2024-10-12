@@ -40,3 +40,7 @@
 
 # Ignore idea files
 /.idea
+
+# Ignore node_modules
+/node_modules
+/node_modules/.yarn-integrity

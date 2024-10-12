@@ -16,10 +16,4 @@ class Admin::SystemsController < ApplicationController
   def check_params
     params.require(:setting).permit(:admin_email, :description, :page_title, :timezone, :locale, :library_path)
   end
-
-  def update_system_settings(checked_params)
-    checked_params.keys.each do |key|
-      Setting.send("#{key}=", checked_params[key].strip) unless checked_params[key].nil?
-    end
-  end
 end

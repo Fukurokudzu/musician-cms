@@ -24,4 +24,6 @@ Rails.application.routes.draw do
 
   get '/player', to: 'player#show'
   patch '/player/update_track', to: 'player#update_track'
+
+  get 'themes/variables', to: 'themes#variables'
 end

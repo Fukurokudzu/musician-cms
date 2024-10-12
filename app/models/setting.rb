@@ -29,7 +29,6 @@ class Setting < RailsSettings::Base
   end
 
   scope :site do
-    field :theme, default: "default"
     field :page_title, default: "Musician CMS", validates: { presence: true, length: { in: 2..30 } }
     field :description, default: "Application description for search engines"
     field :footer_email, default: "it.fukurokudzu@gmail.com"

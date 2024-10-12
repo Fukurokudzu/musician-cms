@@ -2,7 +2,7 @@
   <div class="tracks-container" data-release-id="<%= @release.id %>">
     <h1><%= @release.title %></h1>
     <ul>
-      <%= render(partial: 'track', collection: @release.tracks) %>
+      <%= render(partial: 'track', collection: @release.tracks.order(Arel.sql('COALESCE(pos, 999999)'))) %>
     </ul>
   </div>
   <div class="release-show-cover">

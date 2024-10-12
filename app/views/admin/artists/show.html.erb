@@ -4,3 +4,11 @@
 <p><%= @artist.role %></p>
 
 <%= link_to "remove", [:admin, @artist], data: { turbo_method: :delete } %>
+
+<%= form_for(@artist, url: admin_artist_path, method: :put) do |f| %>
+  <div class="mb-3 mt-3">
+    <label for="description">Artist description</label>
+    <%= f.text_area :description, class: "admin-artist-description" %>
+  </div>
+  <%= f.submit 'Update', class: "btn btn-primary" %>
+<% end %>

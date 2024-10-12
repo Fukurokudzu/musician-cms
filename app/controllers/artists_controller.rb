@@ -17,6 +17,15 @@ class ArtistsController < ApplicationController
     @artists = Artist.all
   end
 
+  def update
+    @artist = Artist.find(params[:id])
+    return unless @artist.update(check_params)
+
+    flash.now[:success] = "Artist updated"
+    render turbo_stream: turbo_stream.update("flash", partial: "layouts/flash")
+
+  end
+
   def show
     @artist = Artist.find(params[:id])
     return if @artist.description.nil?
@@ -43,6 +52,6 @@ class ArtistsController < ApplicationController
   private
 
   def check_params
-    params.require(:artist).permit(:title, :first_name, :last_name, :role)
+    params.require(:artist).permit(:title, :first_name, :last_name, :role, :description)
   end
 end

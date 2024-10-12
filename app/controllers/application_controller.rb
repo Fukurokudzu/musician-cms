@@ -40,4 +40,10 @@ class ApplicationController < ActionController::Base
 
     @release = @track.release if @track.present?
   end
+
+  def update_system_settings(checked_params)
+    checked_params.keys.each do |key|
+      Setting.send("#{key}=", checked_params[key].strip) unless checked_params[key].nil?
+    end
+  end
 end
