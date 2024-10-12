@@ -2,8 +2,8 @@
   display: grid;
   grid-template-rows: auto auto;
   width: 100%;
-  background-color: <%= Setting.main_menu_bg_color %>;
-  color: <%= Setting.text_color %>;
+  background-color: var(--main-menu-bg-color);
+  color: var(--text-color);
   padding: 1rem;
   margin-top: 1rem;
   position: fixed;
@@ -20,7 +20,7 @@
 }
 
 .player-controls button {
-  background-color: <%= Setting.accent_color %>;
+  background-color: var(--accent-color);
   color: white;
   border: none;
   cursor: pointer;
@@ -54,7 +54,7 @@
   appearance: none;
   width: 1rem;
   height: 1rem;
-  background: <%= Setting.accent_color %>;
+  background: var(--accent-color);
   cursor: pointer;
   border-radius: 50%;
 }
@@ -62,7 +62,7 @@
 #seek-slider::-moz-range-thumb, #volume-slider::-moz-range-thumb {
   width: 1rem;
   height: 1rem;
-  background: <%= Setting.accent_color %>;
+  background: var(--accent-color);
   cursor: pointer;
   border-radius: 50%;
   opacity: 0.7;
