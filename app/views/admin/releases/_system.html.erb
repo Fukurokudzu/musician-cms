@@ -1,0 +1,7 @@
+<div class="admin-releases">
+  <% Release.all.group_by(&:artist).each do |_, releases| %>
+    <% releases.each do |release| %>
+      <%= render partial: 'release', locals: { release: release } %>
+    <% end %>
+  <% end %>
+</div>

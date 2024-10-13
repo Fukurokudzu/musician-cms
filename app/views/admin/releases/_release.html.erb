@@ -1,0 +1,13 @@
+<div class="admin-release">
+  <div class="release-title">
+    <%= release.artist.title %> - <%= release.title %>
+  </div>
+  <% if release.cover.attached? %>
+    <%= image_tag release.cover, class: 'cover', id: release.id.to_s + '_cover', class: 'release-cover' %>
+  <% end %>
+  <div class="admin-release-tracks">
+    <%= release.tracks.find_each do |track| %>
+      <%= render partial: 'track', locals: { track: track } %>
+    <% end %>
+  </div>
+</div>

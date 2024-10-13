@@ -1,0 +1,23 @@
+.admin-release {
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    "title title"
+    "cover tracks";
+}
+
+.admin-release .release-cover {
+  width: 10rem;
+  height: 10rem;
+  grid-area: cover;
+}
+
+.admin-release .release-title {
+  grid-area: title;
+}
+
+.admin-release .admin-release-tracks {
+  grid-area: tracks;
+}
