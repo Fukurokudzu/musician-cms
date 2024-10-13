@@ -35,7 +35,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_track
-    @track ||= Track.find_by(id: session[:current_track_id]) if session[:current_track_id].present?
+    @track ||= Track.find_by(id: Rails.cache.read('current_track_id')) if Rails.cache.read('current_track_id').present?
     @track ||= Track.all.sample || Track.find_by(name: 'Default Track')
 
     @release = @track.release if @track.present?
