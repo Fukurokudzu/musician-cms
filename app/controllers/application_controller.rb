@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
 
   def show_flash(type = :success, message)
     flash.now[type] = message
-    render turbo_stream: turbo_stream.prepend("flash_toast", partial: "layouts/flash_toast")
+    render turbo_stream: turbo_stream.prepend('flash_toast', partial: 'layouts/flash_toast')
   end
 
   private
@@ -42,7 +42,7 @@ class ApplicationController < ActionController::Base
   end
 
   def update_system_settings(checked_params)
-    checked_params.keys.each do |key|
+    checked_params.each_key do |key|
       Setting.send("#{key}=", checked_params[key].strip) unless checked_params[key].nil?
     end
   end

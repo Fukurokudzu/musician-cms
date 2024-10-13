@@ -21,9 +21,7 @@ class ArtistsController < ApplicationController
     @artist = Artist.find(params[:id])
     return unless @artist.update(check_params)
 
-    flash.now[:success] = "Artist updated"
-    render turbo_stream: turbo_stream.update("flash", partial: "layouts/flash")
-
+    show_flash(:success, 'Artist updated successfully')
   end
 
   def show
