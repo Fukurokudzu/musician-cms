@@ -34,7 +34,15 @@
         return confirm("Are you sure? This will delete the artist and all associated works.");
     }
 
+    function initializeSimpleMDE() {
+        new SimpleMDE({ element: document.getElementById("artist_description") });
+    }
+
+    document.addEventListener("turbo:load", function() {
+        initializeSimpleMDE();
+    });
+
     document.addEventListener("DOMContentLoaded", function() {
-        let simplemde = new SimpleMDE({ element: document.getElementById("artist_description") });
+        initializeSimpleMDE();
     });
 </script>
