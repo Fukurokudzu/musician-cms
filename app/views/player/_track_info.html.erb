@@ -1,0 +1,6 @@
+<div class="track-info" data-player-target="releaseLink" data-action="click->player#navigateToRelease" data-release-url="<%= url_for(track.release) %>" data-track-id="<%= track.id %>">
+  now playing:&nbsp;
+  <span data-player-target="artistTitle" id="artist-title"><%= track.artists.first.title.downcase %></span>
+  &nbsp;-&nbsp;
+  <span data-player-target="trackTitle" id="track-title"><%= track.title.downcase %></span>
+</div>

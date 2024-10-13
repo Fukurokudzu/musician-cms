@@ -1,6 +1,48 @@
-<p>Artist: <%= @artist.title %></p>
-<p><%= @artist.first_name %></p>
-<p><%= @artist.last_name %></p>
-<p><%= @artist.role %></p>
+<div class="admin admin-artist">
+  <%= form_for(@artist, url: admin_artist_path, method: :put) do |f| %>
+    <div class="mb-3 mt-3">
+      <label for="artist_title">Artist Title</label>
+      <%= f.text_field :title, id: "artist_title", class: "form-control" %>
+    </div>
 
-<%= link_to "remove", [:admin, @artist], data: { turbo_method: :delete } %>
+    <div class="mb-3 mt-3">
+      <label for="artist_first_name">First Name</label>
+      <%= f.text_field :first_name, id: "artist_first_name", class: "form-control" %>
+    </div>
+
+    <div class="mb-3 mt-3">
+      <%= f.label :last_name, t("last_name") %>
+      <%= f.text_field :last_name, id: "artist_last_name", class: "form-control" %>
+    </div>
+
+    <div class="mb-3 mt-3">
+      <%= f.label :role, t("role") %>
+      <%= f.select :role, Artist.roles.keys.map { |key| [key.capitalize, key] }, {}, class: "form-control" %>
+    </div>
+
+    <div class="mb-3 mt-3">
+      <label for="description">Artist description</label>
+      <%= f.text_area :description, class: "admin-artist-description", id: "artist_description" %>
+    </div>
+    <%= f.submit 'Update', class: "btn btn-primary" %>
+  <% end %>
+  <%= button_to "Destroy", [:admin, @artist], method: :delete, class: "btn btn-danger", data: { confirm: "Are you sure?" }, onclick: "return confirmDelete();" %>
+</div>
+
+<script>
+    function confirmDelete() {
+        return confirm("Are you sure? This will delete the artist and all associated works.");
+    }
+
+    function initializeSimpleMDE() {
+        new SimpleMDE({ element: document.getElementById("artist_description") });
+    }
+
+    document.addEventListener("turbo:load", function() {
+        initializeSimpleMDE();
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        initializeSimpleMDE();
+    });
+</script>

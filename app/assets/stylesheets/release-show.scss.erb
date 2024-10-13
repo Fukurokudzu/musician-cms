@@ -7,7 +7,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 1rem;
-  color: <%= Setting.text_color %>;
+  color: var(--a-color);
 }
 
 .release-show-container ul {
@@ -15,7 +15,7 @@
 }
 
 .release-show-container a {
-  color: <%= Setting.links_color %>;
+  color: #ffffff;
   cursor: pointer;
 }
 
@@ -25,5 +25,25 @@
 .release-show-cover img {
   max-width: 500px;
   max-height: 500px;
+}
+
+@media (max-width: 500px) {
+  .release-show-container {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .release-show-cover img {
+    width: 15rem;
+    height: 15rem;
+  }
+
+  .release-show-cover {
+    order: -1;
+  }
+
+  .release-show-container {
+    margin-bottom: 3rem;
+  }
 }
 

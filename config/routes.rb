@@ -9,15 +9,21 @@ Rails.application.routes.draw do
 
   resources :artists
   resources :releases
+  resources :tracks
 
   get :admin, to: 'admin#index'
 
   namespace :admin do
-    resource :system, :library, :releases, :credentials
+    resource :system, :library, :releases, :credentials, :themes
     resources :artists
   end
 
   post :sessions, to: 'sessions#create'
   get :sign_in, to: 'sessions#new', as: 'sign_in'
   delete :sign_out, to: 'sessions#destroy', as: 'sign_out'
+
+  get '/player', to: 'player#show'
+  patch '/player/update_track', to: 'player#update_track'
+
+  get 'themes/variables', to: 'themes#variables'
 end

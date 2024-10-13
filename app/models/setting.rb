@@ -29,7 +29,6 @@ class Setting < RailsSettings::Base
   end
 
   scope :site do
-    field :theme, default: "default"
     field :page_title, default: "Musician CMS", validates: { presence: true, length: { in: 2..30 } }
     field :description, default: "Application description for search engines"
     field :footer_email, default: "it.fukurokudzu@gmail.com"
@@ -38,11 +37,11 @@ class Setting < RailsSettings::Base
 
   scope :theme do
     field :artist_title_color, default: "#ffffff"
-    field :links_color, default: "#000000"
     field :text_color, default: "#ffffff"
     field :main_menu_bg_color, default: "#16191e"
     field :footer_bg_color, default: "#16191e"
     field :player_bg_color, default: "#101011"
     field :accent_color, default: "#d35400"
+    field :a_color, default: "#ffffff"
   end
 end

@@ -1,0 +1,17 @@
+<div class="player-controls">
+  <input type="range" data-player-target="seekSlider" data-action="player#seek" id="seek-slider" max="100" value="0">
+
+  <audio data-player-target="audio" src="<%= url_for(track.audio_file) %>"></audio>
+
+  <div class="controls-group">
+    <button data-player-target="playPause" data-action="player#togglePlayPause" id="play-pause"><i class="fas fa-play"></i></button>
+    <button data-player-target="previousTrack" data-action="player#previousTrack" id="previous-track"><i class="fas fa-fast-backward"></i></button>
+    <button data-player-target="nextTrack" data-action="player#nextTrack" id="next-track"><i class="fas fa-fast-forward"></i></button>
+    <button data-player-target="mute" data-action="player#muteUnmute" id="mute"><i class="fas fa-volume-up"></i></button>
+    <input type="range" data-player-target="volumeSlider" data-action="player#adjustVolume" id="volume-slider" max="100" value="100">
+  </div>
+
+  <div id="track-time">
+    <span data-player-target="currentTime">0:00</span> / <span data-player-target="duration">0:00</span>
+  </div>
+</div>

@@ -35,6 +35,12 @@
 
 # Ignore music assets
 /app/music/*
+!/app/music/Default artist/
+!/app/music/Default artist/**
 
 # Ignore idea files
 /.idea
+
+# Ignore node_modules
+/node_modules
+/node_modules/.yarn-integrity

@@ -1,0 +1,127 @@
+#player {
+  display: grid;
+  grid-template-rows: auto auto;
+  width: 100%;
+  background-color: var(--main-menu-bg-color);
+  color: var(--text-color);
+  padding: 1rem;
+  margin-top: 1rem;
+  position: fixed;
+  bottom: 2rem;
+  left: 0;
+  z-index: 1000;
+}
+
+.player-controls {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  width: 100%;
+}
+
+.player-controls button {
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  opacity: 0.7;
+}
+
+.player-controls button:hover {
+  opacity: 1;
+  transition: opacity 0.2s;
+}
+
+#seek-slider {
+  grid-column: 1 / -1;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 0.2rem;
+  background: #666666;
+  outline: none;
+  opacity: 1;
+  transition: opacity .2s;
+  margin-bottom: 1rem;
+}
+
+#seek-slider::-webkit-slider-thumb, #volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 1rem;
+  height: 1rem;
+  background: var(--accent-color);
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+#seek-slider::-moz-range-thumb, #volume-slider::-moz-range-thumb {
+  width: 1rem;
+  height: 1rem;
+  background: var(--accent-color);
+  cursor: pointer;
+  border-radius: 50%;
+  opacity: 0.7;
+}
+
+#seek-slider::-moz-range-thumb:hover, #volume-slider::-moz-range-thumb:hover {
+  opacity: 1;
+  transition: opacity 0.2s;
+}
+
+#volume-slider {
+  -webkit-appearance: none;
+  width: 100px;
+  height: 5px;
+  background: #666666;
+  outline: none;
+  opacity: 1;
+  transition: opacity .2s;
+}
+
+.track-info {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  padding: 1rem;
+  height: 2rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  font-size: 0.8rem;
+}
+
+.track-info:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+#track-time {
+  grid-column: 2;
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.controls-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+@media (max-width: 500px) {
+  .track-info {
+    bottom: 2rem;
+    justify-content: flex-start;
+    left: 0;
+    right: auto;
+  }
+
+  #player {
+    padding-bottom: 2rem;
+  }
+}
+
