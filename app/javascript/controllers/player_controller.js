@@ -4,18 +4,8 @@ import { Turbo } from '@hotwired/turbo-rails'
 export default class extends Controller {
     static targets = ["audio", "playPause", "seekSlider", "volumeSlider", "currentTime", "duration", "artistTitle", "trackTitle", "mute", "releaseLink", "progress"];
     isUpdatingTrack = false;
-    isFetchingTrackData = false; // Flag to prevent multiple API calls
-    releaseTracks = [];
-    eventListenersAdded = false; // Flag to check if event listeners are added
-
-    connect() {
-        document.addEventListener('turbo:load', this.initializeEventListeners.bind(this));
-        this.initializeEventListeners();
-    }
 
     initializeEventListeners() {
-        this.removeEventListeners(); // Ensure previous listeners are removed
-
         this.trackLinks = document.querySelectorAll('.play-track');
         this.trackLinks.forEach(link => {
             link.addEventListener('click', this.playTrack.bind(this));
@@ -35,31 +25,6 @@ export default class extends Controller {
             this.audioTarget.addEventListener("timeupdate", this.updateTime.bind(this));
             this.audioTarget.addEventListener("loadedmetadata", this.updateDuration.bind(this));
         }
-
-        this.eventListenersAdded = true; // Set the flag to true after adding event listeners
-    }
-
-    removeEventListeners() {
-        if (!this.eventListenersAdded) return;
-
-        this.trackLinks.forEach(link => {
-            link.removeEventListener('click', this.playTrack.bind(this));
-        });
-
-        if (this.nextTrackButton) {
-            this.nextTrackButton.removeEventListener('click', this.nextTrack.bind(this));
-        }
-
-        if (this.previousTrackButton) {
-            this.previousTrackButton.removeEventListener('click', this.previousTrack.bind(this));
-        }
-
-        if (this.hasAudioTarget) {
-            this.audioTarget.removeEventListener("timeupdate", this.updateTime.bind(this));
-            this.audioTarget.removeEventListener("loadedmetadata", this.updateDuration.bind(this));
-        }
-
-        this.eventListenersAdded = false; // Reset the flag
     }
 
     async playTrack(event) {
@@ -86,7 +51,7 @@ export default class extends Controller {
         } catch (error) {
             console.error('Error loading track data:', error);
         } finally {
-            this.isFetchingTrackData = false; // Reset the flag
+            this.isFetchingTrackData = false;
         }
     }
 
@@ -191,73 +156,27 @@ export default class extends Controller {
         }
     }
 
-    nextTrack() {
-        this.changeTrack(1);
+    async nextTrack(csrfToken) {
+        const response = await fetch(`/player/next_track`, {
+            method: "PATCH",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "X-CSRF-Token": csrfToken
+            },
+            body: JSON.stringify({ id: trackId })
+        });
+        return await response.json();
     }
 
     previousTrack() {
-        this.changeTrack(-1);
-    }
-
-    async changeTrack(direction) {
-        if (this.isChangingTrack) return; // Prevent multiple calls
-        this.isChangingTrack = true;
-
-        const trackInfoDiv = document.querySelector('.track-info');
-        const currentTrackId = parseInt(trackInfoDiv.getAttribute('data-track-id'));
-
-        let currentIndex = this.releaseTracks.findIndex(track => track.id === currentTrackId);
-
-        if (currentIndex === -1) {
-            console.error("Current track not found in release tracks.");
-            await this.loadTrackData(currentTrackId); // Fetch updated release tracks
-
-            currentIndex = this.releaseTracks.findIndex(track => track.id === currentTrackId);
-
-            if (currentIndex === -1) {
-                console.error("Current track still not found after fetching.");
-                this.isChangingTrack = false;
-                return;
-            }
-        }
-
-        if (this.releaseTracks.length === 0) {
-            console.error("No tracks available.");
-            this.isChangingTrack = false;
-            return;
-        }
-
-        let nextIndex = currentIndex + direction;
-        console.log("Current index:", currentIndex);
-        console.log("Next index:", nextIndex);
-
-        if (nextIndex >= this.releaseTracks.length) {
-            nextIndex = 0; // Wrap around to the first track
-        } else if (nextIndex < 0) {
-            nextIndex = this.releaseTracks.length - 1; // Wrap around to the last track
-        }
-
-        const nextTrack = this.releaseTracks[nextIndex];
-
-        if (!nextTrack) {
-            console.error("Next track not found.");
-            this.isChangingTrack = false;
-            return;
-        }
-
-        this.audioTarget.addEventListener('loadeddata', () => {
-            this.isChangingTrack = false; // Reset the flag once the new track is loaded
-        }, { once: true });
-
-        this.updateAudioSource(nextTrack.data_src, nextTrack.artist, nextTrack.title);
-        await this.updateTrackDisplay(nextTrack.id);
-        trackInfoDiv.setAttribute('data-track-id', nextTrack.id);
+        this.previousTrack();
     }
 
     updateAudioSource(newSrc, artist, track) {
         this.audioTarget.src = newSrc;
         this.audioTarget.play();
-        this.playPauseTarget.innerHTML = '<i class="fas fa-pause"></i>'; // Pause icon
+        this.playPauseTarget.innerHTML = '<i class="fas fa-pause"></i>';
         this.artistTitleTarget.textContent = artist.title;
         this.trackTitleTarget.textContent = track;
     }
