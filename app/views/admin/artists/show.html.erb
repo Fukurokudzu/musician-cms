@@ -25,8 +25,9 @@
       <%= f.text_area :description, class: "admin-artist-description", id: "artist_description" %>
     </div>
     <%= f.submit 'Update', class: "btn btn-primary" %>
+    <%= button_to "Destroy", [:admin, @artist], method: :delete, class: "btn btn-danger", data: { confirm: "Are you sure?" }, onclick: "return confirmDelete();" %>
   <% end %>
-  <%= button_to "Destroy", [:admin, @artist], method: :delete, class: "btn btn-danger", data: { confirm: "Are you sure?" }, onclick: "return confirmDelete();" %>
+
 </div>
 
 <script>
@@ -35,14 +36,24 @@
     }
 
     function initializeSimpleMDE() {
+        // Remove any existing SimpleMDE instances
+        const existingEditors = document.querySelectorAll('.editor-toolbar');
+        existingEditors.forEach(editor => {
+            editor.parentElement.querySelector('.CodeMirror').remove();
+            editor.remove();
+        });
+
+        // Remove any elements that start with "editor-"
+        const editorElements = document.querySelectorAll('[class^="editor-"]');
+        editorElements.forEach(element => {
+            element.remove();
+        });
+
+        // Initialize new SimpleMDE
         new SimpleMDE({ element: document.getElementById("artist_description") });
     }
 
     document.addEventListener("turbo:load", function() {
-        initializeSimpleMDE();
-    });
-
-    document.addEventListener("DOMContentLoaded", function() {
         initializeSimpleMDE();
     });
 </script>
