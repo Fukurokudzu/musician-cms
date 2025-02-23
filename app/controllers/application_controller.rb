@@ -35,8 +35,8 @@ class ApplicationController < ActionController::Base
   end
 
   def set_track
-    @track ||= Track.find_by(id: Rails.cache.read('current_track_id')) if Rails.cache.read('current_track_id').present?
-    @track ||= Track.all.sample || Track.find_by(name: 'Default Track')
+    @track ||= Track.find_by(id:  session[:current_track_id])
+    @track ||= random_track || default_track
 
     @release = @track.release if @track.present?
   end
@@ -45,5 +45,21 @@ class ApplicationController < ActionController::Base
     checked_params.each_key do |key|
       Setting.send("#{key}=", checked_params[key].strip) unless checked_params[key].nil?
     end
+  end
+
+  def update_session_track_id
+    session[:current_track_id] = @track.id
+  end
+
+  def session_track
+    session[:current_track_id] ? Track.find(session[:current_track_id]) : Track.all.sample
+  end
+
+  def random_track
+    Track.all.sample
+  end
+
+  def default_track
+    Track.find_by(name: 'Default Track')
   end
 end

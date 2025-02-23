@@ -1,11 +1,6 @@
 class PlayerController < ApplicationController
   def show
-    @track = params[:id] ? Track.find(params[:id]) : Track.all.sample
-    @release = @track.release
-  end
-
-  def update_track
-    @track = Track.find(params[:id]) || session_track
+    @track = Track.find(params[:id]) || session_track || random_track
     @release = @track.release
 
     update_session_track_id
@@ -13,7 +8,7 @@ class PlayerController < ApplicationController
   end
 
   def next_track
-    @track = select_track(current_track: session_track)
+    @track = select_track(current_track: session_track, direction: :next)
     @release = @track.release
 
     update_session_track_id
@@ -30,20 +25,18 @@ class PlayerController < ApplicationController
 
   private
 
-  def update_session_track_id
-    session[:current_track_id] = @track.id
-  end
-
-  def session_track
-    session[:current_track_id] ? Track.find(session[:current_track_id]) : Track.all.sample
-  end
-
   def present_track
     respond_to do |format|
       format.json do
-        render json: { release_url: url_for(@release),
-                       track_audio_url: url_for(@track.audio_file),
-                       status: :ok }
+        render json: {
+          track: {
+            data_src: url_for(@track.audio_file),
+            artist: @track.release.artist.title,
+            title: @track.title,
+            id: @track.id
+          },
+          status: :ok
+        }
       end
     end
   end
@@ -65,12 +58,16 @@ class PlayerController < ApplicationController
   def find_next_or_previous_track(current_track, direction)
     pos_query = direction == :next ? 'pos > ?' : 'pos < ?'
     id_query = direction == :next ? 'id > ?' : 'id < ?'
-    tracks(current_track).where(pos_query, current_track.pos).first ||
-      tracks(current_track).where(id_query, current_track.id).first
-  end
+    order_direction = direction == :next ? 'asc' : 'desc'
 
-  def random_track
-    Track.all.sample
+    tracks(current_track)
+      .where(pos_query, current_track.pos)
+      .order(pos: order_direction)
+      .first ||
+      tracks(current_track)
+        .where(id_query, current_track.id)
+        .order(id: order_direction)
+        .first
   end
 
   def tracks(current_track)

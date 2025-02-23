@@ -22,8 +22,10 @@ Rails.application.routes.draw do
   get :sign_in, to: 'sessions#new', as: 'sign_in'
   delete :sign_out, to: 'sessions#destroy', as: 'sign_out'
 
-  get '/player', to: 'player#show'
-  patch '/player/update_track', to: 'player#update_track'
+  # Player routes
+  get 'player/next_track', to: 'player#next_track'
+  get 'player/previous_track', to: 'player#previous_track'
+  get 'player/:id', to: 'player#show'
 
   get 'themes/variables', to: 'themes#variables'
 end
