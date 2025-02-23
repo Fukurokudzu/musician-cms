@@ -1,7 +1,9 @@
-<div class="releases-container">
-  <%= link_to artist_path(artist), class: 'main-artist-title' do %>
-    <h2><%= artist.title %></h2>
-  <% end %>
-  <%= render(partial: 'main/release', collection: artist.releases.order(release_date: :desc, title: :asc)) %>
-</div>
+<% if artist.releases.count > 0 %>
+  <div class="releases-container">
+    <%= link_to artist_path(artist), class: 'main-artist-title' do %>
+      <h2><%= artist.title %></h2>
+    <% end %>
+    <%= render(partial: 'main/release', collection: artist.releases.order(release_date: :desc, title: :asc)) %>
+  </div>
+<% end %>
 
