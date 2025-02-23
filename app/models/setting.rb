@@ -43,5 +43,6 @@ class Setting < RailsSettings::Base
     field :player_bg_color, default: "#101011"
     field :accent_color, default: "#d35400"
     field :a_color, default: "#ffffff"
+    field :a_hover_color, default: "#ffffff"
   end
 end

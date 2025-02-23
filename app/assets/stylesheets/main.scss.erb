@@ -26,7 +26,12 @@ main {
 
 a {
     color: var(--a-color);
-    text-decoration: none !important;
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--a-hover-color);
+    text-decoration: underline;
 }
 
 header {
@@ -57,6 +62,7 @@ header {
     font-weight: bold;
     color: var(--artist-title-color);
     padding-left: 1rem;
+    text-decoration: none;
 }
 
 .releases-container {
@@ -73,18 +79,28 @@ header {
     grid-auto-flow: dense;
 }
 
-.main-artist-title {
-    grid-column: 1 / -1;
-    color: var(--artist_title_color);
+.release-container a {
+    color: var(--a-color);
+    text-decoration: none;
 }
 
+.release-container a:hover {
+    color: var(--a-hover-color);
+    text-decoration: underline;
+}
+
+.main-artist-title {
+    grid-column: 1 / -1;
+    color: var(--a-color);
+    text-decoration: none;
+}
+
+.main-artist-title:hover {
+    color: var(--a-hover-color);
+}
 
 .releases-container img:hover {
     -webkit-filter: brightness(1.2);
-}
-
-.releases-container a {
-    color: var(--a-color);
 }
 
 .cover {

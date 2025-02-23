@@ -15,6 +15,6 @@ class Admin::ThemesController < ApplicationController
 
   def check_params
     params.require(:setting).permit(:artist_title_color, :text_color, :main_menu_bg_color, :footer_bg_color,
-                                    :player_bg_color, :accent_color, :a_color)
+                                    :player_bg_color, :accent_color, :a_color, :a_hover_color)
   end
 end

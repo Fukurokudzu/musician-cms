@@ -42,5 +42,11 @@
                       class: "form-control") %>
   </div>
 
+  <div class="mb-3 mt-3">
+    <label for="a_hover_color">Links hover color</label>
+    <%= f.color_field(:a_hover_color, required: true, pattern: Setting.a_color, value: Setting.a_hover_color,
+                      class: "form-control") %>
+  </div>
+
   <%= f.submit t("settings.update"), class: :"btn btn-primary" %>
 <% end %>
