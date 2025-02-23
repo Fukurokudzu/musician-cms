@@ -35,10 +35,10 @@ class ApplicationController < ActionController::Base
   end
 
   def set_track
-    @track ||= Track.find_by(id:  session[:current_track_id])
-    @track ||= random_track || default_track
-
+    @track ||= session_track || random_track || default_track
     @release = @track.release if @track.present?
+
+    update_session_track_id if session[:current_track_id].nil?
   end
 
   def update_system_settings(checked_params)
@@ -52,7 +52,9 @@ class ApplicationController < ActionController::Base
   end
 
   def session_track
-    session[:current_track_id] ? Track.find(session[:current_track_id]) : Track.all.sample
+    return nil if session[:current_track_id].nil?
+
+    Track.find_by(id: session[:current_track_id])
   end
 
   def random_track
