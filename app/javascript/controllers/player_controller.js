@@ -9,6 +9,7 @@ export default class extends Controller {
 
         this.audioTarget.addEventListener("timeupdate", this.updateTime.bind(this));
         this.audioTarget.addEventListener("loadedmetadata", this.updateDuration.bind(this));
+        this.audioTarget.addEventListener("ended", this.nextTrack.bind(this));
 
         document.querySelectorAll('.play-track')
             .forEach(button => button.addEventListener('click', this.playTrack.bind(this)));
