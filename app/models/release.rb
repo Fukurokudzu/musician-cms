@@ -5,6 +5,22 @@ class Release < ApplicationRecord
 
   validates :title, presence: true, uniqueness: true
 
+  def duration
+    tracks.sum(:duration)
+  end
+
+  def duration_humanized
+    hours = (duration / 3600).floor
+    minutes = ((duration % 3600) / 60).floor
+    seconds = duration % 60
+
+    if hours.positive?
+      format('%d:%02d:%02d', hours, minutes, seconds)
+    else
+      format('%d:%02d', minutes, seconds)
+    end
+  end
+
   def update_plays_count!
     update_column(:plays_count, tracks.sum(:plays_count))
   end

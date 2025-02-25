@@ -10,9 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_02_25_205403) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_25_214927) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+  enable_extension "pg_catalog.plpgsql"
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -84,6 +84,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_25_205403) do
     t.datetime "updated_at", null: false
     t.integer "pos"
     t.integer "plays_count", default: 0, null: false
+    t.bigint "duration"
     t.index ["release_id"], name: "index_tracks_on_release_id"
     t.index ["title"], name: "index_tracks_on_title"
   end

@@ -31,7 +31,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_page_title
-    @page_title = Setting.page_title
+    @page_title ||= Setting.page_title
   end
 
   def set_track

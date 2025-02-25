@@ -11,6 +11,7 @@
     <% end %>
   </div>
   <div class="release-show-info">
+    <p><%= t('release.show.tracks_count') %> <%= @release.tracks.count %>, <%= t('release.show.duration') %> <%= @release.duration_humanized %></p>
     <p><%= @release.description %></p>
     <p><%= "released on " + @release.release_date.strftime("%-d %B %Y") if @release.release_date %>
     <%= " by " + @release.publisher if @release.publisher %></p>
