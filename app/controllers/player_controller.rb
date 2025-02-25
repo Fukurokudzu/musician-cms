@@ -1,29 +1,27 @@
 class PlayerController < ApplicationController
   def show
     @track = Track.find(params[:id]) || session_track || random_track
-    @release = @track.release
-
-    update_session_track_id
-    present_track
+    process_track
   end
 
   def next_track
     @track = select_track(current_track: session_track, direction: :next)
-    @release = @track.release
-
-    update_session_track_id
-    present_track
+    process_track
   end
 
   def previous_track
     @track = select_track(current_track: session_track, direction: :prev)
-    @release = @track.release
-
-    update_session_track_id
-    present_track
+    process_track
   end
 
   private
+
+  def process_track
+    @release = @track.release
+    update_session_track_id
+    present_track
+    @track.increment_plays!
+  end
 
   def present_track
     respond_to do |format|

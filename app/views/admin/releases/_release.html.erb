@@ -10,4 +10,22 @@
       <%= render partial: 'track', locals: { track: track } %>
     <% end %>
   </div>
+  <div class="admin-release-stats">
+    <div class="admin-release-stats-item">
+      <div class="admin-release-stats-item-title">
+        <%= t('admin.release.stats.plays_count') %>
+      </div>
+      <div class="admin-release-stats-item-value">
+        <%= release.plays_count %>
+      </div>
+    </div>
+    <div class="admin-release-tracks-count">
+      <div class="admin-release-stats-item-title">
+        <%= t('admin.release.stats.tracks_count') %>
+      </div>
+      <div class="admin-release-stats-item-value">
+        <%= release.tracks.count %>
+      </div>
+    </div>
+  </div>
 </div>

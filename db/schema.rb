@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_10_12_173341) do
+ActiveRecord::Schema[7.0].define(version: 2025_02_25_205403) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -50,6 +50,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_12_173341) do
     t.datetime "updated_at", null: false
     t.integer "role", default: 0
     t.text "description"
+    t.integer "plays_count", default: 0, null: false
     t.index ["title"], name: "index_artists_on_title"
   end
 
@@ -63,6 +64,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_12_173341) do
     t.datetime "updated_at", null: false
     t.date "release_date"
     t.text "description"
+    t.integer "plays_count", default: 0, null: false
     t.index ["artist_id"], name: "index_releases_on_artist_id"
     t.index ["title"], name: "index_releases_on_title"
   end
@@ -81,6 +83,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_12_173341) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "pos"
+    t.integer "plays_count", default: 0, null: false
     t.index ["release_id"], name: "index_tracks_on_release_id"
     t.index ["title"], name: "index_tracks_on_title"
   end
