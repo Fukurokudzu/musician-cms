@@ -4,6 +4,20 @@ import { Turbo } from '@hotwired/turbo-rails'
 export default class extends Controller {
     static targets = ["audio", "playPause", "seekSlider", "volumeSlider", "currentTime", "duration", "artistTitle", "trackTitle", "mute", "releaseLink", "progress"];
 
+    initialize() {
+        this.currentTrackId = null;
+    }
+
+    updatePlaySign(newTrackId) {
+        if (this.currentTrackId) {
+            document.querySelectorAll(`.play-sign[data-track-id="${this.currentTrackId}"]`)
+                .forEach(sign => sign.classList.remove('active'));
+        }
+
+        document.querySelectorAll(`.play-sign[data-track-id="${newTrackId}"]`)
+            .forEach(sign => sign.classList.add('active'));
+        this.currentTrackId = newTrackId;
+    }
     connect() {
         if (!this.hasAudioTarget) return;
 
@@ -33,7 +47,7 @@ export default class extends Controller {
         }
     }
 
-    updateAudioSource({ data_src, artist, title }) {
+    updateAudioSource({ data_src, artist, title, id }) {
         if (!this.hasAudioTarget) return;
 
         this.audioTarget.src = data_src;
@@ -48,6 +62,8 @@ export default class extends Controller {
         if (this.hasTrackTitleTarget) {
             this.trackTitleTarget.textContent = title || '';
         }
+
+        this.updatePlaySign(id);
     }
 
     async nextTrack(event) {

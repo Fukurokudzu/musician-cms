@@ -127,6 +127,21 @@ header {
     display: none !important;
 }
 
+.play-sign {
+    display: none;
+    margin-right: 0.2rem;
+}
+
+.play-sign.active {
+    display: inline;
+    &::before {
+        font-family: "Font Awesome 5 Free";
+        content: "\f144";
+        color: var(--accent-color);
+        font-weight: 900;
+    }
+}
+
 @media (max-width: 500px) {
     main {
         padding-bottom: 11rem;
