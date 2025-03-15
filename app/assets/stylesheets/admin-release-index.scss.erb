@@ -1,11 +1,11 @@
 .admin-release {
   padding: 1rem;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto 1fr;
+  gap: 1rem;
+  grid-template-columns: 10rem 1fr;
   grid-template-areas:
-    "title title"
-    "cover tracks";
+    "cover title"
+    "cover stats";
 }
 
 .admin-release .release-cover {
@@ -16,8 +16,10 @@
 
 .admin-release .release-title {
   grid-area: title;
+  font-weight: bold;
+  font-size: 1.4rem;
 }
 
-.admin-release .admin-release-tracks {
-  grid-area: tracks;
+.admin-release .admin-release-stats {
+  grid-area: stats;
 }

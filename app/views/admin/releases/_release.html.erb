@@ -1,39 +1,34 @@
 <div class="admin-release">
-  <div class="release-title">
-    <%= release.artist.title %> - <%= release.title %>
-  </div>
   <% if release.cover.attached? %>
     <%= image_tag release.cover, class: 'cover', id: release.id.to_s + '_cover', class: 'release-cover' %>
   <% end %>
-  <div class="admin-release-tracks">
-    <%= release.tracks.find_each do |track| %>
-      <%= render partial: 'track', locals: { track: track } %>
-    <% end %>
+  <div class="release-title">
+    <%= release.artist.title %> - <%= release.title %>
   </div>
   <div class="admin-release-stats">
     <div class="admin-release-stats-item">
-      <div class="admin-release-stats-item-title">
-        <%= t('admin.release.stats.plays_count') %>
-      </div>
-      <div class="admin-release-stats-item-value">
+      <span class="admin-release-stats-item-title">
+        <%= t('admin.release.stats.plays_count')+':' %>
+      </span>
+      <span class="admin-release-stats-item-value">
         <%= release.plays_count %>
-      </div>
+      </span>
     </div>
     <div class="admin-release-tracks-count">
-      <div class="admin-release-stats-item-title">
-        <%= t('admin.release.stats.tracks_count') %>
-      </div>
-      <div class="admin-release-stats-item-value">
+      <span class="admin-release-stats-item-title">
+        <%= t('admin.release.stats.tracks_count')+':' %>
+      </span>
+      <span class="admin-release-stats-item-value">
         <%= release.tracks.count %>
-      </div>
+      </span>
     </div>
     <div class="admin-release-stats-duration">
-      <div class="admin-release-stats-item-title">
-        <%= t('admin.release.stats.duration') %>
-      </div>
-      <div class="admin-release-stats-item-value">
+      <span class="admin-release-stats-item-title">
+        <%= t('admin.release.stats.duration')+':' %>
+      </span>
+      <span class="admin-release-stats-item-value">
         <%= release.duration_humanized %>
-      </div>
+      </span>
     </div>
   </div>
 </div>
