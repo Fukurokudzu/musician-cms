@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :release do
     association :artist
-    title { 'LLN 1348' }
+    title { Faker::Music::RockBand.name }
     artist_id { artist }
   end
 end

@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :artist do
     title { 'Fukurokudzu' }
-    role { 'Producer' }
+    role { 'producer' }
   end
 end
