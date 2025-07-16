@@ -44,7 +44,15 @@ class ArtistsController < ApplicationController
     }
 
     @md_description = Kramdown::Document.new(@artist.description, options).to_html.html_safe
+  end
 
+  def destroy
+    return unless admin?
+
+    @artist = Artist.find(params[:id])
+    return unless @artist.destroy
+
+    show_flash(:success, 'Artist deleted successfully')
   end
 
   private
