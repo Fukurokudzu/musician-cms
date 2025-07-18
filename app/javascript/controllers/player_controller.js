@@ -63,6 +63,10 @@ export default class extends Controller {
             this.trackTitleTarget.textContent = title || '';
         }
 
+        if (this.hasReleaseLinkTarget && release_id) {
+            this.releaseLinkTarget.setAttribute('data-release-url', `/releases/${release_id}`);
+        }
+
         this.updatePlaySign(id);
     }
 
