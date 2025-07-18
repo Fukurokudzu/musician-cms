@@ -1,22 +1,30 @@
 <%= form_for(Setting.new, url: admin_system_path, method: :put) do |f| %>
   <div class="mb-3 mt-3">
+    <%= f.label :admin_email, t('settings.admin_email', default: 'Admin Email') %>
     <%= f.email_field(:admin_email, required: true, pattern: Setting.email_pattern, value: Setting.admin_email,
     class: "form-control") %>
   </div>
   <div class="mb-3 mt-3">
+    <%= f.label :page_title, t('settings.page_title', default: 'Page Title') %>
     <%= f.text_field(:page_title, required: true, value: Setting.page_title,
     class: "form-control") %>
   </div>
   <div class="mb-3 mt-3">
+    <%= f.label :description, t('settings.description', default: 'Description') %>
     <%= f.text_area(:description, value: Setting.description,
     class: "form-control") %>
   </div>
   <div class="field mb-3 mt-3">
+    <%= f.label :timezone, t('settings.timezone', default: 'Timezone') %>
     <%= f.time_zone_select(:timezone, nil, { default: "Setting.timezone" }, { class: "form-select" }) %>
   </div>
   <div class="field mb-3 mt-3">
-    <%= f.label(t('settings.locale')) %>:
+    <%= f.label :locale, t('settings.locale', default: 'Locale') %>
     <%= f.select(:locale, I18n.available_locales.map(&:to_s), { class: "form-select" }) %>
+  </div>
+  <div class="mb-3 mt-3">
+    <%= f.label :admin_password, t('settings.admin_password', default: 'Admin Password') %>
+    <%= f.password_field :admin_password, class: "form-control", autocomplete: "new-password", placeholder: t('settings.admin_password_placeholder', default: 'Leave blank to keep current password') %>
   </div>
   <%= f.submit t("settings.update"), class: :"btn btn-primary" %>
 <% end %>

@@ -42,8 +42,24 @@ class ApplicationController < ActionController::Base
   end
 
   def update_system_settings(checked_params)
-    checked_params.each_key do |key|
-      Setting.send("#{key}=", checked_params[key].strip) unless checked_params[key].nil?
+    params = checked_params.dup
+    update_admin_password_from_params!(params)
+    update_settings_from_params(params)
+  end
+
+  def update_admin_password_from_params!(params)
+    pw_value = params.delete(:admin_password)
+    return unless pw_value.present?
+
+    Setting.admin_hashed_password = Auth.hash_password(pw_value)
+  end
+
+  def update_settings_from_params(params)
+    params.each do |key, value|
+      next if value.nil?
+
+      value = value.strip if value.respond_to?(:strip)
+      Setting.public_send("#{key}=", value)
     end
   end
 

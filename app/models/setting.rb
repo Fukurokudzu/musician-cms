@@ -24,6 +24,7 @@ class Setting < RailsSettings::Base
 
   scope :admin do
     field :admin_email, default: "admin@admin", validates: { presence: true }
+    # default password is admin
     field :admin_hashed_password, default: "$2a$12$.GeWsTtueFtVJMr07iJweOYpuOsMWeoFpm.KJhsM4x87TDEng4s22", validates: { presence: true }
     field :admin_salt, default: "$2a$12$.GeWsTtueFtVJMr07iJweO", validates: { presence: true }
   end

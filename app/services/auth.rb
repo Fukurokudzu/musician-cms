@@ -7,11 +7,12 @@ class Auth
     end
   end
 
-  private
-
   def hash_password(admin_password)
+    self.class.hash_password(admin_password)
+  end
+
+  def self.hash_password(admin_password)
     salt = Setting.admin_salt
     BCrypt::Engine.hash_secret(admin_password, salt)
   end
-
 end
