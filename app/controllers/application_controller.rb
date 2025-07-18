@@ -62,6 +62,6 @@ class ApplicationController < ActionController::Base
   end
 
   def default_track
-    Track.find_by(name: 'Default Track')
+    Track.find_by(title: 'Default Track')
   end
 end
