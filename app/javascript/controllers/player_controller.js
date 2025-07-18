@@ -63,6 +63,11 @@ export default class extends Controller {
             this.trackTitleTarget.textContent = title || '';
         }
 
+        let release_id = null;
+        const match = window.location.pathname.match(/\/releases\/(\d+)/);
+        if (match) {
+            release_id = match[1];
+        }
         if (this.hasReleaseLinkTarget && release_id) {
             this.releaseLinkTarget.setAttribute('data-release-url', `/releases/${release_id}`);
         }
