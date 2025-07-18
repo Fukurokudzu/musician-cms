@@ -1,6 +1,6 @@
 <div class="admin-release">
   <% if release.cover.attached? %>
-    <%= image_tag release.cover, class: 'cover', id: release.id.to_s + '_cover', class: 'release-cover' %>
+    <%= image_tag release.cover, class: 'release-cover', id: release.id.to_s + '_cover' %>
   <% end %>
   <div class="release-title">
     <%= release.artist.title %> - <%= release.title %>
