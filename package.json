@@ -13,5 +13,6 @@
   "private": true,
   "dependencies": {
     "@rails/actioncable": "^7.2.100"
-  }
+  },
+  "packageManager": "yarn@1.22.19"
 }
