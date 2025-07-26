@@ -64,7 +64,7 @@ class ApplicationController < ActionController::Base
   end
 
   def update_session_track_id
-    session[:current_track_id] = @track.id
+    session[:current_track_id] = @track&.id
   end
 
   def session_track
