@@ -20,6 +20,7 @@ class Setting < RailsSettings::Base
     field :track_extensions, default: %w[mp3 wav wave], validates: { presence: true }
     field :email_pattern, default: ".*@.*", validates: { presence: true }
     field :library_path, default: "app/music", validates: { presence: true }
+    field :first_run, default: true, type: :boolean
   end
 
   scope :admin do

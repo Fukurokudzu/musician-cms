@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   helper_method :admin?
-  before_action :set_page_title, :set_track
+  before_action :set_page_title, :set_track, :first_run
   around_action :switch_locale
 
   def show_flash(type = :success, message)
@@ -79,5 +79,12 @@ class ApplicationController < ActionController::Base
 
   def default_track
     Track.find_by(title: 'Default Track')
+  end
+
+  def first_run
+    return unless Setting.first_run
+
+    result = ScanLibJob.perform_now
+    Setting.first_run = false
   end
 end

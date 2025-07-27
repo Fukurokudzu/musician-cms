@@ -13,7 +13,7 @@ echo "Rails environment: ${RAILS_ENV}"
 # Generate fresh Rails credentials for any environment
 echo "Generating fresh Rails master key and credentials for ${RAILS_ENV}..."
 
-# Safely remove existing credential files (ignore permission errors)
+# Safely removes existing credential files (ignore permission errors)
 rm -f /rails/config/master.key 2>/dev/null || true
 rm -f /rails/config/credentials.yml.enc 2>/dev/null || true
 rm -rf /rails/config/credentials 2>/dev/null || true
@@ -114,7 +114,6 @@ if bin/rails db:version > /dev/null 2>&1; then
     fi
 else
     echo "Database doesn't exist, creating fresh database..."
-    # Database doesn't exist, create it fresh
     bin/rails db:create db:schema:load db:seed 2>/dev/null || {
         echo "Fresh database creation failed, trying db:prepare..."
         bin/rails db:prepare
@@ -125,17 +124,17 @@ fi
 echo "Database setup completed!"
 
 # Run ScanLibJob if this is a fresh database setup
-if [ "$DATABASE_CREATED" = true ]; then
-    echo "Running initial library scan..."
-    bin/rails runner "
-    begin
-      ScanLibJob.perform_now
-      puts 'Library scan completed successfully!'
-    rescue => e
-      puts 'Library scan failed: ' + e.message
-      puts 'You might experience problems until library is initialized'
-    end
-    " --environment="${RAILS_ENV}"
-fi
+#if [ "$DATABASE_CREATED" = true ]; then
+#    echo "Running initial library scan..."
+#    bin/rails runner "
+#    begin
+#      ScanLibJob.perform_now
+#      puts 'Library scan completed successfully!'
+#    rescue => e
+#      puts 'Library scan failed: ' + e.message
+#      puts 'You might experience problems until library is initialized'
+#    end
+#    " --environment="${RAILS_ENV}"
+#fi
 
 exec "${@}"
