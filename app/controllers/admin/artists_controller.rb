@@ -13,7 +13,7 @@ class Admin::ArtistsController < ArtistsController
   def create
     @artist = Artist.new(check_params)
     if @artist.save
-      @artists = Artist.all
+      @artists = Artist.all.active
       flash[:notice] = 'Artist was successfully created.'
       render turbo_stream: turbo_stream.update('admin_body', partial: 'index')
     else
@@ -28,7 +28,8 @@ class Admin::ArtistsController < ArtistsController
 
   def destroy
     @artist = Artist.find(params[:id])
-    if @artist.destroy
+    if @artist.update(soft_deleted: true)
+      set_all_artists
       redirect_to admin_path, notice: 'Artist was successfully destroyed.'
     else
       show_flash(:error, 'Could not destroy artist')
@@ -38,7 +39,7 @@ class Admin::ArtistsController < ArtistsController
   private
 
   def set_all_artists
-    @artists = Artist.all
+    @artists = Artist.all.active
   end
 
 end

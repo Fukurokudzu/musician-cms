@@ -14,7 +14,7 @@ class ArtistsController < ApplicationController
   end
 
   def index
-    @artists = Artist.all
+    @artists = Artist.active
   end
 
   def update
@@ -50,7 +50,7 @@ class ArtistsController < ApplicationController
     return unless admin?
 
     @artist = Artist.find(params[:id])
-    return unless @artist.destroy
+    return unless @artist.update(soft_deleted: true)
 
     show_flash(:success, 'Artist deleted successfully')
   end

@@ -5,6 +5,8 @@ class Release < ApplicationRecord
 
   validates :title, presence: true, uniqueness: true
 
+  scope :active, -> { joins(:artist).where(artists: { soft_deleted: false }) }
+
   def duration
     tracks.sum(:duration)
   end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_02_25_214927) do
+ActiveRecord::Schema[7.2].define(version: 2025_07_27_220458) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -51,6 +51,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_25_214927) do
     t.integer "role", default: 0
     t.text "description"
     t.integer "plays_count", default: 0, null: false
+    t.boolean "soft_deleted", default: false, null: false
     t.index ["title"], name: "index_artists_on_title"
   end
 

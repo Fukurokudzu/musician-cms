@@ -10,4 +10,6 @@ class Artist < ApplicationRecord
   def update_plays_count!
     update_column(:plays_count, tracks.sum(:plays_count))
   end
+  
+  scope :active, -> { where(soft_deleted: false) }
 end
