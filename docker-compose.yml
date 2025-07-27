@@ -9,9 +9,9 @@ services:
         GID: ${GID:-${UID:-1000}}
     volumes:
       - ./log:/rails/log
-      - ./storage:/rails/storage
+      - storage_data:/rails/storage
       - gem_cache:/usr/local/bundle
-      - music_library:/app/music
+      - music_library:/rails/app/music
     ports:
       - "3000:3000"
     environment:
@@ -47,7 +47,9 @@ services:
     command: bundle exec sidekiq
     volumes:
       - ./log:/rails/log
+      - storage_data:/rails/storage
       - gem_cache:/usr/local/bundle
+      - music_library:/rails/app/music
     environment:
       - REDIS_URL=redis://redis-db:6379
       - DATABASE_URL=postgres://root:password@postgres-db/
@@ -65,4 +67,4 @@ volumes:
   postgres_data:
   gem_cache:
   music_library:
-    driver: local
+  storage_data:

@@ -73,6 +73,9 @@ FROM base
 COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
 COPY --from=build /rails /rails
 
+COPY bin/docker-entrypoint /rails/bin/
+RUN chmod +x /rails/bin/docker-entrypoint
+
 # Run and own only the runtime files as a non-root user for security
 ARG UID=1000
 ARG GID=1000

@@ -96,8 +96,6 @@ echo "Fresh credentials generated successfully for ${RAILS_ENV}!"
 # Handle database setup with proper error handling
 echo "Setting up database..."
 
-DATABASE_CREATED=false
-
 # Try to check database version first
 if bin/rails db:version > /dev/null 2>&1; then
     echo "Database exists, checking for schema conflicts..."
@@ -108,7 +106,6 @@ if bin/rails db:version > /dev/null 2>&1; then
             echo "Database reset failed, trying db:prepare..."
             bin/rails db:prepare
         }
-        DATABASE_CREATED=true
     else
         echo "Database migrations completed successfully"
     fi
@@ -118,23 +115,8 @@ else
         echo "Fresh database creation failed, trying db:prepare..."
         bin/rails db:prepare
     }
-    DATABASE_CREATED=true
 fi
 
 echo "Database setup completed!"
-
-# Run ScanLibJob if this is a fresh database setup
-#if [ "$DATABASE_CREATED" = true ]; then
-#    echo "Running initial library scan..."
-#    bin/rails runner "
-#    begin
-#      ScanLibJob.perform_now
-#      puts 'Library scan completed successfully!'
-#    rescue => e
-#      puts 'Library scan failed: ' + e.message
-#      puts 'You might experience problems until library is initialized'
-#    end
-#    " --environment="${RAILS_ENV}"
-#fi
 
 exec "${@}"

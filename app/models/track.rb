@@ -11,6 +11,7 @@ class Track < ApplicationRecord
   end
 
   def duration_formatted
+    update_duration! unless duration
     return '--:--' unless duration
 
     minutes = (duration / 60).floor
