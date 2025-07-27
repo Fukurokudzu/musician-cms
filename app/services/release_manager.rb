@@ -44,10 +44,25 @@ class ReleaseManager
       track_title = tags[track] || track
       track_record = release.tracks.find_or_create_by!(title: track_title)
       attach_audio_file(track_record, track_path)
+      update_duration(track_record)
+      track_record.save!
+    rescue StandardError => e
+      Rails.logger.error("Failed to update track #{track_title} for release #{release.title}: #{e.message}")
     end
   end
 
   def attach_audio_file(track, track_path)
     track.audio_file.attach(io: File.open(track_path), filename: File.basename(track_path))
+  end
+
+  def update_duration(track)
+    return unless track.audio_file.attached?
+
+    file_path = ActiveStorage::Blob.service.send(:path_for, track.audio_file.key)
+    audio = WahWah.open(file_path)
+    track.duration = audio.duration.round
+  rescue StandardError => e
+    Rails.logger.error("Failed to update duration for track #{track.title}: #{e.message}")
+    track.duration = nil
   end
 end

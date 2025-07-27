@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   helper_method :admin?
-  before_action :set_page_title, :set_track
+  before_action :first_run_scan, :set_page_title, :set_track
   around_action :switch_locale
 
   def show_flash(type = :success, message)
@@ -31,14 +31,26 @@ class ApplicationController < ActionController::Base
   end
 
   def set_page_title
-    @page_title ||= Setting.page_title
+    @page_title ||= Setting.page_title || 'Musician CMS'
   end
 
   def set_track
-    @track ||= session_track || random_track || default_track
-    @release = @track.release if @track.present?
+    @track ||= active_track
 
-    update_session_track_id if session[:current_track_id].nil?
+    if @track.nil?
+      Rails.logger.warn 'No tracks available, attempting library scan...'
+
+      @track = active_track if initial_scan
+
+      # Fallback if still nil after scanning
+      if @track.nil?
+        Rails.logger.error 'Failed to find any tracks after scan'
+        @track = Track.new(title: 'Missing Track', artist_name: 'System')
+      end
+    end
+
+    @release = @track&.release
+    update_session_track_id if session[:current_track_id].nil? && @track&.persisted?
   end
 
   def update_system_settings(checked_params)
@@ -64,7 +76,11 @@ class ApplicationController < ActionController::Base
   end
 
   def update_session_track_id
-    session[:current_track_id] = @track.id
+    session[:current_track_id] = @track&.id
+  end
+
+  def active_track
+    session_track || random_track || default_track
   end
 
   def session_track
@@ -74,10 +90,29 @@ class ApplicationController < ActionController::Base
   end
 
   def random_track
-    Track.all.sample
+    @random_track ||= Track.all.sample
   end
 
   def default_track
-    Track.find_by(title: 'Default Track')
+    @default_track ||= Track.find_by(title: 'Default Track')
+  end
+
+  def first_run_scan
+    return unless Setting.first_run
+
+    initial_scan
+    Setting.first_run = false
+  end
+
+  def initial_scan
+    result = ScanLibJob.perform_now
+
+    if result.success?
+      Rails.logger.info 'Library scan completed successfully.'
+      true
+    else
+      Rails.logger.error 'Library scan failed.'
+      false
+    end
   end
 end

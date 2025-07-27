@@ -1,0 +1,122 @@
+#!/bin/bash -e
+
+# Enable jemalloc for reduced memory usage and latency.
+if [ -z "${LD_PRELOAD+x}" ]; then
+    LD_PRELOAD=$(find /usr/lib -name libjemalloc.so.2 -print -quit)
+    export LD_PRELOAD
+fi
+
+# Determine Rails environment
+RAILS_ENV=${RAILS_ENV:-production}
+echo "Rails environment: ${RAILS_ENV}"
+
+# Generate fresh Rails credentials for any environment
+echo "Generating fresh Rails master key and credentials for ${RAILS_ENV}..."
+
+# Safely removes existing credential files (ignore permission errors)
+rm -f /rails/config/master.key 2>/dev/null || true
+rm -f /rails/config/credentials.yml.enc 2>/dev/null || true
+rm -rf /rails/config/credentials 2>/dev/null || true
+
+# Create credentials directory with proper permissions
+mkdir -p /rails/config/credentials
+chmod 755 /rails/config/credentials
+
+# Generate a new master key
+RAILS_MASTER_KEY=$(openssl rand -hex 16)
+
+# Set up credentials based on environment
+if [ "$RAILS_ENV" = "production" ]; then
+    # For production, use environment-specific credentials
+    echo "${RAILS_MASTER_KEY}" > /rails/config/credentials/production.key
+    chmod 600 /rails/config/credentials/production.key
+    CREDENTIALS_FILE="/rails/config/credentials/production.yml.enc"
+    echo "Generated production-specific master key: ${RAILS_MASTER_KEY}"
+else
+    # For development/test, use general credentials
+    echo "${RAILS_MASTER_KEY}" > /rails/config/master.key
+    chmod 600 /rails/config/master.key
+    CREDENTIALS_FILE="/rails/config/credentials.yml.enc"
+    echo "Generated general master key: ${RAILS_MASTER_KEY}"
+fi
+
+export RAILS_MASTER_KEY
+
+# Create credentials content with environment-specific secret keys
+SECRET_KEY_BASE=$(openssl rand -hex 64)
+
+# Create a temporary YAML file with credentials content
+TEMP_CREDENTIALS="/tmp/credentials_content.yml"
+cat > "${TEMP_CREDENTIALS}" << EOF
+# Rails credentials file generated for Docker (${RAILS_ENV})
+# Add your secrets here as needed
+
+secret_key_base: ${SECRET_KEY_BASE}
+
+# Database configuration (if needed)
+# database:
+#   host: postgres-db
+#   username: root
+#   password: password
+
+# Redis configuration (if needed)
+# redis:
+#   url: redis://redis-db:6379
+
+# Add other secrets as needed for ${RAILS_ENV}
+EOF
+
+echo "Creating credentials file: ${CREDENTIALS_FILE}"
+
+# Use Rails' built-in credentials system to create the encrypted file
+EDITOR="cp ${TEMP_CREDENTIALS}" bin/rails credentials:edit --environment="${RAILS_ENV}" 2>/dev/null || {
+    echo "Fallback: Using Rails runner to create credentials..."
+    # Fallback using Rails runner with proper Rails encryption
+    bin/rails runner "
+    require 'active_support/encrypted_file'
+
+    content = File.read('${TEMP_CREDENTIALS}')
+
+    if '${RAILS_ENV}' == 'production'
+      encrypted_file = Rails.application.encrypted('config/credentials/production.yml.enc', key_path: 'config/credentials/production.key')
+    else
+      encrypted_file = Rails.application.encrypted('config/credentials.yml.enc')
+    end
+
+    encrypted_file.write(content)
+    puts 'Credentials file created successfully using Rails encryption'
+    " --environment="${RAILS_ENV}"
+}
+
+# Clean up temporary file
+rm -f "${TEMP_CREDENTIALS}"
+
+echo "Fresh credentials generated successfully for ${RAILS_ENV}!"
+
+# Handle database setup with proper error handling
+echo "Setting up database..."
+
+# Try to check database version first
+if bin/rails db:version > /dev/null 2>&1; then
+    echo "Database exists, checking for schema conflicts..."
+    # Try to run migrations, if it fails due to schema conflicts, reset the database
+    if ! bin/rails db:migrate 2>/dev/null; then
+        echo "Schema conflict detected, resetting database..."
+        bin/rails db:drop db:create db:schema:load db:seed 2>/dev/null || {
+            echo "Database reset failed, trying db:prepare..."
+            bin/rails db:prepare
+        }
+    else
+        echo "Database migrations completed successfully"
+    fi
+else
+    echo "Database doesn't exist, creating fresh database..."
+    bin/rails db:create db:schema:load db:seed 2>/dev/null || {
+        echo "Fresh database creation failed, trying db:prepare..."
+        bin/rails db:prepare
+    }
+fi
+
+echo "Database setup completed!"
+
+exec "${@}"

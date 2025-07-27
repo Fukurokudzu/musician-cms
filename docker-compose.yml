@@ -1,0 +1,70 @@
+version: "3.8"
+
+services:
+  web:
+    build:
+      context: .
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-${UID:-1000}}
+    volumes:
+      - ./log:/rails/log
+      - storage_data:/rails/storage
+      - gem_cache:/usr/local/bundle
+      - music_library:/rails/app/music
+    ports:
+      - "3000:3000"
+    environment:
+      - REDIS_URL=redis://redis-db:6379
+      - DATABASE_URL=postgres://root:password@postgres-db/
+      - RAILS_ENV=production
+      - RAILS_SERVE_STATIC_FILES=true
+      - RAILS_LOG_TO_STDOUT=true
+    depends_on:
+      redis-db:
+        condition: service_started
+      postgres-db:
+        condition: service_healthy
+
+  postgres-db:
+    image: postgres
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready
+      interval: 2s
+      timeout: 5s
+      retries: 30
+
+  redis-db:
+    image: redis
+
+  sidekiq:
+    build: .
+    command: bundle exec sidekiq
+    volumes:
+      - ./log:/rails/log
+      - storage_data:/rails/storage
+      - gem_cache:/usr/local/bundle
+      - music_library:/rails/app/music
+    environment:
+      - REDIS_URL=redis://redis-db:6379
+      - DATABASE_URL=postgres://root:password@postgres-db/
+      - RAILS_ENV=production
+      - RAILS_LOG_TO_STDOUT=true
+    depends_on:
+      redis-db:
+        condition: service_started
+      postgres-db:
+        condition: service_healthy
+      web:
+        condition: service_started
+
+volumes:
+  postgres_data:
+  gem_cache:
+  music_library:
+  storage_data:
