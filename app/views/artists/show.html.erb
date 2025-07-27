@@ -5,7 +5,26 @@
     </div>
     <div class="artist-show-info">
       <%= @md_description %>
-
     </div>
+  </div>
+</div>
+
+<div class="artist-show-albums">
+  <div class="albums-list">
+    <% @artist.releases.each do |release| %>
+      <div class="release-item">
+        <%= link_to release_path(release) do %>
+          <div class="release-cover">
+            <% if release.cover.present? %>
+              <%= image_tag release.cover, alt: release.title, class: 'release-cover-image' %>
+            <% else %>
+              <img src="<%= asset_path('default_cover.png') %>" alt="Default Cover" class="release-cover-image">
+            <% end %>
+          </div>
+        <% end %>
+
+        <span class="release-year"><%= release.release_date if release.release_date.present? %></span>
+      </div>
+    <% end %>
   </div>
 </div>
