@@ -1,8 +1,9 @@
 class Track < ApplicationRecord
   belongs_to :release
   has_many :artists, through: :release
-
   has_one_attached :audio_file
+  before_create :set_default_title
+  enum status: {draft: 'draft', published: 'published', archived: 'archived'}
 
   def increment_plays!
     increment!(:plays_count)
@@ -26,5 +27,9 @@ class Track < ApplicationRecord
     audio = WahWah.open(file_path)
     self.duration = audio.duration.round
     save
+  end
+
+  def set_default_title
+    self.title ||= "Untitled #{FakerTitle.new.title}"
   end
 end

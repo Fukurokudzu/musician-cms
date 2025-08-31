@@ -20,6 +20,6 @@ class SessionsController < ApplicationController
   private
 
   def allowed_params
-    params.permit(:admin_email, :admin_password)
+    params.permit(:admin_email, :admin_password, :authenticity_token, :commit)
   end
 end
