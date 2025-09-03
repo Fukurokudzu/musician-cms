@@ -3,7 +3,8 @@ class Release < ApplicationRecord
   has_many :tracks, dependent: :destroy
   has_one_attached :cover
   before_create :set_default_title
-  enum status: {draft: 'draft', published: 'published', archived: 'archived'}
+  attribute :status, :string
+  enum status: { draft: 'draft', published: 'published', archived: 'archived' }
 
   validates :title, presence: true, uniqueness: true
 
@@ -30,7 +31,7 @@ class Release < ApplicationRecord
   end
 
   def artists
-    tracks.includes(:artists).map(&:artists).flatten.uniq
+    tracks.includes(:artists).flat_map(&:artists).uniq
   end
 
   def set_default_title

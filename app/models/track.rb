@@ -3,6 +3,7 @@ class Track < ApplicationRecord
   has_many :artists, through: :release
   has_one_attached :audio_file
   before_create :set_default_title
+  attribute :status, :string
   enum status: {draft: 'draft', published: 'published', archived: 'archived'}
 
   def increment_plays!
