@@ -1,0 +1,14 @@
+[Unit]
+Description=Musician-cms puma daemon
+After=network.target
+
+[Service]
+Type=simple
+User=YOUR_USERNAME
+Environment=RAILS_ENV=production
+ExecStart=/home/YOUR_USER_NAME/.asdf/shims/bundle exec rails server -e production -p 3000
+WorkingDirectory=/home/YOUR_USER_NAME/ruby/musician-cms
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
