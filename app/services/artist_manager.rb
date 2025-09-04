@@ -13,11 +13,7 @@ class ArtistManager
   end
 
   def remove_deleted_artists
-    @existing_artists.each do |artist_title|
-      unless @artist_folders.key?(artist_title)
-        artist = Artist.find_by(title: artist_title)
-        artist&.destroy
-      end
-    end
+    artists_to_remove = @existing_artists.reject { |title| @artist_folders.key?(title) }
+    Artist.where(title: artists_to_remove).destroy_all
   end
 end
