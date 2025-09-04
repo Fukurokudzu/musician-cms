@@ -64,8 +64,11 @@ RUN sed -i "s/\r$//g" bin/* && \
     sed -i 's/ruby\r$/ruby/' bin/* && \
     chmod +x bin/*
 
-# Precompiling assets for production without requiring secret RAILS_MASTER_KEY
-RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
+# Precompile assets
+RUN SECRET_KEY_BASE_DUMMY=1 RAILS_ENV=production ./bin/rails assets:precompile
+
+# Ensure assets are properly served
+RUN ./bin/rails assets:clean
 
 # Final stage for app image
 FROM base

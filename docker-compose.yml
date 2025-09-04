@@ -19,6 +19,7 @@ services:
       - DATABASE_URL=postgres://root:password@postgres-db:5432/musician_cms_production
       - RAILS_ENV=production
       - RAILS_SERVE_STATIC_FILES=true
+      - RAILS_ASSETS_COMPILE=true
       - RAILS_LOG_TO_STDOUT=true
     depends_on:
       redis-db:
