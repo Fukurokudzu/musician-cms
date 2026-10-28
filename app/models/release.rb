@@ -3,7 +3,7 @@ class Release < ApplicationRecord
   has_many :tracks, dependent: :destroy
   has_one_attached :cover
 
-  validates :title, presence: true, uniqueness: true
+  validates :title, presence: true, uniqueness: { scope: :artist_id }
 
   def duration
     tracks.sum(:duration)

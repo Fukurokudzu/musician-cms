@@ -13,7 +13,8 @@ class ScanLibJob < ApplicationJob
     Rails.logger.info "ScanLibHelper JOB STARTED"
     @success = false
 
-    library_path = File.join(Rails.root, Setting.library_path)
+    library_path = Setting.library_path
+    library_path = File.join(Rails.root, library_path) unless Pathname.new(library_path).absolute?
     Rails.logger.info "Scanning library at: #{library_path}"
 
     # Check if directory exists
@@ -32,6 +33,11 @@ class ScanLibJob < ApplicationJob
     Rails.logger.info "ScanLibHelper JOB COMPLETED"
     @success = true
 
+    self
+  rescue StandardError => e
+    Rails.logger.error "ScanLibJob failed: #{e.class}: #{e.message}"
+    Rails.logger.error e.backtrace.first(20).join("\n")
+    @success = false
     self
   end
 
