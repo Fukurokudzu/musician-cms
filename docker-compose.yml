@@ -8,7 +8,6 @@ services:
     volumes:
       - ./log:/rails/log
       - storage_data:/rails/storage
-      - gem_cache:/usr/local/bundle
       - music_library:/rails/app/music
       - credentials_data:/rails/config/credentials
     ports:
@@ -50,7 +49,6 @@ services:
     volumes:
       - ./log:/rails/log
       - storage_data:/rails/storage
-      - gem_cache:/usr/local/bundle
       - music_library:/rails/app/music
       - credentials_data:/rails/config/credentials
     environment:
@@ -69,7 +67,6 @@ services:
 
 volumes:
   postgres_data:
-  gem_cache:
   music_library:
   storage_data:
   credentials_data:
