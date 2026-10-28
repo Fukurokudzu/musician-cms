@@ -16,7 +16,12 @@ Rails.application.routes.draw do
   namespace :admin do
     resource :system, :library, :credentials, :themes
     resources :artists
-    resources :releases
+    resources :releases do
+      collection do
+        get :new_upload
+        post :upload
+      end
+    end
   end
 
   post :sessions, to: 'sessions#create'

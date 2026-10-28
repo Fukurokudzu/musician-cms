@@ -30,6 +30,8 @@
           <%= track_form.text_field :title %>
           <%= track_form.label :pos %>
           <%= track_form.number_field :pos %>
+          <%= track_form.label :status %>
+          <%= track_form.select :status, Track.statuses.keys.map { |s| [s.humanize, s] }, include_blank: true %>
         </div>
       <% end %>
     </div>

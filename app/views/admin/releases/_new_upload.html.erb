@@ -1,0 +1,46 @@
+<div class="admin-upload">
+  <h2>Upload Release</h2>
+  <%= form_with url: upload_admin_releases_path, multipart: true, data: { turbo_stream: true } do |form| %>
+    <div class="form-group">
+      <%= form.label :artist_id, 'Artist' %>
+      <%= form.select :artist_id, options_from_collection_for_select(@artists, :id, :title), include_blank: 'Select artist or create new below' %>
+    </div>
+    <div class="form-group">
+      <%= form.label :artist_title, 'New Artist Name' %>
+      <%= form.text_field :artist_title %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :release_title, 'Release Title' %>
+      <%= form.text_field :release_title %>
+    </div>
+    <div class="form-group">
+      <%= form.label :genre, 'Genre' %>
+      <%= form.text_field :genre %>
+    </div>
+    <div class="form-group">
+      <%= form.label :publisher, 'Publisher' %>
+      <%= form.text_field :publisher %>
+    </div>
+    <div class="form-group">
+      <%= form.label :release_date, 'Release Date' %>
+      <%= form.date_field :release_date %>
+    </div>
+    <div class="form-group">
+      <%= form.label :status, 'Status' %>
+      <%= form.select :status, Release.statuses.keys.map { |s| [s.humanize, s] }, selected: 'draft' %>
+    </div>
+    <div class="form-group">
+      <%= form.label :cover, 'Cover' %>
+      <%= form.file_field :cover, accept: 'image/*' %>
+    </div>
+    <div class="form-group">
+      <%= form.label :tracks, 'Tracks' %>
+      <%= form.file_field :tracks, multiple: true, accept: 'audio/*' %>
+    </div>
+
+    <div class="form-actions">
+      <%= form.submit 'Upload' %>
+    </div>
+  <% end %>
+</div>

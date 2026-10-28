@@ -7,10 +7,13 @@
       <h2><%= @release.artist.title %> - <%= @release.title %></h2>
       <p><%= @release.genre %></p>
       <p><%= @release.release_date %></p>
+      <p>Status: <%= @release.status %></p>
       <p><%= t('admin.release.stats.plays_count') %>: <%= @release.plays_count %></p>
       <p><%= t('admin.release.stats.tracks_count') %>: <%= @release.tracks.count %></p>
       <p><%= t('admin.release.stats.duration') %>: <%= @release.duration_humanized %></p>
       <%= link_to 'Edit', edit_admin_release_path(@release), class: 'btn btn-primary', data: { turbo_stream: true } %>
+      <%= link_to 'Back to releases', admin_releases_path, class: 'btn', data: { turbo_stream: true } %>
+      <%= button_to 'Delete', admin_release_path(@release), method: :delete, data: { turbo_confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
     </div>
   </div>
 
@@ -20,6 +23,7 @@
       <div class="track-item">
         <span class="track-pos"><%= track.pos || '-' %></span>
         <span class="track-title"><%= track.title %></span>
+        <span class="track-status"><%= track.status %></span>
       </div>
     <% end %>
   </div>
