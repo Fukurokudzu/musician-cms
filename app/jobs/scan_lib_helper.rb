@@ -3,43 +3,43 @@ module ScanLibHelper
     folders_list = {}
     Pathname.new(path).children.select(&:directory?).each do |child|
       folder_name = child.basename.to_s
+      next if folder_name.start_with?('.')
+
       folders_list[folder_name] = child.expand_path.to_s
     end
     folders_list
   end
 
   def self.get_tracks_list(path)
-    Dir.glob(File.join(path, track_pattern)).each_with_object({}) do |file, tracks|
-      tracks[File.basename(file)] = File.expand_path(file)
+    extensions = Setting.track_extensions.map { |ext| ext.downcase.delete_prefix('.') }
+
+    Dir.children(path).each_with_object({}) do |entry, tracks|
+      next if entry.start_with?('.')
+
+      full_path = File.join(path, entry)
+      next unless File.file?(full_path)
+      next unless extensions.include?(File.extname(entry).delete_prefix('.').downcase)
+
+      tracks[entry] = File.expand_path(full_path)
     end
   end
 
   def self.get_release_cover(path)
-    cover_file = Dir.glob(File.join(path, cover_pattern)).first
-    return nil unless cover_file
+    filenames = Setting.cover_filenames.map(&:downcase)
+    extensions = Setting.cover_extensions.map { |ext| ext.downcase.delete_prefix('.') }
 
-    File.expand_path(cover_file)
-  end
+    cover_file = Dir.children(path).sort.find do |entry|
+      next if entry.start_with?('.')
 
-  def self.cover_pattern
-    cover_filenames = Setting.cover_filenames
-    cover_extensions = Setting.cover_extensions
+      full_path = File.join(path, entry)
+      next unless File.file?(full_path)
 
-    cover_filenames.map! { |filename| filename.downcase + '*' }
-    cover_filenames += cover_filenames.map { |filename| add_capital_letters(filename) }
-    cover_filenames += cover_filenames.map { |filename| filename.upcase }
+      extension = File.extname(entry).delete_prefix('.').downcase
+      basename = File.basename(entry, File.extname(entry)).downcase
 
-    cover_extensions += cover_extensions.map { |extension| add_capital_letters(extension) }
-    cover_extensions += cover_extensions.map { |extension| extension.upcase }
+      extensions.include?(extension) && filenames.any? { |name| basename.start_with?(name) }
+    end
 
-    "{#{cover_filenames.join(',')}}.{#{cover_extensions.join(',')}}"
-  end
-
-  def self.track_pattern
-    "*.{#{Setting.track_extensions.join(',')}}"
-  end
-
-  def self.add_capital_letters(string)
-    string.capitalize
+    cover_file && File.expand_path(File.join(path, cover_file))
   end
 end

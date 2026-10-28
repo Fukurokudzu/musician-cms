@@ -18,7 +18,7 @@ class ReleaseManager
         metadata = extract_tracks_metadata(tracks)
         cover = ScanLibHelper.get_release_cover(release_path)
 
-        release_record = update_release(artist, release, tracks, metadata, cover)
+        release_record = update_release(artist, release, release_path, tracks, metadata, cover)
         matched_release_ids << release_record.id if release_record&.id
       end
 
@@ -44,9 +44,8 @@ class ReleaseManager
     end
   end
 
-  def update_release(artist, release, tracks, metadata, cover)
+  def update_release(artist, release, release_path, tracks, metadata, cover)
     artist_record = Artist.find_by!(title: artist)
-    release_path = tracks.values.first&.then { |p| File.dirname(p) } || (cover ? File.dirname(cover) : nil)
     release_record = nil
 
     if release_path
@@ -55,7 +54,13 @@ class ReleaseManager
       rescue StandardError
       end
     end
-    release_record ||= artist_record.releases.find_by(title: release)
+    if release_record.nil? && release_path.nil?
+      release_record = artist_record.releases.find_by(title: release)
+    elsif release_record.nil?
+      legacy = artist_record.releases.find_by(title: release)
+      # Adopt only legacy records that were never bound to a folder
+      release_record = legacy if legacy && legacy.respond_to?(:path) && legacy.path.blank?
+    end
     release_record ||= artist_record.releases.new
 
     release_record.artist = artist_record
@@ -91,9 +96,8 @@ class ReleaseManager
     return unless cover_path
 
     if release.cover.attached?
-      existing_filename = release.cover.blob.filename.to_s
-      new_filename = File.basename(cover_path)
-      return if existing_filename == new_filename
+      return if same_file?(release.cover.blob, cover_path)
+
       release.cover.purge
     end
 
@@ -113,7 +117,11 @@ class ReleaseManager
           track_record = release.tracks.find_by(path: track_path)
         rescue StandardError
         end
-        track_record ||= release.tracks.find_by(title: track_title)
+        if track_record.nil?
+          candidate = release.tracks.find_by(title: track_title)
+          # Only reuse a record matched by title if it isn't already bound to another file
+          track_record = candidate if candidate && (candidate.path.blank? || candidate.path == track_path)
+        end
         track_record ||= release.tracks.new(release: release)
 
         track_record.release = release
@@ -136,15 +144,21 @@ class ReleaseManager
 
   def attach_audio_file(track, track_path)
     if track.audio_file.attached?
-      existing_filename = track.audio_file.blob.filename.to_s
-      new_filename = File.basename(track_path)
-      return if existing_filename == new_filename
+      return if same_file?(track.audio_file.blob, track_path)
+
       track.audio_file.purge
     end
 
     track.audio_file.attach(io: File.open(track_path), filename: File.basename(track_path))
   rescue StandardError => e
     Rails.logger.error("Failed to attach audio file for track #{track.title}: #{e.message}")
+  end
+
+  def same_file?(blob, file_path)
+    blob.filename.to_s == File.basename(file_path) &&
+      blob.checksum == Digest::MD5.file(file_path).base64digest
+  rescue StandardError
+    false
   end
 
   def remove_deleted_tracks(release, tracks)

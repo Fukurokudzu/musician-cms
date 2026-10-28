@@ -13,6 +13,14 @@ echo "Rails environment: ${RAILS_ENV}"
 # Handle credentials
 echo "Setting up credentials for ${RAILS_ENV}..."
 
+# Web and sidekiq start concurrently and share the credentials volume,
+# so generation must be serialized to avoid overwriting each other's key/enc files.
+CREDENTIALS_LOCK="/rails/config/credentials/.credentials.lock"
+mkdir -p /rails/config/credentials
+chmod 755 /rails/config/credentials
+exec 200>"${CREDENTIALS_LOCK}"
+flock -w 60 200 || { echo "Failed to acquire credentials lock"; exit 1; }
+
 if [ "$RAILS_ENV" = "production" ]; then
     CREDENTIALS_FILE="/rails/config/credentials/production.yml.enc"
     CREDENTIALS_KEY="/rails/config/credentials/production.key"
@@ -77,30 +85,31 @@ EOF
     fi
 fi
 
+# Release the credentials lock; the fd would otherwise stay held for the
+# lifetime of the process and block other containers (sidekiq/web).
+exec 200>&-
+
 # Handle database setup with proper error handling
 echo "Setting up database..."
 
-# Try to check database version first
-if bin/rails db:version > /dev/null 2>&1; then
-    echo "Database exists, checking for schema conflicts..."
-    # Try to run migrations, if it fails due to schema conflicts, reset the database
-    if ! bin/rails db:migrate 2>/dev/null; then
-        echo "Schema conflict detected, resetting database..."
-        bin/rails db:drop db:create db:schema:load db:seed 2>/dev/null || {
-            echo "Database reset failed, trying db:prepare..."
-            bin/rails db:prepare
-        }
-    else
-        echo "Database migrations completed successfully"
-    fi
+# Web and sidekiq both run this entrypoint; serialize migrations with a lock
+# on the shared storage volume so concurrent containers don't fail with
+# ConcurrentMigrationError.
+DB_LOCK="/rails/storage/db_setup.lock"
+exec 201>"${DB_LOCK}"
+flock -w 180 201 || { echo "Failed to acquire database setup lock"; exit 1; }
+
+# db:prepare creates the database if missing, loads the schema and applies
+# pending migrations. Never drop/reset the database here — that would destroy
+# production data on a transient migration failure.
+if bin/rails db:prepare; then
+    echo "Database setup completed!"
 else
-    echo "Database doesn't exist, creating fresh database..."
-    bin/rails db:create db:schema:load db:seed 2>/dev/null || {
-        echo "Fresh database creation failed, trying db:prepare..."
-        bin/rails db:prepare
-    }
+    echo "Database setup FAILED"
+    exit 1
 fi
 
-echo "Database setup completed!"
+# Release the database setup lock
+exec 201>&-
 
 exec "${@}"
