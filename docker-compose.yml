@@ -11,7 +11,6 @@ services:
       - gem_cache:/usr/local/bundle
       - music_library:/rails/app/music
       - credentials_data:/rails/config/credentials
-      - master_key_data:/rails/config
     ports:
       - "127.0.0.1:3003:3000"
     environment:
@@ -54,7 +53,6 @@ services:
       - gem_cache:/usr/local/bundle
       - music_library:/rails/app/music
       - credentials_data:/rails/config/credentials
-      - master_key_data:/rails/config
     environment:
       - REDIS_URL=redis://redis-db:6379
       - DATABASE_URL=postgres://root:password@postgres-db:5432/musician_cms_production
@@ -75,4 +73,3 @@ volumes:
   music_library:
   storage_data:
   credentials_data:
-  master_key_data:
