@@ -54,7 +54,7 @@ RUN yarn install --frozen-lockfile
 COPY . .
 
 # Any existing credential files to avoid permission issues might be removed
-RUN rm -f config/master.key config/credentials.yml.enc config/credentials/production.key config/credentials/production.yml.enc config/credentials/development.key config/credentials/development.yml.enc config/credentials/test.key config/credentials/test.yml.enc
+RUN rm -f config/master.key config/credentials.yml.enc config/credentials/production.key config/credentials/production.yml.enc config/credentials/development.key config/credentials/development.yml.enc config/credentials/test.key config/credentials/test.yml.enc 2>/dev/null || true
 
 # Precompile bootsnap code for faster boot times
 RUN bundle exec bootsnap precompile app/ lib/

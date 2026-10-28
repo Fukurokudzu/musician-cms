@@ -107,8 +107,10 @@ class ApplicationController < ActionController::Base
   def initial_scan
     result = ScanLibJob.perform_now
 
-    if result.success?
+    if result.respond_to?(:success?) && result.success?
       Rails.logger.info 'Library scan completed successfully.'
+      true
+    elsif result == true
       true
     else
       Rails.logger.error 'Library scan failed.'

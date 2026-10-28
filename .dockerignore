@@ -49,3 +49,4 @@
 # Ignore Docker-related files
 /.dockerignore
 /Dockerfile*
+!/config/credentials/.keep

@@ -6,7 +6,7 @@ class Release < ApplicationRecord
   attribute :status, :string
   enum status: { draft: 'draft', published: 'published', archived: 'archived' }
 
-  validates :title, presence: true, uniqueness: true
+  validates :title, presence: true, uniqueness: { scope: :artist_id }
 
   scope :active, -> { joins(:artist).where(artists: { soft_deleted: false }) }
 

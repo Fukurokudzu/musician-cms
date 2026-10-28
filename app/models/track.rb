@@ -6,6 +6,8 @@ class Track < ApplicationRecord
   attribute :status, :string
   enum status: {draft: 'draft', published: 'published', archived: 'archived'}
 
+  validates :title, presence: true
+
   def increment_plays!
     increment!(:plays_count)
     release.increment!(:plays_count)
