@@ -10,6 +10,12 @@ class Release < ApplicationRecord
 
   scope :active, -> { joins(:artist).where(artists: { soft_deleted: false }) }
 
+  accepts_nested_attributes_for :tracks, allow_destroy: true
+
+  def to_param
+    external_id
+  end
+
   def duration
     tracks.sum(:duration)
   end

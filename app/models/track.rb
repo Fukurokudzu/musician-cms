@@ -4,9 +4,13 @@ class Track < ApplicationRecord
   has_one_attached :audio_file
   before_create :set_default_title
   attribute :status, :string
-  enum status: {draft: 'draft', published: 'published', archived: 'archived'}
+  enum status: { draft: 'draft', published: 'published', archived: 'archived' }
 
   validates :title, presence: true
+
+  def to_param
+    external_id
+  end
 
   def increment_plays!
     increment!(:plays_count)

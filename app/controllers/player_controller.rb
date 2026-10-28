@@ -1,6 +1,6 @@
 class PlayerController < ApplicationController
   def show
-    @track = Track.find(params[:id]) || session_track || random_track
+    @track = Track.find_by(external_id: params[:id]) || Track.find_by(id: params[:id]) || session_track || random_track
     process_track
   end
 
@@ -31,7 +31,8 @@ class PlayerController < ApplicationController
             data_src: url_for(@track.audio_file),
             artist: @track.release.artist.title,
             title: @track.title,
-            id: @track.id
+            id: @track.id,
+            external_id: @track.external_id
           },
           status: :ok
         }
@@ -58,16 +59,16 @@ class PlayerController < ApplicationController
   end
 
   def find_next_or_previous_track(current_track, direction)
+    track_list = tracks(current_track).order(Arel.sql('COALESCE(pos, 0) ASC'), :id).to_a
+    current_index = track_list.index { |track| track.id == current_track.id }
+    return nil unless current_index
+
     if direction == :next
-      next_by_position = tracks(current_track).where('pos > ? OR (pos = ? AND id > ?)',
-                                                     current_track.pos, current_track.pos, current_track.id)
-                                              .order(pos: :asc, id: :asc).first
-      return next_by_position if next_by_position
+      next_index = current_index + 1
+      return track_list[next_index] if next_index < track_list.length
     else
-      prev_by_position = tracks(current_track).where('pos < ? OR (pos = ? AND id < ?)',
-                                                     current_track.pos, current_track.pos, current_track.id)
-                                              .order(pos: :desc, id: :desc).first
-      return prev_by_position if prev_by_position
+      prev_index = current_index - 1
+      return track_list[prev_index] if prev_index >= 0
     end
 
     nil

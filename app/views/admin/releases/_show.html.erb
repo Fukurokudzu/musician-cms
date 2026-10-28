@@ -1,0 +1,26 @@
+<div class="admin-release-details">
+  <div class="release-header">
+    <% if @release.cover.attached? %>
+      <%= image_tag @release.cover, class: 'release-cover' %>
+    <% end %>
+    <div class="release-info">
+      <h2><%= @release.artist.title %> - <%= @release.title %></h2>
+      <p><%= @release.genre %></p>
+      <p><%= @release.release_date %></p>
+      <p><%= t('admin.release.stats.plays_count') %>: <%= @release.plays_count %></p>
+      <p><%= t('admin.release.stats.tracks_count') %>: <%= @release.tracks.count %></p>
+      <p><%= t('admin.release.stats.duration') %>: <%= @release.duration_humanized %></p>
+      <%= link_to 'Edit', edit_admin_release_path(@release), class: 'btn btn-primary', data: { turbo_stream: true } %>
+    </div>
+  </div>
+
+  <div class="tracks-list">
+    <h3>Tracks</h3>
+    <% @release.tracks.order(Arel.sql('COALESCE(pos, 0) ASC'), :id).each do |track| %>
+      <div class="track-item">
+        <span class="track-pos"><%= track.pos || '-' %></span>
+        <span class="track-title"><%= track.title %></span>
+      </div>
+    <% end %>
+  </div>
+</div>

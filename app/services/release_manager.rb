@@ -123,7 +123,9 @@ class ReleaseManager
         rescue StandardError
         end
         track_record.duration = track_info[:duration]
-        track_record.pos = track_info[:track_number]
+        if track_record.pos.nil?
+          track_record.pos = track_info[:track_number]
+        end
         track_record.save!
         attach_audio_file(track_record, track_path)
       rescue StandardError => e
@@ -192,10 +194,12 @@ class ReleaseManager
   end
 
   def update_track_positions(release)
-    tracks = release.tracks.order(:pos, :id)
-    tracks.each_with_index do |track, index|
+    tracks = release.tracks.where(pos: nil).order(:id)
+    next_pos = release.tracks.maximum(:pos) || 0
+    tracks.each do |track|
       begin
-        track.pos = index + 1
+        next_pos += 1
+        track.pos = next_pos
         track.save!
       rescue StandardError => e
         Rails.logger.error("Failed to update position for track #{track.title}: #{e.message}")

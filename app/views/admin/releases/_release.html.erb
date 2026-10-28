@@ -3,7 +3,9 @@
     <%= image_tag release.cover, class: 'release-cover', id: release.id.to_s + '_cover' %>
   <% end %>
   <div class="release-title">
-    <%= release.artist.title %> - <%= release.title %>
+    <%= link_to admin_release_path(release), data: { turbo_stream: true } do %>
+      <%= release.artist.title %> - <%= release.title %>
+    <% end %>
   </div>
   <div class="admin-release-stats">
     <div class="admin-release-stats-item">
