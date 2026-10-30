@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   helper_method :admin?
-  before_action :first_run_scan, :set_page_title, :set_track
+  before_action :set_page_title, :set_track
   around_action :switch_locale
 
   def show_flash(type = :success, message)
@@ -36,14 +36,7 @@ class ApplicationController < ActionController::Base
 
   def set_track
     @track = active_track
-
-    if @track.nil?
-      Rails.logger.warn 'No tracks available, attempting library scan...'
-
-      @track = active_track if initial_scan
-
-      Rails.logger.error 'Failed to find any tracks after scan' unless @track
-    end
+    Rails.logger.warn 'No tracks available in the library' unless @track
 
     @release = @track&.release
     update_session_track_id if session[:current_track_id].nil? && @track&.persisted?
@@ -87,26 +80,5 @@ class ApplicationController < ActionController::Base
 
   def random_track
     @random_track ||= Track.all.sample
-  end
-
-  def first_run_scan
-    return unless Setting.first_run
-
-    initial_scan
-    Setting.first_run = false
-  end
-
-  def initial_scan
-    result = ScanLibJob.perform_now
-
-    if result.respond_to?(:success?) && result.success?
-      Rails.logger.info 'Library scan completed successfully.'
-      true
-    elsif result == true
-      true
-    else
-      Rails.logger.error 'Library scan failed.'
-      false
-    end
   end
 end
