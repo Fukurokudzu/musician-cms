@@ -1,4 +1,6 @@
 class Admin::SystemsController < ApplicationController
+  include AdminAuthorization
+
   def show
     render turbo_stream: turbo_stream.update("admin_body", partial: "system")
   end

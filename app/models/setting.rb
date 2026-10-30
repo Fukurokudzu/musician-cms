@@ -45,5 +45,6 @@ class Setting < RailsSettings::Base
     field :accent_color, default: "#d35400"
     field :a_color, default: "#ffffff"
     field :a_hover_color, default: "#ffffff"
+    field :background_image, default: "", type: :string # ActiveStorage signed_id
   end
 end

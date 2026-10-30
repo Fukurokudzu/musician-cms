@@ -11,8 +11,10 @@
       <p><%= t('admin.release.stats.plays_count') %>: <%= @release.plays_count %></p>
       <p><%= t('admin.release.stats.tracks_count') %>: <%= @release.tracks.count %></p>
       <p><%= t('admin.release.stats.duration') %>: <%= @release.duration_humanized %></p>
-      <%= link_to 'Edit', edit_admin_release_path(@release), class: 'btn btn-primary', data: { turbo_stream: true } %>
-      <%= link_to 'Back to releases', admin_releases_path, class: 'btn', data: { turbo_stream: true } %>
+      <%= link_to 'Edit', edit_admin_release_path(@release), class: 'btn btn-primary',
+                  data: { turbo_stream: true, turbo_prefetch: false } %>
+      <%= link_to 'Back to releases', admin_releases_path, class: 'btn',
+                  data: { turbo_stream: true, turbo_prefetch: false } %>
       <%= button_to 'Delete', admin_release_path(@release), method: :delete, data: { turbo_confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
     </div>
   </div>

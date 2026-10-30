@@ -1,4 +1,6 @@
 class Track < ApplicationRecord
+  include ShortCodeable
+
   belongs_to :release
   has_many :artists, through: :release
   has_one_attached :audio_file
@@ -7,10 +9,6 @@ class Track < ApplicationRecord
   enum status: { draft: 'draft', published: 'published', archived: 'archived' }
 
   validates :title, presence: true
-
-  def to_param
-    external_id
-  end
 
   def increment_plays!
     increment!(:plays_count)

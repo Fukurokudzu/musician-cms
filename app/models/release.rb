@@ -1,4 +1,6 @@
 class Release < ApplicationRecord
+  include ShortCodeable
+
   belongs_to :artist
   has_many :tracks, dependent: :destroy
   has_one_attached :cover
@@ -11,10 +13,6 @@ class Release < ApplicationRecord
   scope :active, -> { joins(:artist).where(artists: { soft_deleted: false }) }
 
   accepts_nested_attributes_for :tracks, allow_destroy: true
-
-  def to_param
-    external_id
-  end
 
   def duration
     tracks.sum(:duration)

@@ -22,6 +22,7 @@ module MusicianCms
     config.i18n.default_locale = :en
     config.i18n.available_locales = [:en, :ru]
     config.active_job.queue_adapter = :sidekiq
+    config.active_storage.variant_processor = :mini_magick
 
     config.generators do |g|
       g.test_framework(

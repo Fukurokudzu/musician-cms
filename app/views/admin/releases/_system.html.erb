@@ -1,6 +1,7 @@
 <div class="admin-releases">
   <div class="admin-releases-header">
-    <%= link_to 'Upload Release', new_upload_admin_releases_path, class: 'btn btn-primary', data: { turbo_stream: true } %>
+    <%= link_to 'Upload Release', new_upload_admin_releases_path, class: 'btn btn-primary',
+                data: { turbo_stream: true, turbo_prefetch: false } %>
   </div>
   <% Release.all.includes(:artist, :tracks).order(created_at: :desc).group_by(&:artist).each do |_, releases| %>
     <% releases.each do |release| %>

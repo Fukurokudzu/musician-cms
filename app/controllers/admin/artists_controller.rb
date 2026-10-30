@@ -1,4 +1,6 @@
 class Admin::ArtistsController < ArtistsController
+  include AdminAuthorization
+
   before_action :set_all_artists, only: [:index, :create, :destroy]
 
   def new
@@ -7,7 +9,7 @@ class Admin::ArtistsController < ArtistsController
   end
 
   def show
-    @artist = Artist.find(params[:id])
+    @artist = find_artist
   end
 
   def create
@@ -27,7 +29,7 @@ class Admin::ArtistsController < ArtistsController
   end
 
   def destroy
-    @artist = Artist.find(params[:id])
+    @artist = find_artist
     if @artist.update(soft_deleted: true)
       set_all_artists
       redirect_to admin_path, notice: 'Artist was successfully destroyed.'

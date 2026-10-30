@@ -1,4 +1,15 @@
-<%= form_for(Setting.new, url: admin_themes_path, method: :put) do |f| %>
+<%= form_for(Setting.new, url: admin_themes_path, method: :put, html: { multipart: true }) do |f| %>
+
+  <div class="mb-3 mt-3">
+    <label for="setting_background_image">Background image</label>
+    <% background_blob = ActiveStorage::Blob.find_signed(Setting.background_image.presence) %>
+    <% if background_blob %>
+      <div class="admin-bg-preview">
+        <%= image_tag url_for(background_blob) %>
+      </div>
+    <% end %>
+    <%= f.file_field :background_image, accept: 'image/*' %>
+  </div>
 
   <div class="mb-3 mt-3">
     <label for="artist_title_color">Artist title</label>
@@ -49,4 +60,9 @@
   </div>
 
   <%= f.submit t("settings.update"), class: :"btn btn-primary" %>
+<% end %>
+
+<% if ActiveStorage::Blob.find_signed(Setting.background_image.presence) %>
+  <%= button_to 'Remove background', admin_themes_path, method: :delete,
+                class: 'btn btn-danger', data: { turbo_confirm: 'Remove background image?' } %>
 <% end %>

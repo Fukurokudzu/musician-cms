@@ -38,7 +38,7 @@
 
     <div class="form-actions">
       <%= form.submit 'Save' %>
-      <%= link_to 'Cancel', admin_release_path(@release), data: { turbo_stream: true } %>
+      <%= link_to 'Cancel', admin_release_path(@release), data: { turbo_stream: true, turbo_prefetch: false } %>
     </div>
   <% end %>
 </div>

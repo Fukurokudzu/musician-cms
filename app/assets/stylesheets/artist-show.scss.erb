@@ -20,6 +20,19 @@ blockquote {
   color: var(--a-color);
 }
 
+.artist-show-albums .albums-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(5rem, 1fr));
+  gap: 1rem;
+}
+
+.artist-show-albums .release-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+}
+
 .artist-show-albums img {
   width: 4rem;
   height: auto;

@@ -18,14 +18,14 @@ class ArtistsController < ApplicationController
   end
 
   def update
-    @artist = Artist.find(params[:id])
+    @artist = find_artist
     return unless @artist.update(check_params)
 
     show_flash(:success, 'Artist updated successfully')
   end
 
   def show
-    @artist = Artist.find(params[:id])
+    @artist = find_artist
     return if @artist.description.nil?
 
     options = {
@@ -49,13 +49,19 @@ class ArtistsController < ApplicationController
   def destroy
     return unless admin?
 
-    @artist = Artist.find(params[:id])
+    @artist = find_artist
     return unless @artist.update(soft_deleted: true)
 
     show_flash(:success, 'Artist deleted successfully')
   end
 
   private
+
+  def find_artist
+    Artist.find_by!(external_id: params[:id])
+  rescue ActiveRecord::RecordNotFound
+    Artist.find(params[:id])
+  end
 
   def check_params
     params.require(:artist).permit(:title, :first_name, :last_name, :role, :description)

@@ -1,4 +1,6 @@
 class Artist < ApplicationRecord
+  include ShortCodeable
+
   has_many :releases, dependent: :destroy
   has_many :tracks, through: :releases
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_10_30_120000) do
+ActiveRecord::Schema[7.2].define(version: 2026_10_30_150000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -54,6 +54,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_10_30_120000) do
     t.integer "plays_count", default: 0, null: false
     t.boolean "soft_deleted", default: false, null: false
     t.string "path"
+    t.string "external_id"
+    t.index ["external_id"], name: "index_artists_on_external_id", unique: true
     t.index ["title"], name: "index_artists_on_title"
   end
 
@@ -70,7 +72,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_10_30_120000) do
     t.integer "plays_count", default: 0, null: false
     t.string "status", default: "draft"
     t.string "path"
-    t.uuid "external_id", default: -> { "gen_random_uuid()" }, null: false
+    t.string "external_id"
     t.index ["artist_id"], name: "index_releases_on_artist_id"
     t.index ["external_id"], name: "index_releases_on_external_id", unique: true
     t.index ["title"], name: "index_releases_on_title"
@@ -94,7 +96,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_10_30_120000) do
     t.bigint "duration"
     t.string "status", default: "draft"
     t.string "path"
-    t.uuid "external_id", default: -> { "gen_random_uuid()" }, null: false
+    t.string "external_id"
     t.index ["external_id"], name: "index_tracks_on_external_id", unique: true
     t.index ["release_id"], name: "index_tracks_on_release_id"
     t.index ["title"], name: "index_tracks_on_title"

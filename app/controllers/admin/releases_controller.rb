@@ -1,4 +1,6 @@
 class Admin::ReleasesController < ApplicationController
+  include AdminAuthorization
+
   before_action :set_release, only: [:show, :edit, :update, :destroy]
 
   def index

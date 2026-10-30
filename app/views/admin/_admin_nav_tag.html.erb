@@ -1,4 +1,4 @@
     <% link_class = active_tab == title ? "nav-link active" : "nav-link" %>
     <li class='nav-item'>
-      <%= link_to(title, link, class: link_class) %>
+      <%= link_to(title, link, class: link_class, data: { turbo_prefetch: false }) %>
     </li>
