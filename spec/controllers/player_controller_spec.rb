@@ -44,4 +44,40 @@ RSpec.describe PlayerController, type: :controller do
       expect(result).to be_nil
     end
   end
+
+  describe '#select_track' do
+    let(:artist) { create(:artist, title: 'Test Artist') }
+    let(:release) { create(:release, artist:, title: 'Test Release') }
+
+    # Creation (id) order deliberately differs from position order,
+    # so wrap-around must follow pos, not id.
+    let!(:last_track) { create(:track, release:, title: 'Last Track', pos: 3) }
+    let!(:first_track) { create(:track, release:, title: 'First Track', pos: 1) }
+    let!(:middle_track) { create(:track, release:, title: 'Middle Track', pos: 2) }
+
+    it 'returns the next track by position' do
+      result = controller.send(:select_track, current_track: first_track, direction: :next)
+      expect(result).to eq(middle_track)
+    end
+
+    it 'returns the previous track by position' do
+      result = controller.send(:select_track, current_track: middle_track, direction: :prev)
+      expect(result).to eq(first_track)
+    end
+
+    it 'wraps to the first track of the release when moving next from the last track' do
+      result = controller.send(:select_track, current_track: last_track, direction: :next)
+      expect(result).to eq(first_track)
+    end
+
+    it 'stays on the current track when moving prev from the first track' do
+      result = controller.send(:select_track, current_track: first_track, direction: :prev)
+      expect(result).to eq(first_track)
+    end
+
+    it 'does not wrap backward to the last track when moving prev from the first track' do
+      result = controller.send(:select_track, current_track: first_track, direction: :prev)
+      expect(result).not_to eq(last_track)
+    end
+  end
 end

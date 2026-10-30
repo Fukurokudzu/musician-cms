@@ -41,9 +41,14 @@ class PlayerController < ApplicationController
   end
 
   def select_track(current_track:, direction: :next)
-    return random_track if invalid_direction?(direction) || single_track?(current_track)
+    return random_track if current_track.nil? || invalid_direction?(direction) || single_track?(current_track)
 
-    find_next_or_previous_track(current_track, direction) || tracks(current_track).first
+    track = find_next_or_previous_track(current_track, direction)
+    return track if track
+
+    # Wrap to the first track of the release only when moving forward;
+    # when moving backward from the first track we stay on the current one.
+    direction == :next ? ordered_tracks(current_track).first : current_track
   end
 
   def invalid_direction?(direction)
@@ -58,8 +63,12 @@ class PlayerController < ApplicationController
     current_track.release.tracks
   end
 
+  def ordered_tracks(current_track)
+    tracks(current_track).order(Arel.sql('COALESCE(pos, 0) ASC'), :id)
+  end
+
   def find_next_or_previous_track(current_track, direction)
-    track_list = tracks(current_track).order(Arel.sql('COALESCE(pos, 0) ASC'), :id).to_a
+    track_list = ordered_tracks(current_track).to_a
     current_index = track_list.index { |track| track.id == current_track.id }
     return nil unless current_index
 
