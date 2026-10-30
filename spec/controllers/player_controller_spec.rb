@@ -80,4 +80,35 @@ RSpec.describe PlayerController, type: :controller do
       expect(result).not_to eq(last_track)
     end
   end
+
+  describe 'JSON actions' do
+    let(:artist) { create(:artist, title: 'Test Artist') }
+    let(:release) { create(:release, artist:, title: 'Test Release') }
+    let!(:first_track) { create(:track, release:, title: 'First Track', pos: 1) }
+    let!(:last_track) { create(:track, release:, title: 'Last Track', pos: 2) }
+
+    before do
+      [first_track, last_track].each do |track|
+        track.audio_file.attach(io: StringIO.new('fake audio'), filename: "#{track.title}.mp3")
+      end
+    end
+
+    it 'wraps to the first track of the release on next_track from the last track' do
+      session[:current_track_id] = last_track.id
+
+      get :next_track, format: :json
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body.dig('track', 'id')).to eq(first_track.id)
+    end
+
+    it 'stays on the first track on previous_track from the first track' do
+      session[:current_track_id] = first_track.id
+
+      get :previous_track, format: :json
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body.dig('track', 'id')).to eq(first_track.id)
+    end
+  end
 end

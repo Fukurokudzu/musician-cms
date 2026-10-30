@@ -1,20 +1,30 @@
 class PlayerController < ApplicationController
   def show
-    @track = Track.find_by(external_id: params[:id]) || Track.find_by(id: params[:id]) || session_track || random_track
+    @track = Track.find_by(external_id: params[:id]) || Track.find_by(id: params[:id]) || active_track
+    return render_no_tracks unless @track
+
     process_track
   end
 
   def next_track
     @track = select_track(current_track: session_track, direction: :next)
+    return render_no_tracks unless @track
+
     process_track
   end
 
   def previous_track
     @track = select_track(current_track: session_track, direction: :prev)
+    return render_no_tracks unless @track
+
     process_track
   end
 
   private
+
+  def render_no_tracks
+    render json: { error: 'No tracks available' }, status: :not_found
+  end
 
   def process_track
     @release = @track.release

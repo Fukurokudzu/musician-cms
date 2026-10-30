@@ -35,18 +35,14 @@ class ApplicationController < ActionController::Base
   end
 
   def set_track
-    @track ||= active_track
+    @track = active_track
 
     if @track.nil?
       Rails.logger.warn 'No tracks available, attempting library scan...'
 
       @track = active_track if initial_scan
 
-      # Fallback if still nil after scanning
-      if @track.nil?
-        Rails.logger.error 'Failed to find any tracks after scan'
-        @track = Track.new(title: 'Missing Track', artist_name: 'System')
-      end
+      Rails.logger.error 'Failed to find any tracks after scan' unless @track
     end
 
     @release = @track&.release
@@ -80,7 +76,7 @@ class ApplicationController < ActionController::Base
   end
 
   def active_track
-    session_track || random_track || default_track
+    session_track || random_track
   end
 
   def session_track
@@ -91,10 +87,6 @@ class ApplicationController < ActionController::Base
 
   def random_track
     @random_track ||= Track.all.sample
-  end
-
-  def default_track
-    @default_track ||= Track.find_by(title: 'Default Track')
   end
 
   def first_run_scan

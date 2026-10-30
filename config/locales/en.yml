@@ -61,3 +61,6 @@ en:
     new_login: "Login information"
     signout: "Sign out"
     remember_me: "Remember me"
+
+  player:
+    empty: "No tracks available"

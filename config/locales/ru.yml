@@ -29,3 +29,6 @@ ru:
     new_login: "Войти"
     signout: "Выйти"
     remember_me: "Запомнить сессию"
+
+  player:
+    empty: "Треки пока не добавлены"

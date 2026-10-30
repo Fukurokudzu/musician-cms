@@ -1,4 +1,8 @@
 <div id="player" data-controller="player">
-    <%= render partial: 'player/controls', locals: { track: @track } %>
-    <%= render partial: 'player/track_info', locals: { track: @track } %>
+  <% if track %>
+    <%= render partial: 'player/controls', locals: { track: } %>
+    <%= render partial: 'player/track_info', locals: { track: } %>
+  <% else %>
+    <div class="player-empty"><%= t('player.empty') %></div>
+  <% end %>
 </div>
