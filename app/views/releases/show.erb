@@ -11,7 +11,7 @@
     <% end %>
   </div>
   <div class="release-show-info">
-    <p><%= t('release.show.tracks_count').lowercase %> <%= @release.tracks.count %>, <%= t('release.show.duration').lowercase %> <%= @release.duration_humanized %></p>
+    <p><%= t('release.show.tracks_count').downcase %> <%= @release.tracks.count %>, <%= t('release.show.duration').downcase %> <%= @release.duration_humanized %></p>
     <p><%= @release.description if @release.description.present? %></p>
     <p>
       <%= t('release.show.released_on', date: l(@release.release_date, format: '%-d %B %Y')) if @release.release_date %>
@@ -20,9 +20,9 @@
     <% if @release.allow_zip_download? %>
       <p class="release-download">
         <%= link_to download_release_path(@release), class: 'release-download-link',
-                    title: t('release.show.download_zip').lowercase do %>
+                    title: t('release.show.download_zip').downcase do %>
           <i class="fas fa-download" aria-hidden="true"></i>
-          <span><%= t('release.show.download_zip').lowercase %></span>
+          <span><%= t('release.show.download_zip').downcase %></span>
         <% end %>
       </p>
     <% end %>
