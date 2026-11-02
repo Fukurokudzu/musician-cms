@@ -1,46 +1,46 @@
 <div class="admin-upload">
-  <h2>Upload Release</h2>
+  <h2><%= t('admin.release.upload_title') %></h2>
   <%= form_with url: upload_admin_releases_path, multipart: true, data: { turbo_stream: true } do |form| %>
     <div class="form-group">
-      <%= form.label :artist_id, 'Artist' %>
-      <%= form.select :artist_id, options_from_collection_for_select(@artists, :id, :title), include_blank: 'Select artist or create new below' %>
+      <%= form.label :artist_id, t('admin.release.artist') %>
+      <%= form.select :artist_id, options_from_collection_for_select(@artists, :id, :title), include_blank: t('admin.release.select_artist') %>
     </div>
     <div class="form-group">
-      <%= form.label :artist_title, 'New Artist Name' %>
+      <%= form.label :artist_title, t('admin.release.new_artist_name') %>
       <%= form.text_field :artist_title %>
     </div>
 
     <div class="form-group">
-      <%= form.label :release_title, 'Release Title' %>
+      <%= form.label :release_title, t('admin.release.fields.title') %>
       <%= form.text_field :release_title %>
     </div>
     <div class="form-group">
-      <%= form.label :genre, 'Genre' %>
+      <%= form.label :genre, t('admin.release.fields.genre') %>
       <%= form.text_field :genre %>
     </div>
     <div class="form-group">
-      <%= form.label :publisher, 'Publisher' %>
+      <%= form.label :publisher, t('admin.release.fields.publisher') %>
       <%= form.text_field :publisher %>
     </div>
     <div class="form-group">
-      <%= form.label :release_date, 'Release Date' %>
+      <%= form.label :release_date, t('admin.release.fields.release_date') %>
       <%= form.date_field :release_date %>
     </div>
     <div class="form-group">
-      <%= form.label :status, 'Status' %>
-      <%= form.select :status, Release.statuses.keys.map { |s| [s.humanize, s] }, selected: 'draft' %>
+      <%= form.label :status, t('admin.release.fields.status') %>
+      <%= form.select :status, Release.statuses.keys.map { |s| [t("admin.statuses.#{s}", default: s.humanize), s] }, selected: 'draft' %>
     </div>
     <div class="form-group">
-      <%= form.label :cover, 'Cover' %>
+      <%= form.label :cover, t('admin.release.cover') %>
       <%= form.file_field :cover, accept: 'image/*' %>
     </div>
     <div class="form-group">
-      <%= form.label :tracks, 'Tracks' %>
+      <%= form.label :tracks, t('admin.release.tracks') %>
       <%= form.file_field :tracks, multiple: true, accept: 'audio/*' %>
     </div>
 
     <div class="form-actions">
-      <%= form.submit 'Upload' %>
+      <%= form.submit t('admin.release.upload') %>
     </div>
   <% end %>
 </div>

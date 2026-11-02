@@ -36,6 +36,35 @@
 !/app/assets/builds/.keep
 /public/assets
 
+# Ignore editor/IDE files: they change all the time and would invalidate
+# the `COPY . .` layer (and with it bootsnap + assets precompile) on
+# every build.
+/.idea
+/.vscode
+
+# Ignore specs and tests: not needed to build the production image, but
+# they change often enough to bust the `COPY . .` cache.
+/spec
+/test
+
+# Ignore files that are not part of the build (docs, service files, tool
+# configs, compose file).
+/*.md
+/.rubocop.yml
+/.rspec
+/.tool-versions
+/.node-version
+/Procfile.dev
+/docker-compose.yml
+/systemd.service.example
+/.gitattributes
+
+# Ignore local music library and any generated credentials: the image must
+# never ship keys, and music belongs to a volume, not to the build context.
+/app/music
+/config/credentials/*
+!/config/credentials/.keep
+
 # Ignore CI service files.
 /.github
 

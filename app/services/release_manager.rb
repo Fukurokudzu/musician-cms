@@ -107,9 +107,12 @@ class ReleaseManager
   end
 
   def update_tracks(release, tracks, metadata)
+    taken_positions = Set.new(release.tracks.pluck(:pos).compact)
+
     tracks.each do |filename, track_path|
       track_info = metadata[filename] || {}
-      track_title = track_info[:title].presence || File.basename(track_path, File.extname(track_path))
+      raw_title = track_info[:title].presence || File.basename(track_path, File.extname(track_path))
+      track_title = Track.without_artist_prefix(raw_title, release.artist&.title)
 
       begin
         track_record = nil
@@ -125,21 +128,42 @@ class ReleaseManager
         track_record ||= release.tracks.new(release: release)
 
         track_record.release = release
-        track_record.title = track_title
+        apply_auto_title(track_record, track_title)
         begin
           track_record.path = track_path if track_record.respond_to?(:path=)
         rescue StandardError
         end
         track_record.duration = track_info[:duration]
-        if track_record.pos.nil?
-          track_record.pos = track_info[:track_number]
-        end
+        apply_position(track_record, track_info, taken_positions)
         track_record.save!
         attach_audio_file(track_record, track_path)
       rescue StandardError => e
         Rails.logger.error("Failed to update track #{track_title} for release #{release.title}: #{e.message}")
       end
     end
+  end
+
+  # Rescans refresh the title only while it hasn't been edited by hand:
+  # auto_title always tracks the last automatic value, and as soon as the
+  # stored title diverges from it, the rescan leaves the title alone.
+  def apply_auto_title(track, new_title)
+    track.title = new_title unless track.manually_edited_title?
+    track.auto_title = new_title
+  end
+
+  # A position is assigned only once, for tracks that don't have one yet:
+  # the track number from the tags is used when it is still free, otherwise
+  # (or when there is no usable number) the track stays position-less and is
+  # appended after the last position by #update_track_positions. Positions
+  # that are already set — e.g. arranged by hand — are never changed.
+  def apply_position(track, track_info, taken_positions)
+    return unless track.pos.nil?
+
+    number = track_info[:track_number].to_i
+    return if number <= 0 || taken_positions.include?(number)
+
+    track.pos = number
+    taken_positions << number
   end
 
   def attach_audio_file(track, track_path)

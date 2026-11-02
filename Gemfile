@@ -56,6 +56,7 @@ gem 'kramdown-parser-gfm'
 gem 'rails-settings-cached'
 gem 'sidekiq', '~> 6.2'
 gem 'wahwah', '~> 1.3'
+gem 'rubyzip', require: 'zip'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

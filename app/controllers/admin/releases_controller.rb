@@ -38,8 +38,10 @@ class Admin::ReleasesController < ApplicationController
       if params[:tracks].present?
         params[:tracks].each_with_index do |track_file, index|
           next if track_file.blank?
+          track_title = Track.title_from_filename(track_file.original_filename, artist: @artist.title)
           track = @release.tracks.new(
-            title: File.basename(track_file.original_filename, File.extname(track_file.original_filename)),
+            title: track_title,
+            auto_title: track_title,
             pos: index + 1,
             status: :draft
           )
@@ -47,7 +49,7 @@ class Admin::ReleasesController < ApplicationController
           track.save!
         end
       end
-      flash.now[:success] = 'Release uploaded'
+      flash.now[:success] = t('admin.release.flash.uploaded')
       render turbo_stream: turbo_stream.update('admin_body', partial: 'system')
     else
       @artists = Artist.all
@@ -68,7 +70,7 @@ class Admin::ReleasesController < ApplicationController
 
   def update
     if @release.update(release_params)
-      flash.now[:success] = 'Release updated'
+      flash.now[:success] = t('admin.release.flash.updated')
       render turbo_stream: [
         turbo_stream.update('admin_body', partial: 'show'),
         turbo_stream.update('flash', partial: 'layouts/flash')
@@ -81,10 +83,10 @@ class Admin::ReleasesController < ApplicationController
 
   def destroy
     if @release.destroy
-      flash.now[:success] = 'Release deleted'
+      flash.now[:success] = t('admin.release.flash.deleted')
       render turbo_stream: turbo_stream.update('admin_body', partial: 'system')
     else
-      flash.now[:error] = 'Could not delete release'
+      flash.now[:error] = t('admin.release.flash.delete_failed')
       render turbo_stream: turbo_stream.update('flash', partial: 'layouts/flash')
     end
   end
@@ -96,6 +98,6 @@ class Admin::ReleasesController < ApplicationController
   end
 
   def release_params
-    params.require(:release).permit(:title, :genre, :publisher, :release_date, :status, tracks_attributes: [:id, :title, :pos, :status, :_destroy])
+    params.require(:release).permit(:title, :genre, :publisher, :release_date, :status, :allow_zip_download, tracks_attributes: [:id, :title, :pos, :status, :_destroy])
   end
 end

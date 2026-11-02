@@ -1,44 +1,48 @@
 <div class="admin-release-edit">
-  <h2>Edit Release</h2>
+  <h2><%= t('admin.release.edit_title') %></h2>
   <%= form_with model: [:admin, @release], data: { turbo_stream: true } do |form| %>
     <div class="form-group">
-      <%= form.label :title %>
+      <%= form.label :title, t('admin.release.fields.title') %>
       <%= form.text_field :title %>
     </div>
     <div class="form-group">
-      <%= form.label :genre %>
+      <%= form.label :genre, t('admin.release.fields.genre') %>
       <%= form.text_field :genre %>
     </div>
     <div class="form-group">
-      <%= form.label :publisher %>
+      <%= form.label :publisher, t('admin.release.fields.publisher') %>
       <%= form.text_field :publisher %>
     </div>
     <div class="form-group">
-      <%= form.label :release_date %>
+      <%= form.label :release_date, t('admin.release.fields.release_date') %>
       <%= form.date_field :release_date %>
     </div>
     <div class="form-group">
-      <%= form.label :status %>
-      <%= form.select :status, Release.statuses.keys.map { |s| [s.humanize, s] }, include_blank: true %>
+      <%= form.label :status, t('admin.release.fields.status') %>
+      <%= form.select :status, Release.statuses.keys.map { |s| [t("admin.statuses.#{s}", default: s.humanize), s] }, include_blank: true %>
+    </div>
+    <div class="form-group">
+      <%= form.label :allow_zip_download, t('admin.release.allow_zip_download') %>
+      <%= form.check_box :allow_zip_download %>
     </div>
 
-    <h3>Tracks</h3>
+    <h3><%= t('admin.release.tracks') %></h3>
     <div id="tracks">
       <%= form.fields_for :tracks, @release.tracks.order(Arel.sql('COALESCE(pos, 0) ASC'), :id) do |track_form| %>
         <div class="track-fields">
-          <%= track_form.label :title %>
+          <%= track_form.label :title, t('admin.release.fields.track_title') %>
           <%= track_form.text_field :title %>
-          <%= track_form.label :pos %>
+          <%= track_form.label :pos, t('admin.release.fields.track_pos') %>
           <%= track_form.number_field :pos %>
-          <%= track_form.label :status %>
-          <%= track_form.select :status, Track.statuses.keys.map { |s| [s.humanize, s] }, include_blank: true %>
+          <%= track_form.label :status, t('admin.release.fields.track_status') %>
+          <%= track_form.select :status, Track.statuses.keys.map { |s| [t("admin.statuses.#{s}", default: s.humanize), s] }, include_blank: true %>
         </div>
       <% end %>
     </div>
 
     <div class="form-actions">
-      <%= form.submit 'Save' %>
-      <%= link_to 'Cancel', admin_release_path(@release), data: { turbo_stream: true, turbo_prefetch: false } %>
+      <%= form.submit t('admin.release.save') %>
+      <%= link_to t('admin.release.cancel'), admin_release_path(@release), data: { turbo_stream: true, turbo_prefetch: false } %>
     </div>
   <% end %>
 </div>

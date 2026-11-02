@@ -38,11 +38,19 @@ RUN curl -sL https://github.com/nodenv/node-build/archive/master.tar.gz | tar xz
     npm install -g yarn@$YARN_VERSION && \
     rm -rf /tmp/node-build-master
 
-# Install application gems
+# Install application gems.
+# The BuildKit cache mount keeps the compiled gems between builds, so a
+# Gemfile.lock change does not recompile native extensions (pg, nokogiri,
+# ...) from scratch. Cache mounts are not part of the image, so the result
+# is copied out into a regular directory that later steps and the final
+# stage can see.
 COPY Gemfile Gemfile.lock ./
-RUN bundle install && \
-    rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
-    bundle exec bootsnap precompile --gemfile
+RUN --mount=type=cache,target=/bundle-cache \
+    BUNDLE_PATH=/bundle-cache bundle install && \
+    rm -rf ~/.bundle/ /bundle-cache/ruby/*/cache /bundle-cache/ruby/*/bundler/gems/*/.git && \
+    BUNDLE_PATH=/bundle-cache bundle exec bootsnap precompile --gemfile && \
+    mkdir -p /gems && cp -a /bundle-cache/. /gems/
+ENV BUNDLE_PATH=/gems
 
 # Install node modules
 COPY .yarnrc package.json package-lock.json yarn.lock ./
@@ -72,23 +80,26 @@ RUN ./bin/rails assets:clean
 # Final stage for app image
 FROM base
 
-# Copy built artifacts: gems, application
-COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
-COPY --from=build /rails /rails
-
-COPY bin/docker-entrypoint /rails/bin/
-RUN chmod +x /rails/bin/docker-entrypoint
-
-# Run and own only the runtime files as a non-root user for security
+# Create the unprivileged app user first so every copied file can get the
+# right owner in a single pass — no recursive chown during the build.
 ARG UID=1000
 ARG GID=1000
 
-# Create rails user with fixed IDs and ensure proper ownership of all files
 RUN set -eux; \
-    groupadd -f -g 1000 rails; \
-    useradd -u 1000 -g 1000 rails --create-home --shell /bin/bash; \
-    chown -R rails:rails /rails
-USER rails:rails
+    groupadd -f -g "${GID}" rails; \
+    useradd -u "${UID}" -g "${GID}" rails --create-home --shell /bin/bash
+
+# Copy built artifacts: gems, application.
+# The gems were copied out of the BuildKit cache mount in the build stage
+# (see above) and now live in /gems there.
+COPY --from=build --chown=rails:rails /gems /usr/local/bundle
+COPY --from=build --chown=rails:rails /rails /rails
+
+COPY --chown=rails:rails --chmod=755 bin/docker-entrypoint /rails/bin/
+
+# The container starts as root so the entrypoint can fix ownership of
+# mounted volumes, then drops privileges to the unprivileged `rails` user
+# before running any application code.
 
 # Entrypoint prepares the database.
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]

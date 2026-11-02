@@ -8,7 +8,11 @@ Rails.application.routes.draw do
   root "main#index"
 
   resources :artists
-  resources :releases
+  resources :releases do
+    member do
+      get :download
+    end
+  end
   resources :tracks
 
   get :admin, to: 'admin#index'

@@ -1,5 +1,17 @@
 ru:
 
+  title: "Название"
+  first_name: "Имя"
+  last_name: "Фамилия"
+  role: "Роль"
+
+  app:
+    profile: "Профиль"
+
+  register:
+    email: "Почта"
+    password: "Пароль"
+
   admin:
     tabs:
       system: "Приложение"
@@ -8,6 +20,48 @@ ru:
       credentials: "Учётные данные"
       library: "Библиотека"
 
+    statuses:
+      draft: "Черновик"
+      published: "Опубликован"
+      archived: "В архиве"
+
+    release:
+      edit_title: "Редактировать релиз"
+      upload_title: "Загрузить релиз"
+      upload: "Загрузить"
+      tracks: "Треки"
+      save: "Сохранить"
+      cancel: "Отмена"
+      edit: "Редактировать"
+      back_to_releases: "К списку релизов"
+      delete: "Удалить"
+      confirm_delete: "Вы уверены?"
+      allow_zip_download: "Разрешить скачивание релиза в ZIP"
+      zip_download: "Скачивание ZIP"
+      enabled: "включено"
+      disabled: "выключено"
+      artist: "Исполнитель"
+      new_artist_name: "Имя нового исполнителя"
+      select_artist: "Выберите исполнителя или создайте нового ниже"
+      cover: "Обложка"
+      flash:
+        uploaded: "Релиз загружен"
+        updated: "Релиз обновлён"
+        deleted: "Релиз удалён"
+        delete_failed: "Не удалось удалить релиз"
+      stats:
+        plays_count: "Прослушивания"
+        tracks_count: "Треки"
+        duration: "Длительность"
+      fields:
+        title: "Название"
+        genre: "Жанр"
+        publisher: "Издатель"
+        release_date: "Дата релиза"
+        status: "Статус"
+        track_title: "Название"
+        track_pos: "Позиция"
+        track_status: "Статус"
 
   settings:
     email: "Почта"
@@ -15,6 +69,13 @@ ru:
     update: "Обновить"
     locale: "Язык"
     edit: "Редактировать"
+    create: "Создать"
+    delete: "Удалить"
+    page_title: "Заголовок страницы"
+    description: "Описание"
+    admin_email: "Почта администратора"
+    admin_password: "Пароль администратора"
+    admin_password_placeholder: "Оставьте пустым, чтобы не менять"
 
   flash:
     alert:
@@ -32,3 +93,28 @@ ru:
 
   player:
     empty: "Треки пока не добавлены"
+
+  release:
+    show:
+      tracks_count: "Треков:"
+      duration: "Длительность:"
+      download_zip: "Скачать релиз"
+      released_on: "выпущен %{date}"
+      released_by: "— %{publisher}"
+
+  # Genitive case: "%-d %B %Y" renders as "3 ноября 2026"
+  date:
+    month_names:
+      -
+      - января
+      - февраля
+      - марта
+      - апреля
+      - мая
+      - июня
+      - июля
+      - августа
+      - сентября
+      - октября
+      - ноября
+      - декабря

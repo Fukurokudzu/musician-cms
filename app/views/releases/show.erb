@@ -2,7 +2,7 @@
   <div class="tracks-container" data-release-id="<%= @release.id %>">
     <h1><%= @release.title %></h1>
     <ul>
-      <%= render(partial: 'track', collection: @release.tracks.order(Arel.sql('COALESCE(pos, 999999)'))) %>
+      <%= render(partial: 'track', collection: @release.tracks.order(Arel.sql('COALESCE(pos, 999999)'), :id)) %>
     </ul>
   </div>
   <div class="release-show-cover">
@@ -13,7 +13,18 @@
   <div class="release-show-info">
     <p><%= t('release.show.tracks_count') %> <%= @release.tracks.count %>, <%= t('release.show.duration') %> <%= @release.duration_humanized %></p>
     <p><%= @release.description %></p>
-    <p><%= "released on " + @release.release_date.strftime("%-d %B %Y") if @release.release_date %>
-    <%= " by " + @release.publisher if @release.publisher %></p>
+    <p>
+      <%= t('release.show.released_on', date: l(@release.release_date, format: '%-d %B %Y')) if @release.release_date %>
+      <%= t('release.show.released_by', publisher: @release.publisher) if @release.publisher %>
+    </p>
+    <% if @release.allow_zip_download? %>
+      <p class="release-download">
+        <%= link_to download_release_path(@release), class: 'release-download-link',
+                    title: t('release.show.download_zip') do %>
+          <i class="fas fa-download" aria-hidden="true"></i>
+          <span><%= t('release.show.download_zip') %></span>
+        <% end %>
+      </p>
+    <% end %>
   </div>
 </div>

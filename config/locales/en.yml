@@ -31,6 +31,18 @@
 
 en:
 
+  title: "Title"
+  first_name: "First name"
+  last_name: "Last name"
+  role: "Role"
+
+  app:
+    profile: "Profile"
+
+  register:
+    email: "Email"
+    password: "Password"
+
   admin:
     tabs:
       system: "System"
@@ -38,6 +50,49 @@ en:
       releases: "Releases"
       credentials: "Credentials"
       library: "Library"
+
+    statuses:
+      draft: "Draft"
+      published: "Published"
+      archived: "Archived"
+
+    release:
+      edit_title: "Edit Release"
+      upload_title: "Upload Release"
+      upload: "Upload"
+      tracks: "Tracks"
+      save: "Save"
+      cancel: "Cancel"
+      edit: "Edit"
+      back_to_releases: "Back to releases"
+      delete: "Delete"
+      confirm_delete: "Are you sure?"
+      allow_zip_download: "Allow downloading the release as ZIP"
+      zip_download: "ZIP download"
+      enabled: "enabled"
+      disabled: "disabled"
+      artist: "Artist"
+      new_artist_name: "New Artist Name"
+      select_artist: "Select artist or create new below"
+      cover: "Cover"
+      flash:
+        uploaded: "Release uploaded"
+        updated: "Release updated"
+        deleted: "Release deleted"
+        delete_failed: "Could not delete release"
+      stats:
+        plays_count: "Plays"
+        tracks_count: "Tracks"
+        duration: "Duration"
+      fields:
+        title: "Title"
+        genre: "Genre"
+        publisher: "Publisher"
+        release_date: "Release date"
+        status: "Status"
+        track_title: "Title"
+        track_pos: "Position"
+        track_status: "Status"
 
   settings:
     email: "Your email"
@@ -47,6 +102,11 @@ en:
     create: "Create"
     delete: "Delete"
     edit: "Edit"
+    page_title: "Page title"
+    description: "Description"
+    admin_email: "Admin email"
+    admin_password: "Admin password"
+    admin_password_placeholder: "Leave blank to keep current password"
 
   flash:
     alert:
@@ -64,3 +124,11 @@ en:
 
   player:
     empty: "No tracks available"
+
+  release:
+    show:
+      tracks_count: "Tracks:"
+      duration: "Duration:"
+      download_zip: "Download release"
+      released_on: "released on %{date}"
+      released_by: "by %{publisher}"

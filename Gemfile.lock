@@ -350,6 +350,7 @@ DEPENDENCIES
   redis (~> 4.0)
   rspec-rails (~> 6.0)
   rubocop-rails
+  rubyzip
   sassc-rails
   selenium-webdriver
   sidekiq (~> 6.2)

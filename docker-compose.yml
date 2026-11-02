@@ -1,10 +1,15 @@
+# Both app services must be built identically (same context, same UID/GID
+# build args), otherwise they would produce two different images and two
+# separate build graphs.
+x-app-build: &app-build
+  context: .
+  args:
+    UID: ${UID:-1000}
+    GID: ${GID:-${UID:-1000}}
+
 services:
   web:
-    build:
-      context: .
-      args:
-        UID: ${UID:-1000}
-        GID: ${GID:-${UID:-1000}}
+    build: *app-build
     volumes:
       - ./log:/rails/log
       - storage_data:/rails/storage
@@ -43,7 +48,7 @@ services:
     image: redis:7
 
   sidekiq:
-    build: .
+    build: *app-build
     command: bundle exec sidekiq
     volumes:
       - ./log:/rails/log

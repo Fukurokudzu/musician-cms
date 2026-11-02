@@ -1,5 +1,17 @@
 #!/bin/bash -e
 
+# The container starts as root so the entrypoint can fix ownership of the
+# runtime volumes (older images may have created them as root), then drops
+# all privileges to the unprivileged app user for the actual work.
+if [ "$(id -u)" = "0" ]; then
+    for dir in /rails/log /rails/storage /rails/app/music /rails/config/credentials; do
+        if [ -d "${dir}" ]; then
+            find "${dir}" ! -user rails -exec chown rails:rails {} +
+        fi
+    done
+    exec setpriv --reuid="$(id -u rails)" --regid="$(id -g rails)" --clear-groups "$0" "$@"
+fi
+
 # Enable jemalloc for reduced memory usage and latency.
 if [ -z "${LD_PRELOAD+x}" ]; then
     LD_PRELOAD=$(find /usr/lib -name libjemalloc.so.2 -print -quit)

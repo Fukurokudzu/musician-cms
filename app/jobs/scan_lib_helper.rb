@@ -13,7 +13,7 @@ module ScanLibHelper
   def self.get_tracks_list(path)
     extensions = Setting.track_extensions.map { |ext| ext.downcase.delete_prefix('.') }
 
-    Dir.children(path).each_with_object({}) do |entry, tracks|
+    Dir.children(path).sort.each_with_object({}) do |entry, tracks|
       next if entry.start_with?('.')
 
       full_path = File.join(path, entry)
