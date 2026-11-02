@@ -16,5 +16,17 @@ RSpec.describe Auth, type: :model do
     end
     
   end
+
+  describe '.change_password!' do
+    it 'sets a new password that authenticates' do
+      Auth.change_password!("new_secret")
+
+      expect(Auth.new(Setting.admin_email, "new_secret").hashed_id).to be_instance_of(String)
+    end
+
+    it 'rejects blank passwords' do
+      expect { Auth.change_password!("") }.to raise_error(ArgumentError)
+    end
+  end
 end
 

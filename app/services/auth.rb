@@ -15,4 +15,13 @@ class Auth
     salt = Setting.admin_salt
     BCrypt::Engine.hash_secret(admin_password, salt)
   end
+
+  # Changes the admin password, rotating the salt as well.
+  # Invalidates all existing admin sessions (session[:hashed_id] no longer matches).
+  def self.change_password!(new_password)
+    raise ArgumentError, "Password can't be blank" if new_password.blank?
+
+    Setting.admin_salt = BCrypt::Engine.generate_salt
+    Setting.admin_hashed_password = hash_password(new_password)
+  end
 end
