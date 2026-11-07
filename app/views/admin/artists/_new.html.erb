@@ -19,5 +19,7 @@
     <%= f.select :role, Artist.roles.keys.map { |key| [key.capitalize, key] }, {}, class: "form-control" %>
   </div>
 
-  <%= f.submit t("settings.create"), class: :"btn btn-primary" %>
+  <div class="form-actions">
+    <%= f.submit t("settings.create"), class: :"btn btn-primary" %>
+  </div>
 <% end %>

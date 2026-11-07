@@ -25,6 +25,10 @@ ru:
       published: "Опубликован"
       archived: "В архиве"
 
+    library:
+      scan: "Сканировать библиотеку"
+      library_path: "Путь к библиотеке"
+
     release:
       edit_title: "Редактировать релиз"
       upload_title: "Загрузить релиз"
@@ -36,6 +40,8 @@ ru:
       back_to_releases: "К списку релизов"
       delete: "Удалить"
       confirm_delete: "Вы уверены?"
+      add_track: "Добавить трек"
+      add: "Добавить"
       allow_zip_download: "Разрешить скачивание релиза в ZIP"
       zip_download: "Скачивание ZIP"
       enabled: "включено"
@@ -49,6 +55,12 @@ ru:
         updated: "Релиз обновлён"
         deleted: "Релиз удалён"
         delete_failed: "Не удалось удалить релиз"
+        no_track_file: "Выберите хотя бы один аудиофайл"
+        tracks_added:
+          one: "Трек добавлен"
+          few: "Трека добавлено"
+          many: "Треков добавлено"
+          other: "Треков добавлено"
       stats:
         plays_count: "Прослушивания"
         tracks_count: "Треки"

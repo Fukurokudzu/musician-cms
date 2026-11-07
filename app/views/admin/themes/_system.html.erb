@@ -59,10 +59,14 @@
                       class: "form-control") %>
   </div>
 
-  <%= f.submit t("settings.update"), class: :"btn btn-primary" %>
+  <div class="form-actions">
+    <%= f.submit t("settings.update"), class: :"btn btn-primary" %>
+  </div>
 <% end %>
 
 <% if ActiveStorage::Blob.find_signed(Setting.background_image.presence) %>
-  <%= button_to 'Remove background', admin_themes_path, method: :delete,
-                class: 'btn btn-danger', data: { turbo_confirm: 'Remove background image?' } %>
+  <div class="admin-actions">
+    <%= button_to 'Remove background', admin_themes_path, method: :delete,
+                  class: 'btn btn-danger', data: { turbo_confirm: 'Remove background image?' } %>
+  </div>
 <% end %>

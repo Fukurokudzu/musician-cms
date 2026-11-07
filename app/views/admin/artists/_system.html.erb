@@ -1,1 +1,4 @@
-<%= button_to('New artist', new_admin_artist_path, method: :get, class: 'btn btn-light align-middle') %>
+<div class="admin-actions">
+  <%= link_to 'New artist', new_admin_artist_path, class: 'btn btn-primary',
+              data: { turbo_stream: true, turbo_prefetch: false } %>
+</div>

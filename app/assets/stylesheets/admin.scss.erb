@@ -74,38 +74,90 @@
   cursor: pointer;
 }
 
-.admin .form-actions {
+.admin .form-actions,
+.admin .admin-actions {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 1rem;
   margin-top: 1.5rem;
+}
+
+.admin .admin-actions {
+  margin-top: 1rem;
+}
+
+/* button_to wraps the control into its own form: keep it inline so buttons
+   sit on the same line as plain links instead of dropping to a new row. */
+.admin form.button_to {
+  display: inline-block;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  vertical-align: middle;
 }
 
 .admin input[type="submit"],
 .admin .btn {
   display: inline-block;
   padding: 0.375rem 0.75rem;
-  border: 1px solid transparent;
+  border: 1px solid #ced4da;
   border-radius: 0.25rem;
-  background-color: #0d6efd;
-  color: #fff;
+  background-color: #e9ecef;
+  color: #212529;
+  font-family: inherit;
   font-size: 1rem;
+  line-height: 1.5;
+  text-align: center;
   text-decoration: none;
+  white-space: nowrap;
   cursor: pointer;
+  vertical-align: middle;
 }
 
 .admin input[type="submit"]:hover,
 .admin .btn:hover {
-  background-color: #0b5ed7;
+  background-color: #dde1e5;
+  border-color: #b9c1c9;
+  color: #212529;
+}
+
+.admin input[type="submit"],
+.admin .btn-primary {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
   color: #fff;
+}
+
+.admin input[type="submit"]:hover,
+.admin .btn-primary:hover {
+  background-color: #0b5ed7;
+  border-color: #0b5ed7;
+  color: #fff;
+}
+
+.admin .btn-light {
+  background-color: #f8f9fa;
+  border-color: #ced4da;
+  color: #212529;
+}
+
+.admin .btn-light:hover {
+  background-color: #d3d6d9;
+  border-color: #b9c1c9;
+  color: #212529;
 }
 
 .admin .btn-danger {
   background-color: #dc3545;
+  border-color: #dc3545;
+  color: #fff;
 }
 
 .admin .btn-danger:hover {
   background-color: #bb2d3b;
+  border-color: #b02a37;
+  color: #fff;
 }
 
 /* Release edit: tracks */
@@ -139,6 +191,49 @@
   gap: 1rem;
   padding: 0.375rem 0;
   border-bottom: 1px solid #eee;
+}
+
+/* Add track form (release details) */
+
+.admin .add-track-form {
+  margin-top: 1.5rem;
+}
+
+/* Artist: update / destroy actions */
+
+.admin .destroy-button-container {
+  margin-top: 1.5rem;
+}
+
+/* Library: path field and the save/scan buttons share one row */
+
+.admin .library-actions {
+  margin-top: 0;
+}
+
+.admin .library-actions > form:not(.button_to) {
+  flex: 1 1 20rem;
+  max-width: 36rem;
+  margin: 0;
+}
+
+.admin .library-field {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+}
+
+.admin .library-field label {
+  margin-bottom: 0;
+  white-space: nowrap;
+}
+
+.admin .library-field input[type="text"] {
+  flex: 1 1 14rem;
+  width: auto;
+  min-width: 10rem;
+  margin: 0;
 }
 
 .admin .release-cover {

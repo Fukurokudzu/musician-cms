@@ -42,7 +42,8 @@
 
     <div class="form-actions">
       <%= form.submit t('admin.release.save') %>
-      <%= link_to t('admin.release.cancel'), admin_release_path(@release), data: { turbo_stream: true, turbo_prefetch: false } %>
+      <%= link_to t('admin.release.cancel'), admin_release_path(@release), class: 'btn',
+                  data: { turbo_stream: true, turbo_prefetch: false } %>
     </div>
   <% end %>
 </div>

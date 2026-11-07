@@ -24,19 +24,17 @@
       <label for="description">Artist description</label>
       <%= f.text_area :description, class: "admin-artist-description", id: "artist_description" %>
     </div>
-    <%= f.submit 'Update', class: "btn btn-primary" %>
-  <% end %>
-    <div class="mb-3 mt-3 destroy-button-container">
-      <%= button_to "Destroy", [:admin, @artist], method: :delete, class: "btn btn-danger", data: { confirm: "Are you sure?" }, onclick: "return confirmDelete();" %>
+    <div class="form-actions">
+      <%= f.submit 'Update', class: "btn btn-primary" %>
     </div>
+  <% end %>
+  <div class="admin-actions destroy-button-container">
+    <%= button_to "Destroy", [:admin, @artist], method: :delete, class: "btn btn-danger", data: { turbo_confirm: "Are you sure?" } %>
+  </div>
 
 </div>
 
 <script>
-    function confirmDelete() {
-        return confirm("Are you sure? This will delete the artist and all associated works.");
-    }
-
     function initializeSimpleMDE() {
         // Remove any existing SimpleMDE instances
         const existingEditors = document.querySelectorAll('.editor-toolbar');

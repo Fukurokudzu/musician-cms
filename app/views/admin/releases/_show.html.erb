@@ -12,11 +12,13 @@
       <p><%= t('admin.release.stats.plays_count') %>: <%= @release.plays_count %></p>
       <p><%= t('admin.release.stats.tracks_count') %>: <%= @release.tracks.count %></p>
       <p><%= t('admin.release.stats.duration') %>: <%= @release.duration_humanized %></p>
-      <%= link_to t('admin.release.edit'), edit_admin_release_path(@release), class: 'btn btn-primary',
-                  data: { turbo_stream: true, turbo_prefetch: false } %>
-      <%= link_to t('admin.release.back_to_releases'), admin_releases_path, class: 'btn',
-                  data: { turbo_stream: true, turbo_prefetch: false } %>
-      <%= button_to t('admin.release.delete'), admin_release_path(@release), method: :delete, data: { turbo_confirm: t('admin.release.confirm_delete') }, class: 'btn btn-danger' %>
+      <div class="admin-actions">
+        <%= link_to t('admin.release.edit'), edit_admin_release_path(@release), class: 'btn btn-primary',
+                    data: { turbo_stream: true, turbo_prefetch: false } %>
+        <%= link_to t('admin.release.back_to_releases'), admin_releases_path, class: 'btn',
+                    data: { turbo_stream: true, turbo_prefetch: false } %>
+        <%= button_to t('admin.release.delete'), admin_release_path(@release), method: :delete, data: { turbo_confirm: t('admin.release.confirm_delete') }, class: 'btn btn-danger' %>
+      </div>
     </div>
   </div>
 
@@ -27,6 +29,17 @@
         <span class="track-pos"><%= track.pos || '-' %></span>
         <span class="track-title"><%= track.title %></span>
         <span class="track-status"><%= track.status %></span>
+      </div>
+    <% end %>
+
+    <%= form_with url: add_tracks_admin_release_path(@release), class: 'add-track-form', multipart: true,
+                  data: { turbo_stream: true } do |form| %>
+      <div class="form-group">
+        <%= form.label :tracks, t('admin.release.add_track') %>
+        <%= form.file_field :tracks, multiple: true, accept: 'audio/*', required: true %>
+      </div>
+      <div class="form-actions">
+        <%= form.submit t('admin.release.add') %>
       </div>
     <% end %>
   </div>

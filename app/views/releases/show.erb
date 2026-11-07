@@ -14,7 +14,7 @@
     <p><%= t('release.show.tracks_count').downcase %> <%= @release.tracks.count %>, <%= t('release.show.duration').downcase %> <%= @release.duration_humanized %></p>
     <p><%= @release.description if @release.description.present? %></p>
     <p>
-      <%= t('release.show.released_on', date: l(@release.release_date, format: '%-d %B %Y')) if @release.release_date %>
+      <%= t('release.show.released_on', date: l(@release.release_date, format: '%-d %B %Y').downcase) if @release.release_date %>
       <%= t('release.show.released_by', publisher: @release.publisher) if @release.publisher.present? %>
     </p>
     <% if @release.allow_zip_download? %>

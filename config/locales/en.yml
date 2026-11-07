@@ -56,6 +56,10 @@ en:
       published: "Published"
       archived: "Archived"
 
+    library:
+      scan: "Scan library"
+      library_path: "Library path"
+
     release:
       edit_title: "Edit Release"
       upload_title: "Upload Release"
@@ -67,6 +71,8 @@ en:
       back_to_releases: "Back to releases"
       delete: "Delete"
       confirm_delete: "Are you sure?"
+      add_track: "Add track"
+      add: "Add"
       allow_zip_download: "Allow downloading the release as ZIP"
       zip_download: "ZIP download"
       enabled: "enabled"
@@ -80,6 +86,10 @@ en:
         updated: "Release updated"
         deleted: "Release deleted"
         delete_failed: "Could not delete release"
+        no_track_file: "Select at least one audio file"
+        tracks_added:
+          one: "Track added"
+          other: "Tracks added"
       stats:
         plays_count: "Plays"
         tracks_count: "Tracks"

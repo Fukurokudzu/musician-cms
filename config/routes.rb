@@ -25,6 +25,9 @@ Rails.application.routes.draw do
         get :new_upload
         post :upload
       end
+      member do
+        post :add_tracks
+      end
     end
   end
 

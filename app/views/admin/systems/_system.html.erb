@@ -26,5 +26,7 @@
     <%= f.label :admin_password, t('settings.admin_password', default: 'Admin Password') %>
     <%= f.password_field :admin_password, class: "form-control", autocomplete: "new-password", placeholder: t('settings.admin_password_placeholder', default: 'Leave blank to keep current password') %>
   </div>
-  <%= f.submit t("settings.update"), class: :"btn btn-primary" %>
+  <div class="form-actions">
+    <%= f.submit t("settings.update"), class: :"btn btn-primary" %>
+  </div>
 <% end %>

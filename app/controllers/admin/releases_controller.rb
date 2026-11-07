@@ -1,7 +1,7 @@
 class Admin::ReleasesController < ApplicationController
   include AdminAuthorization
 
-  before_action :set_release, only: [:show, :edit, :update, :destroy]
+  before_action :set_release, only: [:show, :edit, :update, :destroy, :add_tracks]
 
   def index
     render turbo_stream: turbo_stream.update('admin_body', partial: 'system')
@@ -35,20 +35,7 @@ class Admin::ReleasesController < ApplicationController
     @release.cover.attach(params[:cover]) if params[:cover].present?
 
     if @release.save
-      if params[:tracks].present?
-        params[:tracks].each_with_index do |track_file, index|
-          next if track_file.blank?
-          track_title = Track.title_from_filename(track_file.original_filename, artist: @artist.title)
-          track = @release.tracks.new(
-            title: track_title,
-            auto_title: track_title,
-            pos: index + 1,
-            status: :draft
-          )
-          track.audio_file.attach(track_file)
-          track.save!
-        end
-      end
+      @release.add_tracks!(params[:tracks])
       flash.now[:success] = t('admin.release.flash.uploaded')
       render turbo_stream: turbo_stream.update('admin_body', partial: 'system')
     else
@@ -68,13 +55,25 @@ class Admin::ReleasesController < ApplicationController
     ]
   end
 
+  def add_tracks
+    tracks = @release.add_tracks!(params[:tracks], after_pos: @release.tracks.maximum(:pos).to_i)
+
+    if tracks.empty?
+      flash.now[:error] = t('admin.release.flash.no_track_file')
+    else
+      flash.now[:success] = t('admin.release.flash.tracks_added', count: tracks.size)
+    end
+
+    render_release_show
+  rescue StandardError => e
+    flash.now[:error] = e.message
+    render_release_show
+  end
+
   def update
     if @release.update(release_params)
       flash.now[:success] = t('admin.release.flash.updated')
-      render turbo_stream: [
-        turbo_stream.update('admin_body', partial: 'show'),
-        turbo_stream.update('flash', partial: 'layouts/flash')
-      ]
+      render_release_show
     else
       flash.now[:error] = @release.errors.full_messages.join(', ')
       render turbo_stream: turbo_stream.update('flash', partial: 'layouts/flash'), status: :unprocessable_entity
@@ -95,6 +94,13 @@ class Admin::ReleasesController < ApplicationController
 
   def set_release
     @release = Release.find_by(external_id: params[:id]) || Release.find_by(id: params[:id])
+  end
+
+  def render_release_show
+    render turbo_stream: [
+      turbo_stream.update('admin_body', partial: 'show'),
+      turbo_stream.update('flash', partial: 'layouts/flash')
+    ]
   end
 
   def release_params

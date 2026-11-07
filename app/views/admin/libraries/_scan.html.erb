@@ -1,7 +1,11 @@
-<%= form_for(Setting.new, url: admin_system_path, method: :put) do |f| %>
-  <div class="mb-3 mt-3">
-    <%= f.text_field(:library_path, required: true, value: Setting.library_path,
-                     class: "form-control") %>
-  </div>
-<% end %>
-  <%= button_to('scan', admin_library_path, method: :put, class: 'btn btn-light align-middle') %>
+<div class="admin-actions library-actions">
+  <%= form_for(Setting.new, url: admin_system_path, method: :put) do |f| %>
+    <div class="library-field">
+      <%= f.label :library_path, t('admin.library.library_path') %>
+      <%= f.text_field(:library_path, required: true, value: Setting.library_path,
+                       class: "form-control") %>
+      <%= f.submit t('settings.update'), class: 'btn btn-primary' %>
+    </div>
+  <% end %>
+  <%= button_to t('admin.library.scan'), admin_library_path, method: :put, class: 'btn btn-light' %>
+</div>
