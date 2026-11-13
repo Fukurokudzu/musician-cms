@@ -106,6 +106,10 @@ ru:
   player:
     empty: "Треки пока не добавлены"
 
+  artists:
+    show:
+      releases: "Релизы"
+
   release:
     show:
       tracks_count: "Треков:"

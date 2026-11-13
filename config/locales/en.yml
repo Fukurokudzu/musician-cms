@@ -135,6 +135,10 @@ en:
   player:
     empty: "No tracks available"
 
+  artists:
+    show:
+      releases: "Releases"
+
   release:
     show:
       tracks_count: "Tracks:"

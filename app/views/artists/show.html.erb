@@ -9,22 +9,31 @@
   </div>
 </div>
 
-<div class="artist-show-albums">
-  <div class="albums-list">
-    <% @artist.releases.each do |release| %>
-      <div class="release-item">
-        <%= link_to release_path(release) do %>
-          <div class="release-cover">
-            <% if release.cover.attached? %>
-              <%= cover_image_tag release.cover, size: [200, 200], alt: release.title, class: 'release-cover-image' %>
-            <% else %>
-              <%= image_tag 'default_cover.png', alt: 'Default Cover', class: 'release-cover-image' %>
-            <% end %>
-          </div>
+<% if @artist.releases.any? %>
+  <div class="artist-show-albums">
+    <h3 class="artist-releases-title"><%= t('artists.show.releases') %></h3>
+    <% @artist.releases
+         .group_by { |release| release.release_date&.year }
+         .sort_by { |year, _| year ? -year : Float::INFINITY }.each do |year, releases| %>
+      <div class="artist-releases-group">
+        <% if year %>
+          <h4 class="artist-releases-year"><%= year %></h4>
         <% end %>
-
-        <span class="release-year"><%= release.release_date if release.release_date.present? %></span>
+        <div class="albums-list">
+          <% releases.each do |release| %>
+            <%= link_to release_path(release), class: 'release-item' do %>
+              <div class="release-cover">
+                <% if release.cover.attached? %>
+                  <%= cover_image_tag release.cover, size: [200, 200], alt: release.title, class: 'release-cover-image' %>
+                <% else %>
+                  <%= image_tag 'default_cover.png', alt: 'Default Cover', class: 'release-cover-image' %>
+                <% end %>
+              </div>
+              <span class="release-item-title"><%= release.title %></span>
+            <% end %>
+          <% end %>
+        </div>
       </div>
     <% end %>
   </div>
-</div>
+<% end %>
