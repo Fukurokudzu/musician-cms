@@ -34,6 +34,9 @@ class Setting < RailsSettings::Base
     field :description, default: "Application description for search engines"
     field :footer_email, default: "it.fukurokudzu@gmail.com"
     field :footer_year, default: "2024"
+    field :footer_link_type, default: "email", option_values: %w[email url]
+    field :footer_subject, default: "Musician cms"
+    field :footer_url, default: ""
   end
 
   scope :theme do
@@ -45,6 +48,7 @@ class Setting < RailsSettings::Base
     field :accent_color, default: "#d35400"
     field :a_color, default: "#ffffff"
     field :a_hover_color, default: "#ffffff"
+    field :border_radius, default: 5
     field :background_image, default: "", type: :string # ActiveStorage signed_id
   end
 end

@@ -14,6 +14,30 @@
     <%= f.text_area(:description, value: Setting.description,
     class: "form-control") %>
   </div>
+  <div class="mb-3 mt-3" data-controller="footer-link">
+    <%= f.label :footer_link_type, t('settings.footer_link_type', default: 'Footer link') %>
+    <%= f.select(:footer_link_type,
+                 [[t('settings.footer_type_email', default: 'Email'), 'email'],
+                  [t('settings.footer_type_url', default: 'Web link'), 'url']],
+                 { selected: Setting.footer_link_type },
+                 { class: "form-select", data: { footer_link_target: 'type', action: 'change->footer-link#toggle' } }) %>
+
+    <div class="mt-2" data-footer-link-target="emailSection">
+      <div class="mb-2">
+        <%= f.label :footer_email, t('settings.footer_email', default: 'Email') %>
+        <%= f.email_field(:footer_email, value: Setting.footer_email, class: "form-control") %>
+      </div>
+      <div class="mb-2">
+        <%= f.label :footer_subject, t('settings.footer_subject', default: 'Email subject') %>
+        <%= f.text_field(:footer_subject, value: Setting.footer_subject, class: "form-control") %>
+      </div>
+    </div>
+
+    <div class="mt-2" data-footer-link-target="urlSection">
+      <%= f.label :footer_url, t('settings.footer_url', default: 'Link URL') %>
+      <%= f.url_field(:footer_url, value: Setting.footer_url, placeholder: 'https://example.com', class: "form-control") %>
+    </div>
+  </div>
   <div class="field mb-3 mt-3">
     <%= f.label :timezone, t('settings.timezone', default: 'Timezone') %>
     <%= f.time_zone_select(:timezone, nil, { default: "Setting.timezone" }, { class: "form-select" }) %>

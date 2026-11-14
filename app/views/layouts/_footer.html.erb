@@ -1,6 +1,14 @@
 <footer id="footer" class="bg-dark text-center mt-auto">
   <div class="footer-text">
-    <a href="mailto:<%= Setting.footer_email %>?subject=Musician cms" class="text-white"><%= '© ' + Setting.footer_email %></a>,
-    &nbsp;<%= Setting.footer_year %>
+<% if Setting.footer_link_type == 'url' && Setting.footer_url.present? %>
+  <a href="<%= Setting.footer_url %>" class="text-white"><%= '© ' + Setting.footer_url %></a>,
+<% else %>
+  <%
+    mailto = "mailto:#{Setting.footer_email}"
+    mailto += "?subject=#{ERB::Util.url_encode(Setting.footer_subject)}" if Setting.footer_subject.present?
+  %>
+  <a href="<%= mailto %>" class="text-white"><%= '© ' + Setting.footer_email %></a>,
+<% end %>
+  &nbsp;<%= Setting.footer_year %>
   </div>
 </footer>

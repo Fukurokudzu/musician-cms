@@ -59,6 +59,12 @@
                       class: "form-control") %>
   </div>
 
+  <div class="mb-3 mt-3">
+    <label for="border_radius">Corner radius (px)</label>
+    <%= f.number_field(:border_radius, min: 0, max: 50, step: 1, required: true, value: Setting.border_radius,
+                      class: "form-control") %>
+  </div>
+
   <div class="form-actions">
     <%= f.submit t("settings.update"), class: :"btn btn-primary" %>
   </div>

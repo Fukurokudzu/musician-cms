@@ -102,7 +102,7 @@
   display: inline-block;
   padding: 0.375rem 0.75rem;
   border: 1px solid #ced4da;
-  border-radius: 0.25rem;
+  border-radius: calc(var(--border-radius, 5) * 1px);
   background-color: #e9ecef;
   color: #212529;
   font-family: inherit;
@@ -158,6 +158,60 @@
   background-color: #bb2d3b;
   border-color: #b02a37;
   color: #fff;
+}
+
+/* Admin header */
+
+.admin-header {
+  width: 100%;
+  background-color: var(--main-menu-bg-color);
+  border-bottom: 2px solid var(--accent-color);
+}
+
+.admin-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  padding: 0.5rem 1.25rem;
+}
+
+.admin-nav-brand {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--artist-title-color);
+  text-decoration: none;
+}
+
+.admin-nav-brand:hover {
+  color: var(--a-hover-color);
+  text-decoration: none;
+}
+
+.admin-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.admin-nav-link {
+  padding: 0.25rem 0.875rem;
+  border: 1px solid transparent;
+  border-radius: calc(var(--border-radius, 5) * 1px);
+  color: var(--a-color);
+  text-decoration: none;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.admin-nav-link:hover {
+  color: var(--a-hover-color);
+  background-color: rgba(255, 255, 255, 0.08);
+  text-decoration: none;
+}
+
+.admin-nav-link--signout {
+  border-color: var(--accent-color);
 }
 
 /* Release edit: tracks */
@@ -240,6 +294,7 @@
   max-width: 10rem;
   max-height: 10rem;
   margin-bottom: 1rem;
+  border-radius: calc(var(--border-radius, 5) * 1px);
 }
 
 /* Releases index */

@@ -23,6 +23,15 @@ main {
     padding-bottom: 8rem;
 }
 
+/* Admin pages sit closer to the fixed player: 2rem footer + player height */
+main.admin-session {
+    padding-bottom: 7rem;
+}
+
+main.admin-session .admin {
+    flex: 1 1 auto;
+}
+
 a {
     color: var(--a-color);
     text-decoration: none;
@@ -69,7 +78,7 @@ header {
     width: 90%;
     padding: 1rem;
     background-color: rgba(0, 0, 0, 0.5);
-    border-radius: 5px;
+    border-radius: calc(var(--border-radius, 5) * 1px);
     display: grid;
     row-gap: 1rem;
     column-gap: 1rem;
@@ -105,6 +114,7 @@ header {
 .cover {
     width: 15rem;
     height: 15rem;
+    border-radius: calc(var(--border-radius, 5) * 1px);
 }
 
 #footer {

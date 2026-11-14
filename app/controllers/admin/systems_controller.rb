@@ -16,6 +16,7 @@ class Admin::SystemsController < ApplicationController
   private
 
   def check_params
-    params.require(:setting).permit(:admin_email, :admin_password, :description, :page_title, :timezone, :locale, :library_path)
+    params.require(:setting).permit(:admin_email, :admin_password, :description, :page_title, :timezone, :locale, :library_path,
+                                    :footer_link_type, :footer_email, :footer_subject, :footer_url)
   end
 end

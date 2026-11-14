@@ -3,7 +3,7 @@
   width: 90%;
   padding: 1rem;
   background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 5px;
+  border-radius: calc(var(--border-radius, 5) * 1px);
   color: var(--text-color);
   border-right: solid 3px var(--accent-color);
 }
@@ -55,7 +55,7 @@ blockquote {
 .artist-show-albums .release-cover {
   aspect-ratio: 1 / 1;
   overflow: hidden;
-  border-radius: 5px;
+  border-radius: calc(var(--border-radius, 5) * 1px);
 }
 
 .artist-show-albums .release-cover-image {
