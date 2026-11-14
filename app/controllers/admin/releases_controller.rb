@@ -4,7 +4,10 @@ class Admin::ReleasesController < ApplicationController
   before_action :set_release, only: [:show, :edit, :update, :destroy, :add_tracks]
 
   def index
-    render turbo_stream: turbo_stream.update('admin_body', partial: 'system')
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.update('admin_body', partial: 'system') }
+      format.html { redirect_to admin_path }
+    end
   end
 
   def show

@@ -2,13 +2,19 @@ class Admin::SystemsController < ApplicationController
   include AdminAuthorization
 
   def show
-    render turbo_stream: turbo_stream.update("admin_body", partial: "system")
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.update("admin_body", partial: "system") }
+      format.html { redirect_to admin_path }
+    end
   end
 
   def update
     if update_system_settings(check_params)
       flash[:success] = t('admin.system.flash.updated', default: 'Settings updated')
-      redirect_to admin_path, status: :see_other
+      respond_to do |format|
+        format.turbo_stream { redirect_to admin_path, status: :see_other }
+        format.html { redirect_to admin_path, status: :see_other }
+      end
     else
       flash.now[:error] = t('admin.system.flash.error', default: 'Could not update settings')
       render turbo_stream: turbo_stream.update("flash", partial: "layouts/flash"), status: :unprocessable_entity

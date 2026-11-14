@@ -29,7 +29,10 @@ class Admin::ArtistsController < ArtistsController
   end
 
   def index
-    render turbo_stream: turbo_stream.update('admin_body', partial: 'index')
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.update('admin_body', partial: 'index') }
+      format.html { redirect_to admin_path }
+    end
   end
 
   def update

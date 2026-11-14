@@ -6,6 +6,10 @@ A simple self-hosted Ruby on Rails CMS for musician portfolios — publish relea
   <img src="docs/images/main.png" alt="musician-cms — main page" width="820">
 </p>
 
+<p align="center">
+  <img src="docs/images/admin.png" alt="musician-cms — admin panel" width="820">
+</p>
+
 ## ⚠️ Status: Alpha
 
 This project is in active development. Expect breaking changes, incomplete features and rough edges. Do not use it in production without reviewing the code and keeping backups.
@@ -49,7 +53,7 @@ cp .env.example .env
 docker compose up -d --build
 ```
 
-That's it. On first run the entrypoint generates Rails credentials and prepares the database automatically.
+That's it. On first run the entrypoint generates Rails credentials and prepares the database automatically. See [DEPLOY.md](DEPLOY.md) for deployment details.
 
 The web app will be available at `http://localhost:3003` (the port is mapped to `127.0.0.1`, put your reverse proxy in front for HTTPS).
 

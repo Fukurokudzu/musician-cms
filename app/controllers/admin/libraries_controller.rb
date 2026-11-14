@@ -2,7 +2,10 @@ class Admin::LibrariesController < ApplicationController
   include AdminAuthorization
 
   def show
-    render turbo_stream: turbo_stream.update('admin_body', partial: 'system')
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.update('admin_body', partial: 'system') }
+      format.html { redirect_to admin_path }
+    end
   end
 
   def update

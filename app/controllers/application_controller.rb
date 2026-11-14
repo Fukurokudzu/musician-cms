@@ -67,6 +67,8 @@ class ApplicationController < ActionController::Base
       Setting.public_send("#{key}=", value)
     end
     Setting.clear_cache if Setting.respond_to?(:clear_cache)
+    Rails.cache.delete_matched("rails_settings_cached/*") if Rails.cache.respond_to?(:delete_matched)
+    true
   end
 
   def update_session_track_id
