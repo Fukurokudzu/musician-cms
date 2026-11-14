@@ -7,9 +7,11 @@ class Admin::ThemesController < ApplicationController
 
   def update
     background = params[:setting]&.dig(:background_image)
+    favicon = params[:setting]&.dig(:favicon)
 
     if update_system_settings(check_params)
       attach_background!(background) if background.present?
+      attach_favicon!(favicon) if favicon.present?
       #FIXME translation
       flash.now[:success] = 'Settings updated'
     end
@@ -18,9 +20,15 @@ class Admin::ThemesController < ApplicationController
   end
 
   def destroy
-    purge_background!
-    #FIXME translation
-    flash.now[:success] = 'Background image removed'
+    if params[:target] == 'favicon'
+      purge_favicon!
+      #FIXME translation
+      flash.now[:success] = 'Favicon removed'
+    else
+      purge_background!
+      #FIXME translation
+      flash.now[:success] = 'Background image removed'
+    end
 
     render turbo_stream: [
       turbo_stream.update('admin_body', partial: 'system'),
@@ -54,5 +62,26 @@ class Admin::ThemesController < ApplicationController
   def purge_background!
     ActiveStorage::Blob.find_signed(Setting.background_image.presence)&.purge
     Setting.background_image = ''
+  end
+
+  def attach_favicon!(file)
+    unless file.content_type.to_s.match?(%r{image/(png|x-icon|vnd\.microsoft\.icon|svg\+xml|webp)})
+      flash.now[:error] = 'Favicon must be an image file (PNG, ICO, SVG or WebP)'
+      return
+    end
+
+    purge_favicon!
+
+    blob = ActiveStorage::Blob.create_and_upload!(
+      io: file.tempfile,
+      filename: file.original_filename,
+      content_type: file.content_type
+    )
+    Setting.favicon = blob.signed_id
+  end
+
+  def purge_favicon!
+    ActiveStorage::Blob.find_signed(Setting.favicon.presence)&.purge
+    Setting.favicon = ''
   end
 end

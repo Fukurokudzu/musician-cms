@@ -3,7 +3,7 @@ class ThemesController < ApplicationController
 
   def variables
     theme_fields = Setting.defined_fields
-                          .reject { |field| field[:readonly] || field[:key].to_s == 'background_image' }
+                          .reject { |field| field[:readonly] || %w[background_image favicon].include?(field[:key].to_s) }
                           .group_by { |field| field[:scope] }[:theme] || []
 
     css = ":root {\n"

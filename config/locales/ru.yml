@@ -70,6 +70,7 @@ ru:
         genre: "Жанр"
         publisher: "Издатель"
         release_date: "Дата релиза"
+        description: "Описание"
         status: "Статус"
         track_title: "Название"
         track_pos: "Позиция"

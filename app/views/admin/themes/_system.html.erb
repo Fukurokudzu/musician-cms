@@ -12,6 +12,22 @@
   </div>
 
   <div class="mb-3 mt-3">
+    <label for="setting_favicon">Favicon</label>
+    <% favicon_blob = ActiveStorage::Blob.find_signed(Setting.favicon.presence) %>
+    <% if favicon_blob %>
+      <div class="admin-favicon-preview">
+        <%= image_tag url_for(favicon_blob), alt: 'Favicon' %>
+      </div>
+      <div class="admin-actions">
+        <%= button_to 'Remove favicon', admin_themes_path, method: :delete,
+                      params: { target: 'favicon' }, class: 'btn btn-danger',
+                      data: { turbo_confirm: 'Remove favicon?' } %>
+      </div>
+    <% end %>
+    <%= f.file_field :favicon, accept: 'image/*' %>
+  </div>
+
+  <div class="mb-3 mt-3">
     <label for="artist_title_color">Artist title</label>
     <%= f.color_field(:artist_title_color, required: true, pattern: Setting.artist_title_color, value: Setting.artist_title_color,
                       class: "form-control") %>

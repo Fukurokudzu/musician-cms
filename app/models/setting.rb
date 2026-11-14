@@ -49,6 +49,7 @@ class Setting < RailsSettings::Base
     field :a_color, default: "#ffffff"
     field :a_hover_color, default: "#ffffff"
     field :border_radius, default: 5
+    field :favicon, default: "", type: :string # ActiveStorage signed_id
     field :background_image, default: "", type: :string # ActiveStorage signed_id
   end
 end

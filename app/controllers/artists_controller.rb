@@ -28,22 +28,7 @@ class ArtistsController < ApplicationController
     @artist = find_artist
     return if @artist.description.nil?
 
-    options = {
-      auto_ids: true,
-      footnote_nr: 1,
-      entity_output: :as_char,
-      toc_levels: (1..6),
-      smart_quotes: ['lsquo', 'rsquo', 'ldquo', 'rdquo'],
-      input: 'GFM', # GitHub Flavored Markdown
-      hard_wrap: false,
-      enable_coderay: true,
-      coderay_line_numbers: nil,
-      coderay_css: :style,
-      coderay_bold_every: 10,
-      coderay_tab_width: 4
-    }
-
-    @md_description = Kramdown::Document.new(@artist.description, options).to_html.html_safe
+    @md_description = MarkdownRenderer.call(@artist.description)
   end
 
   def destroy

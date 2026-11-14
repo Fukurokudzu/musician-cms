@@ -99,6 +99,7 @@ en:
         genre: "Genre"
         publisher: "Publisher"
         release_date: "Release date"
+        description: "Description"
         status: "Status"
         track_title: "Title"
         track_pos: "Position"

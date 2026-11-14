@@ -1,30 +1,36 @@
 <div class="release-show-container">
-  <div class="tracks-container" data-release-id="<%= @release.id %>">
-    <h1><%= @release.title %></h1>
-    <ul>
-      <%= render(partial: 'track', collection: @release.tracks.order(Arel.sql('COALESCE(pos, 999999)'), :id)) %>
-    </ul>
+  <div class="release-show-left">
+    <div class="tracks-container" data-release-id="<%= @release.id %>">
+      <h1><%= @release.title %></h1>
+      <ul>
+        <%= render(partial: 'track', collection: @release.tracks.order(Arel.sql('COALESCE(pos, 999999)'), :id)) %>
+      </ul>
+    </div>
+    <% if @md_description.present? %>
+      <div class="release-show-description">
+        <%= @md_description %>
+      </div>
+    <% end %>
+    <div class="release-show-info">
+      <p><%= t('release.show.tracks_count').downcase %> <%= @release.tracks.count %>, <%= t('release.show.duration').downcase %> <%= @release.duration_humanized %></p>
+      <p>
+        <%= t('release.show.released_on', date: l(@release.release_date, format: '%-d %B %Y').downcase) if @release.release_date %>
+        <%= t('release.show.released_by', publisher: @release.publisher) if @release.publisher.present? %>
+      </p>
+      <% if @release.allow_zip_download? %>
+        <p class="release-download">
+          <%= link_to download_release_path(@release), class: 'release-download-link',
+                      title: t('release.show.download_zip').downcase do %>
+            <i class="fas fa-download" aria-hidden="true"></i>
+            <span><%= t('release.show.download_zip').downcase %></span>
+          <% end %>
+        </p>
+      <% end %>
+    </div>
   </div>
   <div class="release-show-cover">
     <% if @release.cover.attached? %>
       <%= image_tag @release.cover, id: @release.id.to_s + '_cover' %>
-    <% end %>
-  </div>
-  <div class="release-show-info">
-    <p><%= t('release.show.tracks_count').downcase %> <%= @release.tracks.count %>, <%= t('release.show.duration').downcase %> <%= @release.duration_humanized %></p>
-    <p><%= @release.description if @release.description.present? %></p>
-    <p>
-      <%= t('release.show.released_on', date: l(@release.release_date, format: '%-d %B %Y').downcase) if @release.release_date %>
-      <%= t('release.show.released_by', publisher: @release.publisher) if @release.publisher.present? %>
-    </p>
-    <% if @release.allow_zip_download? %>
-      <p class="release-download">
-        <%= link_to download_release_path(@release), class: 'release-download-link',
-                    title: t('release.show.download_zip').downcase do %>
-          <i class="fas fa-download" aria-hidden="true"></i>
-          <span><%= t('release.show.download_zip').downcase %></span>
-        <% end %>
-      </p>
     <% end %>
   </div>
 </div>
