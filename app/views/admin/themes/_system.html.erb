@@ -1,94 +1,103 @@
-<%= form_for(Setting.new, url: admin_themes_path, method: :put, html: { multipart: true }) do |f| %>
+<div class="admin-theme-settings">
+  <%= form_for(Setting.new, url: admin_themes_path, method: :put, html: { multipart: true, class: 'admin-theme-form' }) do |f| %>
 
-  <div class="mb-3 mt-3">
-    <label for="setting_background_image">Background image</label>
-    <% background_blob = ActiveStorage::Blob.find_signed(Setting.background_image.presence) %>
-    <% if background_blob %>
-      <div class="admin-bg-preview">
-        <%= image_tag url_for(background_blob) %>
+    <div class="admin-theme-section">
+      <h3 class="admin-theme-section-title"><%= t('admin.theme.background', default: 'Background') %></h3>
+      <div class="form-group">
+        <% background_blob = ActiveStorage::Blob.find_signed(Setting.background_image.presence) %>
+        <% if background_blob %>
+          <div class="admin-bg-preview">
+            <%= image_tag url_for(background_blob), alt: t('admin.theme.background', default: 'Background') %>
+          </div>
+        <% end %>
+        <%= f.file_field :background_image, accept: 'image/*', class: 'form-control', aria: { label: t('admin.theme.background', default: 'Background') } %>
       </div>
-    <% end %>
-    <%= f.file_field :background_image, accept: 'image/*' %>
-  </div>
+    </div>
 
-  <div class="mb-3 mt-3">
-    <label for="setting_favicon">Favicon</label>
-    <% favicon_blob = ActiveStorage::Blob.find_signed(Setting.favicon.presence) %>
-    <% if favicon_blob %>
-      <div class="admin-favicon-preview">
-        <%= image_tag url_for(favicon_blob), alt: 'Favicon' %>
+    <div class="admin-theme-section">
+      <h3 class="admin-theme-section-title"><%= t('admin.theme.favicon', default: 'Favicon') %></h3>
+      <div class="form-group">
+        <% favicon_blob = ActiveStorage::Blob.find_signed(Setting.favicon.presence) %>
+        <% if favicon_blob %>
+          <div class="admin-favicon-preview">
+            <%= image_tag url_for(favicon_blob), alt: 'Favicon' %>
+          </div>
+        <% end %>
+        <%= f.file_field :favicon, accept: 'image/*', class: 'form-control', aria: { label: t('admin.theme.favicon', default: 'Favicon') } %>
       </div>
-      <div class="admin-actions">
-        <%= button_to 'Remove favicon', admin_themes_path, method: :delete,
+    </div>
+
+    <div class="admin-theme-section">
+      <h3 class="admin-theme-section-title"><%= t('admin.theme.colors', default: 'Colors') %></h3>
+      <div class="admin-theme-colors">
+        <div class="admin-theme-color-field">
+          <%= f.label :artist_title_color, t('admin.theme.artist_title_color', default: 'Artist title') %>
+          <%= f.color_field :artist_title_color, required: true, value: Setting.artist_title_color %>
+        </div>
+
+        <div class="admin-theme-color-field">
+          <%= f.label :text_color, t('admin.theme.text_color', default: 'Text') %>
+          <%= f.color_field :text_color, required: true, value: Setting.text_color %>
+        </div>
+
+        <div class="admin-theme-color-field">
+          <%= f.label :main_menu_bg_color, t('admin.theme.main_menu_bg_color', default: 'Main menu background') %>
+          <%= f.color_field :main_menu_bg_color, required: true, value: Setting.main_menu_bg_color %>
+        </div>
+
+        <div class="admin-theme-color-field">
+          <%= f.label :footer_bg_color, t('admin.theme.footer_bg_color', default: 'Footer background') %>
+          <%= f.color_field :footer_bg_color, required: true, value: Setting.footer_bg_color %>
+        </div>
+
+        <div class="admin-theme-color-field">
+          <%= f.label :player_bg_color, t('admin.theme.player_bg_color', default: 'Player background') %>
+          <%= f.color_field :player_bg_color, required: true, value: Setting.player_bg_color %>
+        </div>
+
+        <div class="admin-theme-color-field">
+          <%= f.label :accent_color, t('admin.theme.accent_color', default: 'Accent') %>
+          <%= f.color_field :accent_color, required: true, value: Setting.accent_color %>
+        </div>
+
+        <div class="admin-theme-color-field">
+          <%= f.label :a_color, t('admin.theme.a_color', default: 'Links') %>
+          <%= f.color_field :a_color, required: true, value: Setting.a_color %>
+        </div>
+
+        <div class="admin-theme-color-field">
+          <%= f.label :a_hover_color, t('admin.theme.a_hover_color', default: 'Links hover') %>
+          <%= f.color_field :a_hover_color, required: true, value: Setting.a_hover_color %>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-theme-section">
+      <h3 class="admin-theme-section-title"><%= t('admin.theme.other', default: 'Other') %></h3>
+      <div class="form-group admin-theme-radius-field">
+        <%= f.label :border_radius, t('admin.theme.border_radius', default: 'Corner radius (px)') %>
+        <%= f.number_field :border_radius, min: 0, max: 50, step: 1, required: true, value: Setting.border_radius, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <%= f.submit t("settings.update"), class: "btn btn-primary" %>
+    </div>
+  <% end %>
+
+  <% favicon_blob_for_remove = ActiveStorage::Blob.find_signed(Setting.favicon.presence) %>
+  <% background_blob_for_remove = ActiveStorage::Blob.find_signed(Setting.background_image.presence) %>
+  <% if favicon_blob_for_remove || background_blob_for_remove %>
+    <div class="admin-actions admin-theme-remove-actions">
+      <% if favicon_blob_for_remove %>
+        <%= button_to t('admin.theme.remove_favicon', default: 'Remove favicon'), admin_themes_path, method: :delete,
                       params: { target: 'favicon' }, class: 'btn btn-danger',
-                      data: { turbo_confirm: 'Remove favicon?' } %>
-      </div>
-    <% end %>
-    <%= f.file_field :favicon, accept: 'image/*' %>
-  </div>
-
-  <div class="mb-3 mt-3">
-    <label for="artist_title_color">Artist title</label>
-    <%= f.color_field(:artist_title_color, required: true, pattern: Setting.artist_title_color, value: Setting.artist_title_color,
-                      class: "form-control") %>
-  </div>
-
-  <div class="mb-3 mt-3">
-    <label for="text_color">Text</label>
-    <%= f.color_field(:text_color, required: true, pattern: Setting.text_color, value: Setting.text_color,
-                      class: "form-control") %>
-  </div>
-
-  <div class="mb-3 mt-3">
-    <label for="main_menu_bg_color">Main menu background</label>
-    <%= f.color_field(:main_menu_bg_color, required: true, pattern: Setting.main_menu_bg_color, value: Setting.main_menu_bg_color,
-                      class: "form-control") %>
-  </div>
-
-  <div class="mb-3 mt-3">
-    <label for="footer_bg_color">Footer background</label>
-    <%= f.color_field(:footer_bg_color, required: true, pattern: Setting.footer_bg_color, value: Setting.footer_bg_color,
-                      class: "form-control") %>
-  </div>
-
-  <div class="mb-3 mt-3">
-    <label for="player_bg_color">Player background</label>
-    <%= f.color_field(:player_bg_color, required: true, pattern: Setting.player_bg_color, value: Setting.player_bg_color,
-                      class: "form-control") %>
-  </div>
-
-  <div class="mb-3 mt-3">
-    <label for="accent_color">Color accent</label>
-    <%= f.color_field(:accent_color, required: true, pattern: Setting.accent_color, value: Setting.accent_color,
-                      class: "form-control") %>
-  </div>
-
-  <div class="mb-3 mt-3">
-    <label for="a_color">Links color</label>
-    <%= f.color_field(:a_color, required: true, pattern: Setting.a_color, value: Setting.a_color,
-                      class: "form-control") %>
-  </div>
-
-  <div class="mb-3 mt-3">
-    <label for="a_hover_color">Links hover color</label>
-    <%= f.color_field(:a_hover_color, required: true, pattern: Setting.a_color, value: Setting.a_hover_color,
-                      class: "form-control") %>
-  </div>
-
-  <div class="mb-3 mt-3">
-    <label for="border_radius">Corner radius (px)</label>
-    <%= f.number_field(:border_radius, min: 0, max: 50, step: 1, required: true, value: Setting.border_radius,
-                      class: "form-control") %>
-  </div>
-
-  <div class="form-actions">
-    <%= f.submit t("settings.update"), class: :"btn btn-primary" %>
-  </div>
-<% end %>
-
-<% if ActiveStorage::Blob.find_signed(Setting.background_image.presence) %>
-  <div class="admin-actions">
-    <%= button_to 'Remove background', admin_themes_path, method: :delete,
-                  class: 'btn btn-danger', data: { turbo_confirm: 'Remove background image?' } %>
-  </div>
-<% end %>
+                      data: { turbo_confirm: t('admin.theme.remove_favicon_confirm', default: 'Remove favicon?') } %>
+      <% end %>
+      <% if background_blob_for_remove %>
+        <%= button_to t('admin.theme.remove_background', default: 'Remove background'), admin_themes_path, method: :delete,
+                      class: 'btn btn-danger', data: { turbo_confirm: t('admin.theme.remove_background_confirm', default: 'Remove background image?') } %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

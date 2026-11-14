@@ -1,4 +1,15 @@
-<div class="admin-actions">
-  <%= link_to 'New artist', new_admin_artist_path, class: 'btn btn-primary',
-              data: { turbo_stream: true, turbo_prefetch: false } %>
+<div class="admin-artists">
+  <div class="admin-actions admin-releases-header">
+    <%= link_to t('admin.artists.new', default: 'New artist'), new_admin_artist_path, class: 'btn btn-primary',
+                data: { turbo_stream: true, turbo_prefetch: false } %>
+  </div>
+
+
+
+  <% artists = Artist.active.order(:title) %>
+  <% if artists.any? %>
+    <div class="admin-releases-list">
+      <%= render partial: 'admin/artists/artist', collection: artists, as: :artist %>
+    </div>
+  <% end %>
 </div>

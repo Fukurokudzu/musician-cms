@@ -1,10 +1,26 @@
+main.admin-session {
+  --admin-accent: #475569;
+  --main-menu-bg-color: #1f2933;
+  --accent-color: var(--admin-accent);
+  --artist-title-color: #f8f9fa;
+  --a-color: #334155;
+  --a-hover-color: #111827;
+  --footer-bg-color: #e9ecef;
+  --border-radius: 6;
+  background-color: #eef1f4;
+}
+
 .admin {
   width: 100%;
+  max-width: 1100px;
   min-height: calc(100vh - 10rem);
   background-color: #fcfcfc;
   color: #212529;
   padding: 1.5rem;
-  border-radius: 0.25rem;
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  align-self: center;
 }
 
 .admin h2 {
@@ -18,7 +34,38 @@
 /* Tabs */
 
 .admin .nav-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
   margin-bottom: 1.5rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.admin .nav-tabs .nav-item {
+  margin-bottom: -1px;
+}
+
+.admin .nav-tabs .nav-link {
+  display: block;
+  padding: 0.5rem 0.9rem;
+  color: #495057;
+  border: 1px solid transparent;
+  border-top-left-radius: 0.375rem;
+  border-top-right-radius: 0.375rem;
+  text-decoration: none;
+}
+
+.admin .nav-tabs .nav-link:hover {
+  color: #212529;
+  background-color: #f8f9fa;
+  border-color: #e9ecef #e9ecef #dee2e6;
+}
+
+.admin .nav-tabs .nav-link.active {
+  color: #212529;
+  background-color: #fcfcfc;
+  border-color: #dee2e6 #dee2e6 #fcfcfc;
+  font-weight: 600;
 }
 
 /* Forms */
@@ -37,6 +84,14 @@
   display: block;
   margin-bottom: 0.25rem;
   font-weight: 600;
+}
+
+.admin .admin-theme-form .form-group > label,
+.admin .admin-theme-form .field > label,
+.admin .admin-theme-form .mb-3 > label {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #495057;
 }
 
 .admin input[type="text"],
@@ -72,6 +127,19 @@
   width: 1.1rem;
   height: 1.1rem;
   cursor: pointer;
+}
+
+.admin .form-group-checkbox .checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.admin .form-group-checkbox input[type="checkbox"] {
+  margin: 0;
 }
 
 .admin .form-actions,
@@ -124,16 +192,17 @@
 
 .admin input[type="submit"],
 .admin .btn-primary {
-  background-color: #0d6efd;
-  border-color: #0d6efd;
+  background-color: var(--admin-accent);
+  border-color: var(--admin-accent);
   color: #fff;
 }
 
 .admin input[type="submit"]:hover,
 .admin .btn-primary:hover {
-  background-color: #0b5ed7;
-  border-color: #0b5ed7;
+  background-color: var(--admin-accent);
+  border-color: var(--admin-accent);
   color: #fff;
+  filter: brightness(0.92);
 }
 
 .admin .btn-light {
@@ -164,8 +233,8 @@
 
 .admin-header {
   width: 100%;
-  background-color: var(--main-menu-bg-color);
-  border-bottom: 2px solid var(--accent-color);
+  background-color: #1f2933;
+  border-bottom: 2px solid var(--admin-accent);
 }
 
 .admin-nav {
@@ -180,12 +249,12 @@
 .admin-nav-brand {
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--artist-title-color);
+  color: #f8f9fa;
   text-decoration: none;
 }
 
 .admin-nav-brand:hover {
-  color: var(--a-hover-color);
+  color: #ffffff;
   text-decoration: none;
 }
 
@@ -198,38 +267,49 @@
 .admin-nav-link {
   padding: 0.25rem 0.875rem;
   border: 1px solid transparent;
-  border-radius: calc(var(--border-radius, 5) * 1px);
-  color: var(--a-color);
+  border-radius: 0.375rem;
+  color: #e9ecef;
   text-decoration: none;
   transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .admin-nav-link:hover {
-  color: var(--a-hover-color);
-  background-color: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.12);
   text-decoration: none;
 }
 
 .admin-nav-link--signout {
-  border-color: var(--accent-color);
+  border-color: var(--admin-accent);
 }
 
 /* Release edit: tracks */
 
 .admin .track-fields {
   display: grid;
-  grid-template-columns: 1fr 5rem 10rem;
-  gap: 0.5rem 1rem;
+  grid-template-columns: minmax(12rem, 1fr) 6rem 12rem;
+  gap: 0.75rem 1rem;
   align-items: end;
   padding: 0.75rem;
   margin-bottom: 0.75rem;
   border: 1px solid #dee2e6;
-  border-radius: 0.25rem;
+  border-radius: 0.375rem;
   background-color: #fff;
 }
 
-.admin .track-fields label {
-  grid-row: 1;
+.admin .track-field label {
+  margin-bottom: 0.25rem;
+}
+
+.admin .track-field input,
+.admin .track-field select {
+  width: 100%;
+}
+
+@media (max-width: 700px) {
+  .admin .track-fields {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Release details */
@@ -259,48 +339,204 @@
   margin-top: 1.5rem;
 }
 
-/* Library: path field and the save/scan buttons share one row */
+/* Library */
 
-.admin .library-actions {
-  margin-top: 0;
-}
-
-.admin .library-actions > form:not(.button_to) {
-  flex: 1 1 20rem;
-  max-width: 36rem;
-  margin: 0;
+.admin-library .admin-theme-section:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
 .admin .library-field {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem 1rem;
+  align-items: flex-end;
+  gap: 0.75rem 1rem;
+  max-width: 48rem;
 }
 
 .admin .library-field label {
+  flex: 1 1 100%;
   margin-bottom: 0;
-  white-space: nowrap;
 }
 
 .admin .library-field input[type="text"] {
-  flex: 1 1 14rem;
+  flex: 1 1 20rem;
   width: auto;
-  min-width: 10rem;
+  min-width: 12rem;
   margin: 0;
+}
+
+.admin-library-hint {
+  margin: 0 0 0.75rem;
+  color: #6c757d;
 }
 
 .admin .release-cover {
   max-width: 10rem;
   max-height: 10rem;
   margin-bottom: 1rem;
-  border-radius: calc(var(--border-radius, 5) * 1px);
+  border-radius: 0.375rem;
+}
+
+/* Artists */
+
+.admin-artists-list {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e9ecef;
+  border-radius: 0.375rem;
+  overflow: hidden;
+  background: #fff;
+}
+
+.admin-artist-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.admin-artist-row:last-child {
+  border-bottom: none;
+}
+
+.admin-artist-row-main {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.admin-artist-row-thumb {
+  width: 2.5rem;
+  height: 2.5rem;
+  object-fit: cover;
+  border-radius: 0.375rem;
+  border: 1px solid #e9ecef;
+  background: #f8f9fa;
+  display: block;
+  flex: 0 0 auto;
+}
+
+.admin-artist-row-thumb--placeholder {
+  background: linear-gradient(135deg, #f1f3f5, #e9ecef);
+}
+
+.admin-artist-row-title a {
+  color: #212529;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.admin-artist-row-title a:hover {
+  color: var(--admin-accent);
+  text-decoration: underline;
+}
+
+.admin-artist-row-meta {
+  color: #6c757d;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.admin-artist-description-block {
+  margin-top: 1rem;
+}
+
+.admin-artist-description-content {
+  line-height: 1.5;
 }
 
 /* Releases index */
 
 .admin-releases-header {
   margin-bottom: 1rem;
+}
+
+.admin-release-stats-item,
+.admin-release-tracks-count,
+.admin-release-stats-duration {
+  display: grid;
+  grid-template-columns: 8rem 1fr;
+  gap: 0.5rem;
+  align-items: baseline;
+}
+
+.admin-release-stats-item-title {
+  color: #495057;
+}
+
+/* Theme settings */
+
+.admin-theme-form {
+  max-width: 48rem;
+}
+
+.admin-theme-section {
+  padding: 1rem 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.admin-theme-section:first-child {
+  padding-top: 0;
+}
+
+.admin-theme-section:last-of-type {
+  border-bottom: none;
+}
+
+.admin-theme-section-title {
+  margin: 0 0 1rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #212529;
+  letter-spacing: 0.01em;
+}
+
+.admin-theme-colors {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 0.75rem 1rem;
+}
+
+.admin-theme-color-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0.75rem;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 0.375rem;
+}
+
+.admin-theme-color-field label {
+  margin: 0;
+  font-weight: 500;
+  color: #495057;
+}
+
+.admin-theme-color-field input[type="color"] {
+  width: 3rem;
+  height: 2rem;
+  padding: 0.15rem;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  background: #fff;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.admin-theme-radius-field {
+  max-width: 16rem;
+}
+
+.admin-theme-remove-actions {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e9ecef;
 }
 
 /* Background preview (theme tab) */
@@ -310,15 +546,98 @@
 }
 
 .admin-bg-preview img {
-  max-width: 16rem;
-  max-height: 9rem;
+  max-width: 100%;
+  width: 20rem;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
   border: 1px solid #ced4da;
-  border-radius: 0.25rem;
+  border-radius: 0.375rem;
   display: block;
+  background: #f8f9fa;
+}
+
+.admin-favicon-preview {
+  margin-bottom: 0.5rem;
 }
 
 .admin-favicon-preview img {
+  width: 3rem;
+  height: 3rem;
+  display: block;
+  border: 1px solid #ced4da;
+  border-radius: 0.375rem;
+  padding: 0.25rem;
+  background: #fff;
+}
+
+/* Diagnostics */
+
+.admin-diagnostics {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #dee2e6;
+}
+
+.admin-diagnostics-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.admin-diagnostics-header h3 {
+  margin: 0;
+}
+
+.admin-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 2rem;
   height: 2rem;
+  padding: 0;
+  border: 1px solid #ced4da;
+  border-radius: 0.375rem;
+  background: #fff;
+  color: #495057;
+  cursor: pointer;
+}
+
+.admin-copy-btn:hover {
+  background: #f8f9fa;
+  color: #212529;
+}
+
+.admin-copy-btn.is-copied {
+  color: #198754;
+  border-color: #198754;
+}
+
+.admin-diagnostics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 0.75rem 1rem;
+}
+
+.admin-diagnostics-item {
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 0.375rem;
+}
+
+.admin-diagnostics-label {
   display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 0.25rem;
+}
+
+.admin-diagnostics-value {
+  display: block;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.9rem;
+  word-break: break-word;
 }

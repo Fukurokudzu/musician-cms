@@ -1,56 +1,74 @@
-<%= form_for(Setting.new, url: admin_system_path, method: :put) do |f| %>
-  <div class="mb-3 mt-3">
-    <%= f.label :admin_email, t('settings.admin_email', default: 'Admin Email') %>
-    <%= f.email_field(:admin_email, required: true, pattern: Setting.email_pattern, value: Setting.admin_email,
-    class: "form-control") %>
-  </div>
-  <div class="mb-3 mt-3">
-    <%= f.label :page_title, t('settings.page_title', default: 'Page Title') %>
-    <%= f.text_field(:page_title, required: true, value: Setting.page_title,
-    class: "form-control") %>
-  </div>
-  <div class="mb-3 mt-3">
-    <%= f.label :description, t('settings.description', default: 'Description') %>
-    <%= f.text_area(:description, value: Setting.description,
-    class: "form-control") %>
-  </div>
-  <div class="mb-3 mt-3" data-controller="footer-link">
-    <%= f.label :footer_link_type, t('settings.footer_link_type', default: 'Footer link') %>
-    <%= f.select(:footer_link_type,
-                 [[t('settings.footer_type_email', default: 'Email'), 'email'],
-                  [t('settings.footer_type_url', default: 'Web link'), 'url']],
-                 { selected: Setting.footer_link_type },
-                 { class: "form-select", data: { footer_link_target: 'type', action: 'change->footer-link#toggle' } }) %>
+<div class="admin-theme-settings">
+  <%= form_for(Setting.new, url: admin_system_path, method: :put, html: { class: 'admin-theme-form' }) do |f| %>
 
-    <div class="mt-2" data-footer-link-target="emailSection">
-      <div class="mb-2">
-        <%= f.label :footer_email, t('settings.footer_email', default: 'Email') %>
-        <%= f.email_field(:footer_email, value: Setting.footer_email, class: "form-control") %>
+    <div class="admin-theme-section">
+      <h3 class="admin-theme-section-title"><%= t('admin.system.general', default: 'General') %></h3>
+      <div class="form-group">
+        <%= f.label :page_title, t('settings.page_title', default: 'Page Title') %>
+        <%= f.text_field :page_title, required: true, value: Setting.page_title, class: "form-control" %>
       </div>
-      <div class="mb-2">
-        <%= f.label :footer_subject, t('settings.footer_subject', default: 'Email subject') %>
-        <%= f.text_field(:footer_subject, value: Setting.footer_subject, class: "form-control") %>
+      <div class="form-group">
+        <%= f.label :description, t('settings.description', default: 'Description') %>
+        <%= f.text_area :description, value: Setting.description, class: "form-control", rows: 4 %>
       </div>
     </div>
 
-    <div class="mt-2" data-footer-link-target="urlSection">
-      <%= f.label :footer_url, t('settings.footer_url', default: 'Link URL') %>
-      <%= f.url_field(:footer_url, value: Setting.footer_url, placeholder: 'https://example.com', class: "form-control") %>
+    <div class="admin-theme-section" data-controller="footer-link">
+      <h3 class="admin-theme-section-title"><%= t('admin.system.footer', default: 'Footer') %></h3>
+      <div class="form-group">
+        <%= f.label :footer_link_type, t('settings.footer_link_type', default: 'Footer link') %>
+        <%= f.select :footer_link_type,
+                     [[t('settings.footer_type_email', default: 'Email'), 'email'],
+                      [t('settings.footer_type_url', default: 'Web link'), 'url']],
+                     { selected: Setting.footer_link_type },
+                     { class: "form-select", data: { footer_link_target: 'type', action: 'change->footer-link#toggle' } } %>
+      </div>
+
+      <div data-footer-link-target="emailSection">
+        <div class="form-group">
+          <%= f.label :footer_email, t('settings.footer_email', default: 'Email') %>
+          <%= f.email_field :footer_email, value: Setting.footer_email, class: "form-control" %>
+        </div>
+        <div class="form-group">
+          <%= f.label :footer_subject, t('settings.footer_subject', default: 'Email subject') %>
+          <%= f.text_field :footer_subject, value: Setting.footer_subject, class: "form-control" %>
+        </div>
+      </div>
+
+      <div data-footer-link-target="urlSection">
+        <div class="form-group">
+          <%= f.label :footer_url, t('settings.footer_url', default: 'Link URL') %>
+          <%= f.url_field :footer_url, value: Setting.footer_url, placeholder: 'https://example.com', class: "form-control" %>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="field mb-3 mt-3">
-    <%= f.label :timezone, t('settings.timezone', default: 'Timezone') %>
-    <%= f.time_zone_select(:timezone, nil, { default: "Setting.timezone" }, { class: "form-select" }) %>
-  </div>
-  <div class="field mb-3 mt-3">
-    <%= f.label :locale, t('settings.locale', default: 'Locale') %>
-    <%= f.select(:locale, I18n.available_locales.map(&:to_s), { class: "form-select" }) %>
-  </div>
-  <div class="mb-3 mt-3">
-    <%= f.label :admin_password, t('settings.admin_password', default: 'Admin Password') %>
-    <%= f.password_field :admin_password, class: "form-control", autocomplete: "new-password", placeholder: t('settings.admin_password_placeholder', default: 'Leave blank to keep current password') %>
-  </div>
-  <div class="form-actions">
-    <%= f.submit t("settings.update"), class: :"btn btn-primary" %>
-  </div>
-<% end %>
+
+    <div class="admin-theme-section">
+      <h3 class="admin-theme-section-title"><%= t('admin.system.localization', default: 'Localization') %></h3>
+      <div class="form-group">
+        <%= label_tag 'setting_timezone', t('settings.timezone', default: 'Timezone') %>
+        <%= time_zone_select :setting, :timezone, nil, { default: Setting.timezone.presence, selected: Setting.timezone.presence }, { class: "form-select", id: 'setting_timezone' } %>
+      </div>
+      <div class="form-group">
+        <%= label_tag 'setting_locale', t('settings.locale', default: 'Locale') %>
+        <%= select_tag 'setting[locale]', options_for_select(I18n.available_locales.map(&:to_s), Setting.locale), class: "form-select", id: 'setting_locale' %>
+      </div>
+    </div>
+
+    <div class="admin-theme-section">
+      <h3 class="admin-theme-section-title"><%= t('admin.system.security', default: 'Security') %></h3>
+      <div class="form-group">
+        <%= f.label :admin_email, t('settings.admin_email', default: 'Admin Email') %>
+        <%= f.email_field :admin_email, required: true, pattern: Setting.email_pattern, value: Setting.admin_email, class: "form-control" %>
+      </div>
+      <div class="form-group">
+        <%= f.label :admin_password, t('settings.admin_password', default: 'Admin Password') %>
+        <%= f.password_field :admin_password, class: "form-control", autocomplete: "new-password", placeholder: t('settings.admin_password_placeholder', default: 'Leave blank to keep current password') %>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <%= f.submit t("settings.update"), class: "btn btn-primary" %>
+    </div>
+  <% end %>
+</div>

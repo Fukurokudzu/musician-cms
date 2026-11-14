@@ -1,0 +1,48 @@
+<div class="admin-artist-details">
+  <div class="admin-release admin-release-summary">
+    <div class="release-cover-wrap">
+      <% if @artist.photo.attached? %>
+        <%= image_tag @artist.photo.variant(resize_to_limit: [160, 160]), class: 'release-cover', loading: 'lazy', decoding: 'async' %>
+      <% else %>
+        <div class="release-cover release-cover--placeholder" aria-hidden="true"></div>
+      <% end %>
+    </div>
+    <div class="release-title"><%= @artist.title %></div>
+    <div class="admin-release-stats">
+      <div class="admin-release-stats-item">
+        <span class="admin-release-stats-item-title"><%= t('first_name', default: 'First name') %>:</span>
+        <span class="admin-release-stats-item-value"><%= @artist.first_name.presence || '-' %></span>
+      </div>
+      <div class="admin-release-stats-item">
+        <span class="admin-release-stats-item-title"><%= t('last_name', default: 'Last name') %>:</span>
+        <span class="admin-release-stats-item-value"><%= @artist.last_name.presence || '-' %></span>
+      </div>
+      <div class="admin-release-stats-item">
+        <span class="admin-release-stats-item-title"><%= t('role', default: 'Role') %>:</span>
+        <span class="admin-release-stats-item-value"><%= @artist.role.present? ? @artist.role.humanize : '-' %></span>
+      </div>
+      <div class="admin-release-stats-item">
+        <span class="admin-release-stats-item-title"><%= t('admin.about.releases', default: 'Releases') %>:</span>
+        <span class="admin-release-stats-item-value"><%= @artist.releases.count %></span>
+      </div>
+      <div class="admin-release-stats-item">
+        <span class="admin-release-stats-item-title"><%= t('admin.release.stats.plays_count', default: 'Plays') %>:</span>
+        <span class="admin-release-stats-item-value"><%= @artist.plays_count %></span>
+      </div>
+      <div class="admin-actions admin-release-summary-actions">
+        <%= link_to t('settings.edit', default: 'Edit'), edit_admin_artist_path(@artist), class: 'btn btn-primary',
+                    data: { turbo_stream: true, turbo_prefetch: false } %>
+        <%= link_to t('admin.release.back_to_releases', default: 'Back'), admin_artists_path, class: 'btn',
+                    data: { turbo_stream: true, turbo_prefetch: false } %>
+        <%= button_to t('settings.delete', default: 'Delete'), [:admin, @artist], method: :delete, class: 'btn btn-danger', data: { turbo_confirm: 'Are you sure?' } %>
+      </div>
+    </div>
+  </div>
+
+  <% if @artist.description.present? %>
+    <div class="admin-artist-description-block">
+      <h3><%= t('settings.description', default: 'Description') %></h3>
+      <div class="admin-artist-description-content"><%= MarkdownRenderer.call(@artist.description) %></div>
+    </div>
+  <% end %>
+</div>

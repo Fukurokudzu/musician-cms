@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  helper_method :admin?
+  helper_method :admin?, :admin_area?
   before_action :set_page_title, :set_track
   around_action :switch_locale
 
@@ -12,6 +12,10 @@ class ApplicationController < ActionController::Base
 
   def admin?
     session[:hashed_id] == Setting.admin_hashed_password
+  end
+
+  def admin_area?
+    controller_path.start_with?('admin')
   end
 
   def switch_locale(&action)
@@ -62,6 +66,7 @@ class ApplicationController < ActionController::Base
       value = value.strip if value.respond_to?(:strip)
       Setting.public_send("#{key}=", value)
     end
+    Setting.clear_cache if Setting.respond_to?(:clear_cache)
   end
 
   def update_session_track_id

@@ -1,7 +1,14 @@
-<div class="admin-actions">
-  <%= link_to 'New artist', new_admin_artist_path, class: 'btn btn-primary',
-              data: { turbo_stream: true, turbo_prefetch: false } %>
-</div>
+<div class="admin-artists">
+  <div class="admin-actions admin-releases-header">
+    <%= link_to t('admin.artists.new', default: 'New artist'), new_admin_artist_path, class: 'btn btn-primary',
+                data: { turbo_stream: true, turbo_prefetch: false } %>
+  </div>
 
-<h1>Artists</h1>
-<%= render partial: 'artist', collection: @artists %>
+
+
+  <% if @artists.any? %>
+    <div class="admin-releases-list">
+      <%= render partial: 'artist', collection: @artists %>
+    </div>
+  <% end %>
+</div>

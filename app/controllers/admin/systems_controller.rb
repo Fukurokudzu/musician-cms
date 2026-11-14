@@ -7,9 +7,11 @@ class Admin::SystemsController < ApplicationController
 
   def update
     if update_system_settings(check_params)
-      #FIXME translation
-      flash.now[:success] = "Settings updated"
-      render turbo_stream: turbo_stream.update("flash", partial: "layouts/flash")
+      flash[:success] = t('admin.system.flash.updated', default: 'Settings updated')
+      redirect_to admin_path, status: :see_other
+    else
+      flash.now[:error] = t('admin.system.flash.error', default: 'Could not update settings')
+      render turbo_stream: turbo_stream.update("flash", partial: "layouts/flash"), status: :unprocessable_entity
     end
   end
 

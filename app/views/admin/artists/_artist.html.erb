@@ -1,2 +1,43 @@
-<p> Artist:
-<%= link_to artist.title, [:admin, artist] %></p>
+<div class="admin-release admin-artist-card">
+  <div class="release-cover-wrap">
+    <%= link_to edit_admin_artist_path(artist), class: 'admin-release-cover-link', data: { turbo_stream: true, turbo_prefetch: false } do %>
+      <% if artist.photo.attached? %>
+        <%= image_tag artist.photo.variant(resize_to_limit: [160, 160]), class: 'release-cover', loading: 'lazy', decoding: 'async' %>
+      <% else %>
+        <div class="release-cover release-cover--placeholder" aria-hidden="true"></div>
+      <% end %>
+    <% end %>
+  </div>
+  <div class="release-title">
+    <%= link_to edit_admin_artist_path(artist), data: { turbo_stream: true, turbo_prefetch: false } do %>
+      <%= artist.title %>
+    <% end %>
+  </div>
+  <div class="admin-release-stats">
+    <div class="admin-release-stats-item">
+      <span class="admin-release-stats-item-title"><%= t('first_name', default: 'First name') %>:</span>
+      <span class="admin-release-stats-item-value"><%= artist.first_name.presence || '-' %></span>
+    </div>
+    <div class="admin-release-stats-item">
+      <span class="admin-release-stats-item-title"><%= t('last_name', default: 'Last name') %>:</span>
+      <span class="admin-release-stats-item-value"><%= artist.last_name.presence || '-' %></span>
+    </div>
+    <div class="admin-release-stats-item">
+      <span class="admin-release-stats-item-title"><%= t('role', default: 'Role') %>:</span>
+      <span class="admin-release-stats-item-value"><%= artist.role.present? ? artist.role.humanize : '-' %></span>
+    </div>
+    <div class="admin-release-stats-item">
+      <span class="admin-release-stats-item-title"><%= t('admin.about.releases', default: 'Releases') %>:</span>
+      <span class="admin-release-stats-item-value"><%= artist.releases.size %></span>
+    </div>
+    <div class="admin-release-stats-item">
+      <span class="admin-release-stats-item-title"><%= t('admin.release.stats.plays_count', default: 'Plays') %>:</span>
+      <span class="admin-release-stats-item-value"><%= artist.plays_count %></span>
+    </div>
+    <div class="admin-actions admin-release-summary-actions">
+      <%= link_to t('settings.edit', default: 'Edit'), edit_admin_artist_path(artist), class: 'btn btn-primary',
+                  data: { turbo_stream: true, turbo_prefetch: false } %>
+      <%= button_to t('settings.delete', default: 'Delete'), [:admin, artist], method: :delete, class: 'btn btn-danger', data: { turbo_confirm: 'Are you sure?' } %>
+    </div>
+  </div>
+</div>

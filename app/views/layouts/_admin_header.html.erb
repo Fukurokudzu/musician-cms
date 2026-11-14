@@ -2,7 +2,7 @@
   <nav class="admin-nav">
     <%= link_to('Musician CMS Admin', root_path, class: "admin-nav-brand") %>
     <div class="admin-nav-links">
-      <%= link_to('Admin', admin_path, class: "admin-nav-link") %>
+      <%= link_to(t('admin.nav.admin', default: 'Admin'), admin_path, class: "admin-nav-link") %>
       <%= link_to(t('login.signout'), sign_out_path, class: "admin-nav-link admin-nav-link--signout",
                   data: { controller: 'sign-out', action: 'click->sign-out#perform' }) %>
     </div>

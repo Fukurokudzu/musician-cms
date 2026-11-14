@@ -1,0 +1,35 @@
+<div class="admin-artist-edit">
+  <h2><%= t('settings.edit', default: 'Edit') %></h2>
+  <%= form_for(@artist, url: admin_artist_path(@artist), method: :put) do |f| %>
+    <div class="form-group">
+      <%= f.label :title, t('title', default: 'Title') %>
+      <%= f.text_field :title, id: "artist_title", class: "form-control" %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :first_name, t('first_name', default: 'First name') %>
+      <%= f.text_field :first_name, id: "artist_first_name", class: "form-control" %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :last_name, t('last_name', default: 'Last name') %>
+      <%= f.text_field :last_name, id: "artist_last_name", class: "form-control" %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :role, t('role', default: 'Role') %>
+      <%= f.select :role, Artist.roles.keys.map { |key| [key.capitalize, key] }, {}, class: "form-control" %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :description, t('settings.description', default: 'Description') %>
+      <%= f.text_area :description, class: "admin-artist-description", id: "artist_description", data: { controller: 'md-editor' } %>
+    </div>
+
+    <div class="form-actions">
+      <%= f.submit t('settings.update', default: 'Update'), class: "btn btn-primary" %>
+      <%= link_to t('admin.release.cancel', default: 'Cancel'), admin_artists_path, class: 'btn',
+                  data: { turbo_stream: true, turbo_prefetch: false } %>
+    </div>
+  <% end %>
+</div>

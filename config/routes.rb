@@ -18,7 +18,7 @@ Rails.application.routes.draw do
   get :admin, to: 'admin#index'
 
   namespace :admin do
-    resource :system, :library, :credentials, :themes
+    resource :system, :library, :credentials, :themes, :about, only: [:show]
     resources :artists
     resources :releases do
       collection do

@@ -25,21 +25,29 @@
       <%= form.label :status, t('admin.release.fields.status') %>
       <%= form.select :status, Release.statuses.keys.map { |s| [t("admin.statuses.#{s}", default: s.humanize), s] }, include_blank: true %>
     </div>
-    <div class="form-group">
-      <%= form.label :allow_zip_download, t('admin.release.allow_zip_download') %>
-      <%= form.check_box :allow_zip_download %>
+    <div class="form-group form-group-checkbox">
+      <%= form.label :allow_zip_download, class: 'checkbox-label' do %>
+        <%= form.check_box :allow_zip_download %>
+        <span><%= t('admin.release.allow_zip_download') %></span>
+      <% end %>
     </div>
 
     <h3><%= t('admin.release.tracks') %></h3>
-    <div id="tracks">
+    <div id="tracks" class="admin-edit-tracks">
       <%= form.fields_for :tracks, @release.tracks.order(Arel.sql('COALESCE(pos, 0) ASC'), :id) do |track_form| %>
         <div class="track-fields">
-          <%= track_form.label :title, t('admin.release.fields.track_title') %>
-          <%= track_form.text_field :title %>
-          <%= track_form.label :pos, t('admin.release.fields.track_pos') %>
-          <%= track_form.number_field :pos %>
-          <%= track_form.label :status, t('admin.release.fields.track_status') %>
-          <%= track_form.select :status, Track.statuses.keys.map { |s| [t("admin.statuses.#{s}", default: s.humanize), s] }, include_blank: true %>
+          <div class="track-field track-field--title">
+            <%= track_form.label :title, t('admin.release.fields.track_title') %>
+            <%= track_form.text_field :title %>
+          </div>
+          <div class="track-field track-field--pos">
+            <%= track_form.label :pos, t('admin.release.fields.track_pos') %>
+            <%= track_form.number_field :pos %>
+          </div>
+          <div class="track-field track-field--status">
+            <%= track_form.label :status, t('admin.release.fields.track_status') %>
+            <%= track_form.select :status, Track.statuses.keys.map { |s| [t("admin.statuses.#{s}", default: s.humanize), s] }, include_blank: true %>
+          </div>
         </div>
       <% end %>
     </div>

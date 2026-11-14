@@ -60,6 +60,10 @@ RUN yarn install --frozen-lockfile
 # Copy application code
 COPY . .
 
+ARG GIT_COMMIT=""
+ARG GIT_BRANCH=""
+RUN printf '%s' "$GIT_COMMIT" > REVISION && printf '%s' "$GIT_BRANCH" > BRANCH
+
 # Any existing credential files to avoid permission issues might be removed
 RUN rm -f config/master.key config/credentials.yml.enc config/credentials/production.key config/credentials/production.yml.enc config/credentials/development.key config/credentials/development.yml.enc config/credentials/test.key config/credentials/test.yml.enc 2>/dev/null || true
 

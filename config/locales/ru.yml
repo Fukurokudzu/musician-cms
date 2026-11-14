@@ -13,12 +13,56 @@ ru:
     password: "Пароль"
 
   admin:
+    nav:
+      admin: "Админка"
     tabs:
       system: "Приложение"
       artists: "Исполнители"
       releases: "Релизы"
       credentials: "Учётные данные"
       library: "Библиотека"
+      theme: "Тема"
+      about: "О системе"
+
+    about:
+      title: "Диагностика"
+      runtime: "Среда выполнения"
+      environment: "Окружение"
+      branch: "Ветка"
+      commit: "Коммит"
+      database: "База данных"
+      adapter: "Адаптер"
+      db_name: "Имя базы"
+      pool: "Пул соединений"
+      active_storage: "Active Storage"
+      service: "Сервис"
+      processor: "Обработчик"
+      content: "Контент"
+      artists: "Исполнители"
+      releases: "Релизы"
+      tracks: "Треки"
+      storage_records: "Записи хранилища"
+      redis_sidekiq: "Redis / Sidekiq"
+      neighbor_services: "Соседние сервисы (docker-compose)"
+      not_detected: "не обнаружены"
+      not_set: "не задано"
+      unavailable: "недоступно"
+      processes: "Процессы"
+      queues: "Очереди"
+      empty: "пусто"
+      paths_disk: "Хранилище и диск"
+      storage_path: "Путь к хранилищу"
+      disk_total: "Всего"
+      disk_free: "Свободно"
+      used: "занято"
+      time: "Время"
+      timezone: "Часовой пояс"
+      copy: "Скопировать диагностику"
+      copied: "Скопировано"
+
+    artists:
+      title: "Исполнители"
+      new: "Новый исполнитель"
 
     statuses:
       draft: "Черновик"
@@ -27,19 +71,43 @@ ru:
 
     library:
       scan: "Сканировать библиотеку"
+      scan_hint: "Сканирование использует сохранённый путь к библиотеке."
       library_path: "Путь к библиотеке"
       flash:
         started: "Задача сканирования запущена..."
 
     theme:
+      background: "Фон"
+      background_image: "Фоновое изображение"
+      favicon: "Favicon"
+      colors: "Цвета"
+      artist_title_color: "Заголовок исполнителя"
+      text_color: "Текст"
+      main_menu_bg_color: "Фон главного меню"
+      footer_bg_color: "Фон подвала"
+      player_bg_color: "Фон плеера"
+      accent_color: "Акцентный цвет"
+      a_color: "Ссылки"
+      a_hover_color: "Ссылки при наведении"
+      other: "Прочее"
+      border_radius: "Скругление углов (px)"
+      remove_favicon: "Удалить favicon"
+      remove_favicon_confirm: "Удалить favicon?"
+      remove_background: "Удалить фон"
+      remove_background_confirm: "Удалить фоновое изображение?"
       flash:
         updated: "Настройки обновлены"
         background_removed: "Фоновая картинка удалена"
         favicon_removed: "Favicon удалён"
 
     system:
+      general: "Основные"
+      footer: "Подвал"
+      localization: "Локализация"
+      security: "Безопасность"
       flash:
         updated: "Настройки обновлены"
+        error: "Не удалось обновить настройки"
 
     release:
       edit_title: "Редактировать релиз"

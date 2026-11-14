@@ -1,0 +1,204 @@
+<%
+  storage_path = Rails.root.join('storage')
+
+  disk_info = begin
+    out = `df -Pk #{storage_path} 2>/dev/null | tail -1`.strip
+    if out.present?
+      parts = out.split(/\s+/)
+      total_kb = parts[1].to_i
+      avail_kb = parts[3].to_i
+      used_pct = parts[4]
+      {
+        total: number_to_human_size(total_kb * 1024),
+        free: number_to_human_size(avail_kb * 1024),
+        used_pct: used_pct
+      }
+    end
+  rescue StandardError
+    nil
+  end
+
+  redis_url = ENV['REDIS_URL'].presence
+  redis_host = begin
+    redis_url ? URI.parse(redis_url).host : nil
+  rescue URI::InvalidURIError
+    nil
+  end
+  redis_ping = begin
+    defined?(Sidekiq) ? Sidekiq.redis { |c| c.ping } : nil
+  rescue StandardError
+    nil
+  end
+  sidekiq_processes = begin
+    defined?(Sidekiq::ProcessSet) ? Sidekiq::ProcessSet.new.size : nil
+  rescue StandardError
+    nil
+  end
+  sidekiq_queues = begin
+    defined?(Sidekiq::Queue) ? Sidekiq::Queue.all.map { |q| "#{q.name}: #{q.size}" } : nil
+  rescue StandardError
+    nil
+  end
+
+  compose_path = Rails.root.join('docker-compose.yml')
+  compose_services = begin
+    if compose_path.exist?
+      content = File.read(compose_path)
+      %w[redis-db postgres-db sidekiq web].select { |s| content.include?("\n  #{s}:") || content.include?("\n  #{s}:\n") }
+    end
+  rescue StandardError
+    nil
+  end
+
+  revision = app_revision_info
+  revision_branch = revision[:branch].presence || t('admin.about.not_detected', default: 'not detected')
+  revision_commit = revision[:commit].presence || t('admin.about.not_detected', default: 'not detected')
+
+  ui_time_str = (l(Time.current, format: :long) rescue Time.current.to_s)
+  tz_str = Time.zone&.name || t('admin.about.not_set', default: 'not set')
+  na = t('admin.about.unavailable', default: 'unavailable')
+
+  copy_branch = revision[:branch].presence || 'not detected'
+  copy_commit = revision[:commit].presence || 'not detected'
+  copy_tz = Time.zone&.name || 'not set'
+  copy_time = Time.current.strftime('%Y-%m-%d %H:%M:%S %z')
+
+  diagnostics_text = [
+    'Diagnostics',
+    '=' * 30,
+    '',
+    '[Runtime]',
+    "Ruby: #{RUBY_VERSION}",
+    "Rails: #{Rails.version}",
+    "Environment: #{Rails.env}",
+    "Branch: #{copy_branch}",
+    "Commit: #{copy_commit}",
+    '',
+    '[Database]',
+    "Adapter: #{ActiveRecord::Base.connection_db_config.adapter}",
+    "Database name: #{ActiveRecord::Base.connection_db_config.database}",
+    "Pool: #{ActiveRecord::Base.connection_db_config.pool}",
+    '',
+    '[Active Storage]',
+    "Service: #{Rails.application.config.active_storage.service}",
+    "Processor: #{Rails.application.config.active_storage.variant_processor}",
+    '',
+    '[Content]',
+    "Artists: #{Artist.count}",
+    "Releases: #{Release.count}",
+    "Tracks: #{Track.count}",
+    '',
+    '[Storage records]',
+    "Blobs: #{ActiveStorage::Blob.count}",
+    "Attachments: #{ActiveStorage::Attachment.count}",
+    "Variants: #{ActiveStorage::VariantRecord.count}",
+    '',
+    '[Redis / Sidekiq]',
+    "Neighbor services (docker-compose): #{compose_services.presence&.join(', ') || 'not detected'}",
+    "Redis: #{redis_host.present? ? redis_host : 'not set'}#{redis_ping.present? ? " (ping: #{redis_ping})" : ''}",
+    "Sidekiq: #{sidekiq_processes.nil? ? 'unavailable' : "processes: #{sidekiq_processes}"}",
+    "Queues: #{sidekiq_queues.present? ? sidekiq_queues.join(', ') : 'empty'}",
+    '',
+    '[Storage and disk]',
+    "Storage path: #{storage_path}",
+    if disk_info
+      "Total: #{disk_info[:total]}\nFree: #{disk_info[:free]} (#{disk_info[:used_pct]} used)"
+    else
+      'Disk info: unavailable'
+    end,
+    '',
+    '[Time]',
+    "Current time: #{copy_time}",
+    "Time zone: #{copy_tz}"
+  ].join("\n")
+%>
+
+<div class="admin-diagnostics" data-controller="clipboard">
+  <div class="admin-diagnostics-header">
+    <h3><%= t('admin.about.title', default: 'Diagnostics') %></h3>
+    <button type="button" class="admin-copy-btn" data-action="clipboard#copy" data-clipboard-target="button" title="<%= t('admin.about.copy', default: 'Copy diagnostics') %>" aria-label="<%= t('admin.about.copy', default: 'Copy diagnostics') %>">
+      <i class="far fa-copy" aria-hidden="true"></i>
+    </button>
+  </div>
+  <pre data-clipboard-target="source" class="visually-hidden"><%= diagnostics_text %></pre>
+
+  <div class="admin-diagnostics-grid">
+    <div class="admin-diagnostics-item">
+      <span class="admin-diagnostics-label"><%= t('admin.about.runtime', default: 'Runtime') %></span>
+      <span class="admin-diagnostics-value">
+        Ruby <%= RUBY_VERSION %><br>
+        Rails <%= Rails.version %><br>
+        <%= t('admin.about.environment', default: 'Environment') %>: <%= Rails.env %><br>
+        <%= t('admin.about.branch', default: 'Branch') %>: <%= revision_branch %><br>
+        <%= t('admin.about.commit', default: 'Commit') %>: <%= revision_commit %>
+      </span>
+    </div>
+
+    <div class="admin-diagnostics-item">
+      <span class="admin-diagnostics-label"><%= t('admin.about.database', default: 'Database') %></span>
+      <span class="admin-diagnostics-value">
+        <%= t('admin.about.adapter', default: 'Adapter') %>: <%= ActiveRecord::Base.connection_db_config.adapter %><br>
+        <%= t('admin.about.db_name', default: 'Database name') %>: <%= ActiveRecord::Base.connection_db_config.database %><br>
+        <%= t('admin.about.pool', default: 'Pool') %>: <%= ActiveRecord::Base.connection_db_config.pool %>
+      </span>
+    </div>
+
+    <div class="admin-diagnostics-item">
+      <span class="admin-diagnostics-label"><%= t('admin.about.active_storage', default: 'Active Storage') %></span>
+      <span class="admin-diagnostics-value">
+        <%= t('admin.about.service', default: 'Service') %>: <%= Rails.application.config.active_storage.service %><br>
+        <%= t('admin.about.processor', default: 'Processor') %>: <%= Rails.application.config.active_storage.variant_processor %>
+      </span>
+    </div>
+
+    <div class="admin-diagnostics-item">
+      <span class="admin-diagnostics-label"><%= t('admin.about.content', default: 'Content') %></span>
+      <span class="admin-diagnostics-value">
+        <%= t('admin.about.artists', default: 'Artists') %>: <%= Artist.count %><br>
+        <%= t('admin.about.releases', default: 'Releases') %>: <%= Release.count %><br>
+        <%= t('admin.about.tracks', default: 'Tracks') %>: <%= Track.count %>
+      </span>
+    </div>
+
+    <div class="admin-diagnostics-item">
+      <span class="admin-diagnostics-label"><%= t('admin.about.storage_records', default: 'Storage records') %></span>
+      <span class="admin-diagnostics-value">
+        Blobs: <%= ActiveStorage::Blob.count %><br>
+        Attachments: <%= ActiveStorage::Attachment.count %><br>
+        Variants: <%= ActiveStorage::VariantRecord.count %>
+      </span>
+    </div>
+
+    <div class="admin-diagnostics-item">
+      <span class="admin-diagnostics-label"><%= t('admin.about.redis_sidekiq', default: 'Redis / Sidekiq') %></span>
+      <span class="admin-diagnostics-value">
+        <%= t('admin.about.neighbor_services', default: 'Neighbor services (docker-compose)') %>: <%= compose_services.presence&.join(', ') || t('admin.about.not_detected', default: 'not detected') %><br>
+        Redis: <%= redis_host.present? ? redis_host : t('admin.about.not_set', default: 'not set') %>
+        <% if redis_ping.present? %>(ping: <%= redis_ping %>)<% end %><br>
+        Sidekiq: <%= sidekiq_processes.nil? ? na : "#{t('admin.about.processes', default: 'Processes')}: #{sidekiq_processes}" %>
+        <% if sidekiq_queues.present? %><br><%= t('admin.about.queues', default: 'Queues') %>: <%= sidekiq_queues.presence&.join(', ') || t('admin.about.empty', default: 'empty') %><% end %>
+      </span>
+    </div>
+
+    <div class="admin-diagnostics-item">
+      <span class="admin-diagnostics-label"><%= t('admin.about.paths_disk', default: 'Storage and disk') %></span>
+      <span class="admin-diagnostics-value">
+        <%= t('admin.about.storage_path', default: 'Storage path') %>: <%= storage_path %><br>
+        <% if disk_info %>
+          <%= t('admin.about.disk_total', default: 'Total') %>: <%= disk_info[:total] %><br>
+          <%= t('admin.about.disk_free', default: 'Free') %>: <%= disk_info[:free] %> (<%= disk_info[:used_pct] %> <%= t('admin.about.used', default: 'used') %>)
+        <% else %>
+          <%= na %>
+        <% end %>
+      </span>
+    </div>
+
+    <div class="admin-diagnostics-item">
+      <span class="admin-diagnostics-label"><%= t('admin.about.time', default: 'Time') %></span>
+      <span class="admin-diagnostics-value">
+        <%= ui_time_str %><br>
+        <%= t('admin.about.timezone', default: 'Time zone') %>: <%= tz_str %>
+      </span>
+    </div>
+  </div>
+</div>

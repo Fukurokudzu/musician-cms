@@ -44,12 +44,56 @@ en:
     password: "Password"
 
   admin:
+    nav:
+      admin: "Admin"
     tabs:
       system: "System"
       artists: "Artists"
       releases: "Releases"
       credentials: "Credentials"
       library: "Library"
+      theme: "Theme"
+      about: "About"
+
+    about:
+      title: "Diagnostics"
+      runtime: "Runtime"
+      environment: "Environment"
+      branch: "Branch"
+      commit: "Commit"
+      database: "Database"
+      adapter: "Adapter"
+      db_name: "Database name"
+      pool: "Pool"
+      active_storage: "Active Storage"
+      service: "Service"
+      processor: "Processor"
+      content: "Content"
+      artists: "Artists"
+      releases: "Releases"
+      tracks: "Tracks"
+      storage_records: "Storage records"
+      redis_sidekiq: "Redis / Sidekiq"
+      neighbor_services: "Neighbor services (docker-compose)"
+      not_detected: "not detected"
+      not_set: "not set"
+      unavailable: "unavailable"
+      processes: "Processes"
+      queues: "Queues"
+      empty: "empty"
+      paths_disk: "Storage and disk"
+      storage_path: "Storage path"
+      disk_total: "Total"
+      disk_free: "Free"
+      used: "used"
+      time: "Time"
+      timezone: "Time zone"
+      copy: "Copy diagnostics"
+      copied: "Copied"
+
+    artists:
+      title: "Artists"
+      new: "New artist"
 
     statuses:
       draft: "Draft"
@@ -58,19 +102,43 @@ en:
 
     library:
       scan: "Scan library"
+      scan_hint: "Scan uses the saved library path."
       library_path: "Library path"
       flash:
         started: "Scan job started..."
 
     theme:
+      background: "Background"
+      background_image: "Background image"
+      favicon: "Favicon"
+      colors: "Colors"
+      artist_title_color: "Artist title"
+      text_color: "Text"
+      main_menu_bg_color: "Main menu background"
+      footer_bg_color: "Footer background"
+      player_bg_color: "Player background"
+      accent_color: "Accent"
+      a_color: "Links"
+      a_hover_color: "Links hover"
+      other: "Other"
+      border_radius: "Corner radius (px)"
+      remove_favicon: "Remove favicon"
+      remove_favicon_confirm: "Remove favicon?"
+      remove_background: "Remove background"
+      remove_background_confirm: "Remove background image?"
       flash:
         updated: "Settings updated"
         background_removed: "Background image removed"
         favicon_removed: "Favicon removed"
 
     system:
+      general: "General"
+      footer: "Footer"
+      localization: "Localization"
+      security: "Security"
       flash:
         updated: "Settings updated"
+        error: "Could not update settings"
 
     release:
       edit_title: "Edit Release"

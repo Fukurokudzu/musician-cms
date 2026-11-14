@@ -1,11 +1,18 @@
-<div class="admin-actions library-actions">
-  <%= form_for(Setting.new, url: admin_system_path, method: :put) do |f| %>
-    <div class="library-field">
-      <%= f.label :library_path, t('admin.library.library_path') %>
-      <%= f.text_field(:library_path, required: true, value: Setting.library_path,
-                       class: "form-control") %>
-      <%= f.submit t('settings.update'), class: 'btn btn-primary' %>
+<div class="admin-library">
+  <div class="admin-theme-section">
+    <%= form_for(Setting.new, url: admin_system_path, method: :put) do |f| %>
+      <div class="library-field">
+        <%= f.label :library_path, t('admin.library.library_path', default: 'Library path') %>
+        <%= f.text_field(:library_path, required: true, value: Setting.library_path, class: "form-control") %>
+        <%= f.submit t('settings.update'), class: 'btn btn-primary' %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="admin-theme-section">
+    <p class="admin-library-hint"><%= t('admin.library.scan_hint', default: 'Scan uses the saved library path.') %></p>
+    <div class="admin-actions">
+      <%= button_to t('admin.library.scan'), admin_library_path, method: :put, class: 'btn btn-primary' %>
     </div>
-  <% end %>
-  <%= button_to t('admin.library.scan'), admin_library_path, method: :put, class: 'btn btn-light' %>
+  </div>
 </div>

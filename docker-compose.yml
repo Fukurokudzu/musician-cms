@@ -6,6 +6,8 @@ x-app-build: &app-build
   args:
     UID: ${UID:-1000}
     GID: ${GID:-${UID:-1000}}
+    GIT_COMMIT: ${GIT_COMMIT:-}
+    GIT_BRANCH: ${GIT_BRANCH:-}
 
 services:
   web:
