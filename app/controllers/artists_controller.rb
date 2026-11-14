@@ -25,10 +25,12 @@ class ArtistsController < ApplicationController
   end
 
   def show
-    @artist = find_artist
-    return if @artist.description.nil?
-
-    @md_description = MarkdownRenderer.call(@artist.description)
+    @artist = Artist.includes(releases: { cover_attachment: { blob: :variant_records } })
+                    .find_by!(external_id: params[:id])
+    @md_description = MarkdownRenderer.call(@artist.description) if @artist.description.present?
+  rescue ActiveRecord::RecordNotFound
+    @artist = Artist.includes(releases: { cover_attachment: { blob: :variant_records } }).find(params[:id])
+    @md_description = MarkdownRenderer.call(@artist.description) if @artist.description.present?
   end
 
   def destroy

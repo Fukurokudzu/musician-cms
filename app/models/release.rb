@@ -3,7 +3,11 @@ class Release < ApplicationRecord
 
   belongs_to :artist
   has_many :tracks, dependent: :destroy
-  has_one_attached :cover
+  has_one_attached :cover do |attachable|
+    attachable.variant :card, resize_to_limit: [400, 400], preprocessed: true
+    attachable.variant :thumb, resize_to_limit: [200, 200], preprocessed: true
+    attachable.variant :detail, resize_to_limit: [1000, 1000], preprocessed: true
+  end
   before_create :set_default_title
   attribute :status, :string
   enum status: { draft: 'draft', published: 'published', archived: 'archived' }
