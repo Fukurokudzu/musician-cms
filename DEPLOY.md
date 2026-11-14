@@ -36,8 +36,20 @@ The web app is bound to `127.0.0.1:3003` by default. Put a reverse proxy (Nginx,
 |---|---|---|
 | `UID` | Build-time container user ID (affects image/build args) | `1000` |
 | `GID` | Build-time container group ID | `1000` (or `UID`) |
+| `GIT_COMMIT` | Optional commit shown in **Admin → About** diagnostics (build arg + runtime env) | empty |
+| `GIT_BRANCH` | Optional branch shown in **Admin → About** diagnostics (build arg + runtime env) | empty |
 
 Runtime service configuration such as `DATABASE_URL`, `REDIS_URL`, and `RAILS_ENV` is currently defined directly in `docker-compose.yml`.
+
+Because `.git` is excluded from the Docker build context, branch/commit cannot be auto-detected during image build. Pass them when building:
+
+```bash
+GIT_COMMIT=$(git rev-parse --short HEAD) \
+GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD) \
+docker compose up -d --build
+```
+
+Alternatively set `GIT_COMMIT`/`GIT_BRANCH` in `.env` before building, or provide them as runtime environment variables (diagnostics also read env vars). If the image was already built without these values, rebuild the image to bake them into `REVISION`/`BRANCH` files (or set runtime env vars and restart).
 
 ## Credentials
 
