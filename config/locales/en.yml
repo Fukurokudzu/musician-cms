@@ -59,6 +59,18 @@ en:
     library:
       scan: "Scan library"
       library_path: "Library path"
+      flash:
+        started: "Scan job started..."
+
+    theme:
+      flash:
+        updated: "Settings updated"
+        background_removed: "Background image removed"
+        favicon_removed: "Favicon removed"
+
+    system:
+      flash:
+        updated: "Settings updated"
 
     release:
       edit_title: "Edit Release"

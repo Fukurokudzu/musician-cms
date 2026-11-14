@@ -28,6 +28,18 @@ ru:
     library:
       scan: "Сканировать библиотеку"
       library_path: "Путь к библиотеке"
+      flash:
+        started: "Задача сканирования запущена..."
+
+    theme:
+      flash:
+        updated: "Настройки обновлены"
+        background_removed: "Фоновая картинка удалена"
+        favicon_removed: "Favicon удалён"
+
+    system:
+      flash:
+        updated: "Настройки обновлены"
 
     release:
       edit_title: "Редактировать релиз"

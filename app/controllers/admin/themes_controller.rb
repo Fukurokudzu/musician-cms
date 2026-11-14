@@ -12,8 +12,7 @@ class Admin::ThemesController < ApplicationController
     if update_system_settings(check_params)
       attach_background!(background) if background.present?
       attach_favicon!(favicon) if favicon.present?
-      #FIXME translation
-      flash.now[:success] = 'Settings updated'
+      flash.now[:success] = t('admin.theme.flash.updated')
     end
 
     render turbo_stream: turbo_stream.update('flash', partial: 'layouts/flash')
@@ -22,12 +21,10 @@ class Admin::ThemesController < ApplicationController
   def destroy
     if params[:target] == 'favicon'
       purge_favicon!
-      #FIXME translation
-      flash.now[:success] = 'Favicon removed'
+      flash.now[:success] = t('admin.theme.flash.favicon_removed')
     else
       purge_background!
-      #FIXME translation
-      flash.now[:success] = 'Background image removed'
+      flash.now[:success] = t('admin.theme.flash.background_removed')
     end
 
     render turbo_stream: [
