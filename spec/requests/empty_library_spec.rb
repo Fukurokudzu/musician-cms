@@ -8,6 +8,26 @@ RSpec.describe 'Player without tracks', type: :request do
       expect(response).to have_http_status(:ok)
       expect(response.body).to include('No tracks available')
     end
+
+    it 'renders a welcome message instead of a blank library' do
+      get root_path
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include('Welcome to Musician CMS!')
+      expect(response.body).to include('Open admin panel')
+      expect(response.body).to include('github.com/Fukurokudzu/musician-cms')
+    end
+
+    it 'keeps showing the welcome while only drafts exist' do
+      artist = create(:artist, title: 'Draft Artist')
+      create(:release, artist:, title: 'Draft Only', status: :draft)
+
+      get root_path
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include('Welcome to Musician CMS!')
+      expect(response.body).not_to include('Draft Artist')
+    end
   end
 
   describe 'GET /player/next_track' do

@@ -27,6 +27,28 @@ RSpec.describe "Admin::Releases", type: :request do
       expect(release.tracks.order(:pos).pluck(:title)).to eq(['My Bird', 'Some Other Song'])
       expect(release.tracks.order(:pos).pluck(:pos)).to eq([1, 2])
     end
+
+    it "creates tracks with the published status when the release is published" do
+      post sessions_path, params: { admin_email: Setting.admin_email, admin_password: 'admin' }
+
+      post upload_admin_releases_path, params: {
+        artist_title: 'Fukurokudzu',
+        release_title: 'Live Album',
+        status: 'published',
+        tracks: [uploaded_file('Fukurokudzu - Live Song.mp3')]
+      }
+
+      release = Release.find_by(title: 'Live Album')
+      expect(release.status).to eq('published')
+      expect(release.tracks.pluck(:status)).to eq(['published'])
+      # The fixture is a dummy file, not real audio: pre-set the duration
+      # so the public page doesn't try to probe it with WahWah.
+      release.tracks.update_all(duration: 95)
+
+      get release_path(release)
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include('live song')
+    end
   end
 
   describe "POST /admin/releases/:id/add_tracks" do
@@ -220,5 +242,27 @@ RSpec.describe "Admin::Releases", type: :request do
       expect(response).to have_http_status(:ok)
       expect(Release.exists?(release.id)).to be(false)
     end
+  end
+end
+
+RSpec.describe "Admin::Releases empty state", type: :request do
+  before do
+    post sessions_path, params: { admin_email: Setting.admin_email, admin_password: 'admin' }
+  end
+
+  it "shows the welcome block on an empty library" do
+    get admin_releases_path, as: :turbo_stream
+
+    expect(response.body).to include('Welcome to Musician CMS!')
+  end
+
+  it "hides soft-deleted artists from the upload form" do
+    create(:artist, title: 'Visible Artist')
+    create(:artist, title: 'Deleted Artist', soft_deleted: true)
+
+    get new_upload_admin_releases_path, as: :turbo_stream
+
+    expect(response.body).to include('Visible Artist')
+    expect(response.body).not_to include('Deleted Artist')
   end
 end

@@ -4,8 +4,7 @@ class BlogController < ApplicationController
   end
 
   def show
-    @post = Post.active.find_by(external_id: params[:id]) || Post.active.find_by(id: params[:id])
-    raise ActiveRecord::RecordNotFound unless @post
+    @post = find_short_codeable!(public_scope: Post.active, param: params[:id])
 
     @md_body = MarkdownRenderer.call(@post.body) if @post.body.present?
   end

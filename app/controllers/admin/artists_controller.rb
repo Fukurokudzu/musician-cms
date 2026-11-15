@@ -82,9 +82,7 @@ class Admin::ArtistsController < ApplicationController
   end
 
   def find_artist
-    Artist.find_by!(external_id: params[:id])
-  rescue ActiveRecord::RecordNotFound
-    Artist.find(params[:id])
+    find_short_codeable!(public_scope: Artist, param: params[:id])
   end
 
   def check_params

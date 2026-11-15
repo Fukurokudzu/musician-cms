@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  include ShortCodeLookup
+
   helper_method :admin?, :admin_area?
   before_action :set_page_title, :set_track
   around_action :switch_locale
@@ -24,11 +26,22 @@ class ApplicationController < ActionController::Base
     I18n.with_locale(locale, &action)
   end
 
-  # An explicit ?locale= wins over the configured site locale, so a visitor can
-  # switch the language even when the settings store a valid one.
+  # An explicit locale parameter wins over the configured site locale, so a
+  # visitor can switch the language even when the settings store a valid one.
+  # ?lang= is accepted as an alias for ?locale=, since some external tools
+  # (search previews, shared links) append lang= instead.
   def requested_locale
-    value = params[:locale].presence.to_s
+    value = (params[:locale].presence || params[:lang].presence).to_s
     value if I18n.available_locales.map(&:to_s).include?(value)
+  end
+
+  # Carry an explicit locale choice into internal links so it survives
+  # navigation (and copied URLs stay in that language). A visitor arriving
+  # with ?lang=ru gets links with the canonical ?locale=ru.
+  def default_url_options
+    options = super
+    options = options.merge(locale: requested_locale) if requested_locale.present?
+    options
   end
 
   def locale_set?

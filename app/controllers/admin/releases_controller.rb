@@ -19,13 +19,13 @@ class Admin::ReleasesController < ApplicationController
   end
 
   def new_upload
-    @artists = Artist.all
+    @artists = Artist.active.order(:title)
     @release = Release.new
     render turbo_stream: turbo_stream.update('admin_body', partial: 'new_upload')
   end
 
   def upload
-    @artist = Artist.find_by(id: params[:artist_id]) || Artist.new(title: params[:artist_title])
+    @artist = Artist.active.find_by(id: params[:artist_id]) || Artist.new(title: params[:artist_title])
     @artist.save! if @artist.new_record?
 
     @release = @artist.releases.new(
@@ -44,7 +44,7 @@ class Admin::ReleasesController < ApplicationController
       flash.now[:success] = t('admin.release.flash.uploaded')
       render turbo_stream: turbo_stream.update('admin_body', partial: 'system')
     else
-      @artists = Artist.all
+      @artists = Artist.active.order(:title)
       AuditLogger.log(action: 'release.upload_failed', request: request,
                       metadata: { title: params[:release_title], error: @release.errors.full_messages.join(', ') })
       flash.now[:error] = @release.errors.full_messages.join(', ')
@@ -54,7 +54,7 @@ class Admin::ReleasesController < ApplicationController
       ]
     end
   rescue StandardError => e
-    @artists = Artist.all
+    @artists = Artist.active.order(:title)
     AuditLogger.log(action: 'release.upload_failed', request: request,
                     metadata: { title: params[:release_title], error: e.message })
     flash.now[:error] = e.message
@@ -199,7 +199,7 @@ class Admin::ReleasesController < ApplicationController
   end
 
   def set_release
-    @release = Release.find_by(external_id: params[:id]) || Release.find_by(id: params[:id])
+    @release = find_short_codeable!(public_scope: Release, param: params[:id])
   end
 
   def render_release_show

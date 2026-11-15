@@ -1,0 +1,19 @@
+<div class="welcome-container">
+  <h1 class="welcome-title"><%= t('welcome.title') %></h1>
+  <p class="welcome-lead"><%= t('welcome.body') %></p>
+  <ol class="welcome-steps">
+    <li><%= t('welcome.step_signin') %></li>
+    <li><%= t('welcome.step_release') %></li>
+    <li><%= t('welcome.step_publish') %></li>
+  </ol>
+  <div class="welcome-info">
+    <%= link_to admin_path, class: 'welcome-link welcome-link--primary' do %>
+      <i class="fas fa-arrow-right" aria-hidden="true"></i>
+      <span><%= t('welcome.admin') %></span>
+    <% end %>
+    <%= link_to 'https://github.com/Fukurokudzu/musician-cms', target: '_blank', rel: 'noopener', class: 'welcome-link' do %>
+      <i class="fab fa-github" aria-hidden="true"></i>
+      <span><%= t('welcome.github') %></span>
+    <% end %>
+  </div>
+</div>

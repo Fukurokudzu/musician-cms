@@ -21,8 +21,6 @@ class ReleasesController < ApplicationController
   private
 
   def set_release
-    @release = Release.published.find_by(external_id: params[:id]) ||
-               Release.published.find_by(id: params[:id])
-    raise ActiveRecord::RecordNotFound unless @release
+    @release = find_short_codeable!(public_scope: Release.published, param: params[:id])
   end
 end

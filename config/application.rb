@@ -33,5 +33,9 @@ module MusicianCms
       )
     end
 
+    # Serve error pages through the app (so they get the site layout and a
+    # link back to the main page) instead of the static public/*.html files.
+    config.exceptions_app = self.routes
+
   end
 end

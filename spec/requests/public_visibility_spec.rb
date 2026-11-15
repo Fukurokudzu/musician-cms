@@ -74,6 +74,16 @@ RSpec.describe 'Public visibility', type: :request do
 
       expect(response).to have_http_status(:not_found)
     end
+
+    it 'answers with not found for a soft deleted artist' do
+      deleted = create(:artist, title: 'Retired Artist', soft_deleted: true)
+      create(:release, artist: deleted, title: 'Old Album', status: :published,
+                       release_date: Date.new(2024, 1, 1))
+
+      get artist_path(deleted)
+
+      expect(response).to have_http_status(:not_found)
+    end
   end
 
   describe 'release page' do

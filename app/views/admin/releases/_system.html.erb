@@ -1,4 +1,7 @@
 <div class="admin-releases">
+  <% if Artist.active.none? && Release.none? %>
+    <%= render 'welcome' %>
+  <% else %>
   <div class="admin-actions admin-releases-header">
     <%= link_to t('admin.release.upload_title', default: 'Upload Release'), new_upload_admin_releases_path, class: 'btn btn-primary',
                 data: { turbo_stream: true, turbo_prefetch: false } %>
@@ -26,5 +29,6 @@
         <% end %>
       <% end %>
     </div>
+  <% end %>
   <% end %>
 </div>

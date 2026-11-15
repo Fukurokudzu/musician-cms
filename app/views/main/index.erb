@@ -1,1 +1,5 @@
-<%= render partial: 'main/artist', collection: @artists %>
+<% if Artist.active.joins(:releases).merge(Release.published).none? %>
+  <%= render 'main/welcome' %>
+<% else %>
+  <%= render partial: 'main/artist', collection: @artists %>
+<% end %>

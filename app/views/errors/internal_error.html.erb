@@ -1,0 +1,11 @@
+<div class="error-container">
+  <p class="error-code">500</p>
+  <h1 class="error-title"><%= t('errors.internal_error_title') %></h1>
+  <p class="error-text"><%= t('errors.internal_error') %></p>
+  <div class="error-info">
+    <%= link_to root_path, class: 'error-link' do %>
+      <i class="fas fa-arrow-left" aria-hidden="true"></i>
+      <span><%= t('errors.back_home') %></span>
+    <% end %>
+  </div>
+</div>

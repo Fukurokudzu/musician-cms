@@ -1,6 +1,10 @@
 import { Controller } from '@hotwired/stimulus'
 import { Turbo } from '@hotwired/turbo-rails'
 
+// Seconds from the track start within which "previous" means "previous track";
+// past it, "previous" restarts the current one (YouTube / Spotify behavior).
+const RESTART_THRESHOLD_SECONDS = 3
+
 export default class extends Controller {
     static targets = ["audio", "playPause", "seekSlider", "volumeSlider", "currentTime", "duration", "artistTitle", "trackTitle", "mute", "releaseLink", "progress"];
 
@@ -53,6 +57,10 @@ export default class extends Controller {
         this.audioTarget.src = data_src;
         this.audioTarget.play().catch(error => console.error('Error playing audio:', error));
 
+        if (this.hasSeekSliderTarget) this.seekSliderTarget.value = 0;
+        if (this.hasCurrentTimeTarget) this.currentTimeTarget.textContent = '0:00';
+        if (this.hasDurationTarget) this.durationTarget.textContent = '0:00';
+
         if (this.hasPlayPauseTarget) {
             this.playPauseTarget.innerHTML = '<i class="fas fa-pause"></i>';
         }
@@ -96,6 +104,13 @@ export default class extends Controller {
 
     async previousTrack(event) {
         if (event) event.preventDefault();
+
+        // Standard player behavior: restart the current track first,
+        // and only skip to the previous one when already near its start.
+        if (this.hasAudioTarget && this.audioTarget.currentTime > RESTART_THRESHOLD_SECONDS) {
+            this.audioTarget.currentTime = 0;
+            return;
+        }
 
         try {
             const response = await fetch('/player/previous_track', {
@@ -155,6 +170,13 @@ export default class extends Controller {
 
         const currentTime = this.audioTarget.currentTime;
         const duration = this.audioTarget.duration;
+        // Until the metadata loads duration is NaN; writing NaN into a range
+        // input makes the browser snap the thumb back to the middle.
+        if (!Number.isFinite(duration) || duration <= 0) {
+            this.seekSliderTarget.value = 0;
+            this.currentTimeTarget.textContent = this.formatTime(currentTime || 0);
+            return;
+        }
         this.seekSliderTarget.value = (currentTime / duration) * 100;
         this.currentTimeTarget.textContent = this.formatTime(currentTime);
     }

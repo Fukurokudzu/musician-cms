@@ -64,8 +64,7 @@ class Admin::PostsController < ApplicationController
   private
 
   def set_post
-    @post = Post.find_by(external_id: params[:id]) || Post.find_by(id: params[:id])
-    raise ActiveRecord::RecordNotFound unless @post
+    @post = find_short_codeable!(public_scope: Post, param: params[:id])
   end
 
   def render_index

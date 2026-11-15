@@ -51,6 +51,11 @@ Rails.application.routes.draw do
   get :sign_in, to: 'sessions#new', as: 'sign_in'
   delete :sign_out, to: 'sessions#destroy', as: 'sign_out'
 
+  # Error pages, rendered by config.exceptions_app through the normal stack
+  # (site layout, header, footer) instead of the static public/*.html files.
+  match '/404', to: 'errors#not_found', via: :all
+  match '/500', to: 'errors#internal_error', via: :all
+
   # Player routes
   get 'player/next_track', to: 'player#next_track'
   get 'player/previous_track', to: 'player#previous_track'

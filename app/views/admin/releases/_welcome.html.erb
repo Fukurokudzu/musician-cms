@@ -1,0 +1,9 @@
+<div class="admin-welcome">
+  <div class="admin-welcome-icon" aria-hidden="true"><i class="fas fa-music"></i></div>
+  <h2 class="admin-welcome-title"><%= t('admin.welcome.title') %></h2>
+  <p class="admin-welcome-text"><%= t('admin.welcome.body') %></p>
+  <div class="admin-welcome-actions">
+    <%= link_to t('admin.welcome.upload'), new_upload_admin_releases_path, class: 'btn btn-primary',
+                data: { turbo_stream: true, turbo_prefetch: false } %>
+  </div>
+</div>

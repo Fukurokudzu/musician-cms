@@ -30,7 +30,6 @@
           <thead>
             <tr>
               <th scope="col"><%= t('admin.logs.columns.time') %></th>
-              <th scope="col"><%= t('admin.logs.columns.actor') %></th>
               <th scope="col"><%= t('admin.logs.columns.action') %></th>
               <th scope="col"><%= t('admin.logs.columns.target') %></th>
               <th scope="col"><%= t('admin.logs.columns.details') %></th>
@@ -40,7 +39,6 @@
             <% @events.each do |event| %>
               <tr>
                 <td class="text-nowrap"><%= format_datetime(event.created_at) %></td>
-                <td><%= event.actor.presence || '—' %></td>
                 <td><code class="admin-logs-action"><%= event.action %></code></td>
                 <td><%= event.target.presence || '—' %></td>
                 <td class="admin-logs-details"><%= event.details.presence || '—' %></td>

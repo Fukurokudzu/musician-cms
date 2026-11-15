@@ -1,8 +1,6 @@
 class PlayerController < ApplicationController
   def show
-    @track = Track.playable.find_by(external_id: params[:id]) ||
-             Track.playable.find_by(id: params[:id]) ||
-             active_track
+    @track = resolve_playable_track || active_track
     return render_no_tracks unless @track
 
     process_track
@@ -23,6 +21,13 @@ class PlayerController < ApplicationController
   end
 
   private
+
+  def resolve_playable_track
+    lookup = find_short_codeable!(public_scope: Track.playable, param: params[:id])
+    Track.playable.find(lookup.id)
+  rescue ActiveRecord::RecordNotFound
+    nil
+  end
 
   def render_no_tracks
     render json: { error: 'No tracks available' }, status: :not_found

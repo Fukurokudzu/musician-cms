@@ -80,7 +80,6 @@ en:
         blog: "Blog"
       columns:
         time: "Time"
-        actor: "Actor"
         action: "Action"
         target: "Target"
         details: "Details"
@@ -273,6 +272,11 @@ en:
         updated: "Post updated"
         deleted: "Post deleted"
 
+    welcome:
+      title: "Welcome to Musician CMS!"
+      body: "No artists or releases yet. Upload your first release — you can pick an existing artist or create a new one right in the form."
+      upload: "Upload your first release"
+
   blog:
     title: "Blog"
     empty: "No posts yet."
@@ -317,6 +321,22 @@ en:
 
   player:
     empty: "No tracks available"
+
+  errors:
+    not_found_title: "Page not found"
+    not_found: "The page you were looking for doesn't exist, was moved or made private"
+    internal_error_title: "Something went wrong"
+    internal_error: "The server hit an unexpected error. Please try again."
+    back_home: "Back to the main page"
+
+  welcome:
+    title: "Welcome to Musician CMS!"
+    body: "The site is up and running, but there is nothing published yet. Here is how to get started:"
+    step_signin: "Open the admin panel and sign in with your credentials"
+    step_release: "Upload your first release — you can create the artist right in the upload form"
+    step_publish: "Publish the release and it will appear on this page"
+    admin: "Open admin panel"
+    github: "Documentation on GitHub"
 
   artists:
     show:

@@ -52,14 +52,16 @@ class Release < ApplicationRecord
     update_column(:plays_count, tracks.sum(:plays_count))
   end
 
-  # Builds a draft track for every uploaded audio file. The title comes from
+  # Builds a track for every uploaded audio file. The title comes from
   # the file name ("<artist> - Song.mp3" becomes "Song") and positions continue
-  # after +after_pos+. Returns the created tracks, empty when nothing usable
-  # was uploaded.
+  # after +after_pos+. Tracks inherit the release's status so a release
+  # published right away doesn't end up silent (a published release only
+  # shows published tracks publicly). Returns the created tracks,
+  # empty when nothing usable was uploaded.
   def add_tracks!(files, after_pos: 0)
     Array(files).select { |file| file.respond_to?(:original_filename) }.each_with_index.map do |file, index|
       title = Track.title_from_filename(file.original_filename, artist: artist.title)
-      tracks.create!(title:, auto_title: title, pos: after_pos + index + 1, status: :draft) do |track|
+      tracks.create!(title:, auto_title: title, pos: after_pos + index + 1, status: status) do |track|
         track.audio_file.attach(file)
       end
     end

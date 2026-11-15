@@ -21,8 +21,10 @@ Rails.application.configure do
     "Cache-Control" => "public, max-age=#{1.hour.to_i}"
   }
 
-  # Show full error reports and disable caching.
-  config.consider_all_requests_local       = true
+  # Don't render verbose exception dialogs; rescuable exceptions (404/422)
+  # render through the app's exceptions_app so request specs can assert on
+  # the themed error pages, and non-rescuable ones raise for the test.
+  config.consider_all_requests_local       = false
   config.action_controller.perform_caching = false
   config.cache_store = :null_store
 
