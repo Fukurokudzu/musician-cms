@@ -11,6 +11,7 @@
           </div>
         <% end %>
         <%= f.file_field :background_image, accept: 'image/*', class: 'form-control', aria: { label: t('admin.theme.background', default: 'Background') } %>
+        <p class="admin-field-hint"><%= t('admin.theme.hints.background', default: 'Any image file') %></p>
       </div>
     </div>
 
@@ -24,6 +25,7 @@
           </div>
         <% end %>
         <%= f.file_field :favicon, accept: 'image/*', class: 'form-control', aria: { label: t('admin.theme.favicon', default: 'Favicon') } %>
+        <p class="admin-field-hint"><%= t('admin.theme.hints.favicon', default: 'Allowed formats: PNG, JPG, ICO, SVG, WebP') %></p>
       </div>
     </div>
 

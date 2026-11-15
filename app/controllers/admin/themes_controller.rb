@@ -65,8 +65,8 @@ class Admin::ThemesController < ApplicationController
   end
 
   def attach_favicon!(file)
-    unless file.content_type.to_s.match?(%r{image/(png|x-icon|vnd\.microsoft\.icon|svg\+xml|webp)})
-      flash.now[:error] = 'Favicon must be an image file (PNG, ICO, SVG or WebP)'
+    unless file.content_type.to_s.match?(%r{image/(png|jpeg|jpg|x-icon|vnd\.microsoft\.icon|svg\+xml|webp)})
+      flash.now[:error] = t('admin.theme.flash.favicon_invalid', default: 'Favicon must be an image file (PNG, JPG, ICO, SVG or WebP)')
       return
     end
 
