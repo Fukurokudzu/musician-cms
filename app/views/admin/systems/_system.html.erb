@@ -60,6 +60,16 @@
     </div>
 
     <div class="admin-theme-section">
+      <h3 class="admin-theme-section-title"><%= t('admin.system.logging', default: 'Logging') %></h3>
+      <div class="form-group">
+        <%= f.label :audit_retention_days, t('settings.audit_retention_days', default: 'Keep audit log for (days)') %>
+        <%= f.number_field :audit_retention_days, min: 0, step: 1, required: true,
+                           value: Setting.audit_retention_days, class: "form-control" %>
+        <small class="form-text text-muted"><%= t('admin.system.logging_hint', default: 'Days to keep key-action entries shown on the Logs page. 0 keeps everything.') %></small>
+      </div>
+    </div>
+
+    <div class="admin-theme-section">
       <h3 class="admin-theme-section-title"><%= t('admin.system.security', default: 'Security') %></h3>
       <div class="form-group">
         <%= f.label :admin_email, t('settings.admin_email', default: 'Admin Email') %>

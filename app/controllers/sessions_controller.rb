@@ -6,13 +6,18 @@ class SessionsController < ApplicationController
     auth = Auth.new(allowed_params[:admin_email], allowed_params[:admin_password])
     if auth.hashed_id
       session[:hashed_id] = auth.hashed_id
+      AuditLogger.log(action: 'auth.sign_in', actor: Setting.admin_email, request: request)
       redirect_to(controller: :admin)
     else
+      attempted_email = allowed_params[:admin_email].to_s.truncate(255)
+      AuditLogger.log(action: 'auth.sign_in_failed', actor: attempted_email.presence || 'unknown',
+                      metadata: { email: attempted_email }, request: request)
       show_flash(t('flash.alert.login'))
     end
   end
 
   def destroy
+    AuditLogger.log(action: 'auth.sign_out', actor: Setting.admin_email, request: request)
     session[:hashed_id] = nil
     redirect_to(controller: :main, action: :index)
   end

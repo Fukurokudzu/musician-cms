@@ -20,6 +20,8 @@ class ScanLibJob < ApplicationJob
     # Check if directory exists
     unless Dir.exist?(library_path)
       Rails.logger.error "Library path not found: #{library_path}"
+      AuditLogger.log(action: 'library.scan_failed', actor: 'system',
+                      metadata: { path: library_path, error: 'Library path not found' })
       return self
     end
 
@@ -31,12 +33,16 @@ class ScanLibJob < ApplicationJob
     release_manager.update_releases
 
     Rails.logger.info "ScanLibHelper JOB COMPLETED"
+    AuditLogger.log(action: 'library.scan_completed', actor: 'system',
+                    metadata: { path: library_path })
     @success = true
 
     self
   rescue StandardError => e
     Rails.logger.error "ScanLibJob failed: #{e.class}: #{e.message}"
     Rails.logger.error e.backtrace.first(20).join("\n")
+    AuditLogger.log(action: 'library.scan_failed', actor: 'system',
+                    metadata: { error: "#{e.class}: #{e.message}" })
     @success = false
     self
   end

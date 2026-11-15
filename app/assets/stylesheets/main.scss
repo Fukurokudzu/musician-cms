@@ -113,11 +113,10 @@ header {
 
 .cover,
 .release-show-cover img {
-    /* Placeholder while the variant streams in: reserves the box and shows a
-       shimmer instead of a blank/transparent hole. */
-    background: linear-gradient(110deg, #1b1b1e 25%, #26262b 37%, #1b1b1e 60%);
-    background-size: 200% 100%;
-    animation: cover-shimmer 1.4s ease infinite;
+    /* Static placeholder while the variant streams in: reserves the box and
+       avoids a blank/transparent hole. No animation on purpose — the CSS
+       doesn't depend on image load time, so a single static paint is enough. */
+    background: linear-gradient(160deg, #1b1b1e, #222227);
 }
 
 .cover {
@@ -125,22 +124,6 @@ header {
     height: 15rem;
     border-radius: var(--border-radius, 5px);
     object-fit: cover;
-}
-
-@keyframes cover-shimmer {
-    from {
-        background-position: 200% 0;
-    }
-    to {
-        background-position: -200% 0;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .cover,
-    .release-show-cover img {
-        animation: none;
-    }
 }
 
 #footer {

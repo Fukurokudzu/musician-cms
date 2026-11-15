@@ -10,10 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_11_02_130000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_15_153406) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
-  enable_extension "plpgsql"
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -57,6 +57,20 @@ ActiveRecord::Schema[7.2].define(version: 2026_11_02_130000) do
     t.string "external_id"
     t.index ["external_id"], name: "index_artists_on_external_id", unique: true
     t.index ["title"], name: "index_artists_on_title"
+  end
+
+  create_table "audit_events", force: :cascade do |t|
+    t.string "action", null: false
+    t.string "actor"
+    t.string "target_type"
+    t.string "target_id"
+    t.string "target_label"
+    t.jsonb "metadata", default: {}, null: false
+    t.string "ip_address"
+    t.string "user_agent"
+    t.datetime "created_at", null: false
+    t.index ["action"], name: "index_audit_events_on_action"
+    t.index ["created_at"], name: "index_audit_events_on_created_at"
   end
 
   create_table "releases", force: :cascade do |t|

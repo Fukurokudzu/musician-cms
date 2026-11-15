@@ -87,9 +87,15 @@ Rails.application.configure do
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new "app-name")
 
   if ENV["RAILS_LOG_TO_STDOUT"].present?
-    logger           = ActiveSupport::Logger.new(STDOUT)
-    logger.formatter = config.log_formatter
-    config.logger    = ActiveSupport::TaggedLogging.new(logger)
+    stdout_logger           = ActiveSupport::Logger.new(STDOUT)
+    stdout_logger.formatter = config.log_formatter
+    # Also keep a file copy: /admin/logs tails log/<env>.log (the ./log
+    # directory is mounted into both the web and the sidekiq containers).
+    file_logger             = ActiveSupport::Logger.new(Rails.root.join("log", "#{Rails.env}.log"))
+    file_logger.formatter   = config.log_formatter
+    config.logger           = ActiveSupport::TaggedLogging.new(
+      ActiveSupport::BroadcastLogger.new(stdout_logger, file_logger)
+    )
   end
 
   # Do not dump schema after migrations.

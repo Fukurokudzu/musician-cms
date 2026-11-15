@@ -38,6 +38,9 @@ class Setting < RailsSettings::Base
     # default password is admin
     field :admin_hashed_password, default: "$2a$12$.GeWsTtueFtVJMr07iJweOYpuOsMWeoFpm.KJhsM4x87TDEng4s22", validates: { presence: true }
     field :admin_salt, default: "$2a$12$.GeWsTtueFtVJMr07iJweO", validates: { presence: true }
+    # 0 keeps audit events forever, otherwise entries older than N days are pruned
+    field :audit_retention_days, default: 90, type: :integer,
+          validates: { numericality: { only_integer: true, greater_than_or_equal_to: 0 } }
   end
 
   scope :site do

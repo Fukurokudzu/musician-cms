@@ -54,6 +54,48 @@ en:
       library: "Library"
       theme: "Theme"
       about: "About"
+      logs: "Logs"
+
+    logs:
+      title: "Key actions"
+      entries:
+        one: "%{count} entry"
+        other: "%{count} entries"
+      hint: "Kept for %{days} days (0 = forever). Change it in System → Logging."
+      filter_all: "All"
+      categories:
+        auth: "Auth"
+        artist: "Artists"
+        release: "Releases"
+        track: "Tracks"
+        settings: "Settings"
+        theme: "Theme"
+        library: "Library"
+      columns:
+        time: "Time"
+        actor: "Actor"
+        action: "Action"
+        target: "Target"
+        details: "Details"
+      empty: "No entries yet."
+      pagination: "Log pages"
+      newer: "← Newer"
+      older: "Older →"
+      page_of: "Page %{page} of %{total}"
+      stdout_title: "Application log file"
+      stdout_path: "File"
+      stdout_modified: "updated"
+      stdout_missing: "Log file not found or not readable."
+      download_tail: "Download last %{size}"
+      download_full: "Download whole file (%{size})"
+      download_note: "The log contains everything: requests, SQL, Sidekiq output. It is never inlined in this page; download instead."
+      clear_audit: "Clear audit log"
+      clear_audit_confirm: "Delete all %{count} audit entries? This cannot be undone."
+      clear_file: "Clear log file"
+      clear_file_confirm: "Truncate %{path} to zero bytes? Existing log content will be lost."
+      audit_cleared: "Audit log cleared (%{count} entries removed)"
+      file_cleared: "Log file truncated"
+      clear_failed: "Could not clear: %{error}"
 
     about:
       title: "Diagnostics"
@@ -144,6 +186,8 @@ en:
       footer: "Footer"
       localization: "Localization"
       security: "Security"
+      logging: "Logging"
+      logging_hint: "Days to keep key-action entries shown on the Logs page. 0 keeps everything."
       flash:
         updated: "Settings updated"
         error: "Could not update settings"
@@ -222,6 +266,7 @@ en:
     admin_email: "Admin email"
     admin_password: "Admin password"
     admin_password_placeholder: "Leave blank to keep current password"
+    audit_retention_days: "Keep audit log for (days)"
 
   flash:
     alert:

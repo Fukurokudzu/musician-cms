@@ -38,11 +38,15 @@ class Admin::ReleasesController < ApplicationController
     @release.cover.attach(params[:cover]) if params[:cover].present?
 
     if @release.save
-      @release.add_tracks!(params[:tracks])
+      added_tracks = @release.add_tracks!(params[:tracks])
+      AuditLogger.log(action: 'release.uploaded', target: @release, request: request,
+                      metadata: { title: @release.title, artist: @artist&.title, tracks: Array(added_tracks).size })
       flash.now[:success] = t('admin.release.flash.uploaded')
       render turbo_stream: turbo_stream.update('admin_body', partial: 'system')
     else
       @artists = Artist.all
+      AuditLogger.log(action: 'release.upload_failed', request: request,
+                      metadata: { title: params[:release_title], error: @release.errors.full_messages.join(', ') })
       flash.now[:error] = @release.errors.full_messages.join(', ')
       render turbo_stream: [
         turbo_stream.update('admin_body', partial: 'new_upload'),
@@ -51,6 +55,8 @@ class Admin::ReleasesController < ApplicationController
     end
   rescue StandardError => e
     @artists = Artist.all
+    AuditLogger.log(action: 'release.upload_failed', request: request,
+                    metadata: { title: params[:release_title], error: e.message })
     flash.now[:error] = e.message
     render turbo_stream: [
       turbo_stream.update('admin_body', partial: 'new_upload'),
@@ -64,11 +70,15 @@ class Admin::ReleasesController < ApplicationController
     if tracks.empty?
       flash.now[:error] = t('admin.release.flash.no_track_file')
     else
+      AuditLogger.log(action: 'track.added', target: @release, request: request,
+                      metadata: { release: @release.title, count: tracks.size })
       flash.now[:success] = t('admin.release.flash.tracks_added', count: tracks.size)
     end
 
     render_release_show
   rescue StandardError => e
+    AuditLogger.log(action: 'track.add_failed', target: @release, request: request,
+                    metadata: { release: @release&.title, error: e.message })
     flash.now[:error] = e.message
     render_release_show
   end
@@ -79,6 +89,8 @@ class Admin::ReleasesController < ApplicationController
     attrs = bulk_track_attributes
     if attrs.present?
       tracks.update_all(attrs.merge(updated_at: Time.current))
+      AuditLogger.log(action: 'track.bulk_updated', target: @release, request: request,
+                      metadata: { release: @release.title, count: tracks.count, changes: attrs.keys })
       flash.now[:success] = t('admin.release.flash.tracks_published', default: 'Tracks updated')
     else
       flash.now[:error] = t('admin.release.flash.bulk_no_action', default: 'Choose an action')
@@ -103,6 +115,8 @@ class Admin::ReleasesController < ApplicationController
     attrs = bulk_release_attributes
     if attrs.present?
       releases.update_all(attrs.merge(updated_at: Time.current))
+      AuditLogger.log(action: 'release.bulk_updated', request: request,
+                      metadata: { count: releases.count, changes: attrs.keys })
       flash.now[:success] = t('admin.release.flash.releases_updated', default: 'Releases updated')
     else
       flash.now[:error] = t('admin.release.flash.bulk_no_action', default: 'Choose an action')
@@ -122,6 +136,9 @@ class Admin::ReleasesController < ApplicationController
 
   def update
     if @release.update(release_params)
+      AuditLogger.log(action: 'release.updated', target: @release, request: request,
+                      metadata: { release: @release.title, changes: release_params.keys,
+                                  bulk_apply: params[:bulk_apply].present? })
       if params[:bulk_apply].present?
         attrs = bulk_track_attributes
         attrs = { status: params[:bulk_status] } if attrs.blank? && params[:bulk_status].present?
@@ -138,6 +155,8 @@ class Admin::ReleasesController < ApplicationController
         render_release_show
       end
     else
+      AuditLogger.log(action: 'release.update_failed', target: @release, request: request,
+                      metadata: { release: @release&.title, error: @release.errors.full_messages.join(', ') })
       flash.now[:error] = @release.errors.full_messages.join(', ')
       render turbo_stream: turbo_stream.update('flash', partial: 'layouts/flash'), status: :unprocessable_entity
     end
@@ -145,6 +164,8 @@ class Admin::ReleasesController < ApplicationController
 
   def destroy
     if @release.destroy
+      AuditLogger.log(action: 'release.deleted', target: @release, request: request,
+                      metadata: { title: @release.title })
       flash.now[:success] = t('admin.release.flash.deleted')
       render turbo_stream: turbo_stream.update('admin_body', partial: 'system')
     else

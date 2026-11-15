@@ -21,6 +21,11 @@ Rails.application.routes.draw do
 
   namespace :admin do
     resource :about, only: [:show]
+    resource :logs, only: [:show] do
+      get :download
+      delete :clear_audit
+      delete :clear_file
+    end
     resource :system, only: [:show, :update]
     resource :library, only: [:show, :update]
     resource :themes, only: [:show, :update, :destroy]

@@ -107,6 +107,15 @@ Alternatively set `GIT_COMMIT`/`GIT_BRANCH` in `.env` before building, or provid
 
 `./log` is also bind-mounted to `/rails/log` for easier access to logs on the host.
 
+## Admin logs
+
+The admin panel has a **Logs** tab (`/admin/logs`) with two parts:
+
+- **Key actions** — audit trail of admin activity (sign-in/out, release/track and artist changes, settings/theme updates, library scans, log clears). Stored in the PostgreSQL `audit_events` table. Retention is configurable in *System → Logging* ("Keep audit log for (days)", default 90, `0` keeps everything). Old entries are pruned automatically, at most once an hour, on each new audit write.
+- **Application log file** — metadata (path, size, mtime) and one-click downloads: last 5 MB or the whole file via the admin-only `/admin/logs/download` endpoint. The log is deliberately not rendered into the page: its last lines are almost always the current admin's own requests, so a tail has little value on screen. Since the production image keeps `RAILS_LOG_TO_STDOUT=true`, the web and Sidekiq processes now also broadcast to `log/production.log` so downloads work; `docker compose logs` output is unchanged. The file is shared between web and sidekiq (both mount `./log`), so lines from background jobs are in it too. Note that this file has no rotation by itself — rely on host-level logrotate or trim it periodically if needed.
+
+It also has two destructive buttons (both ask for confirmation, both are admin-only): **Clear audit log** deletes every row from `audit_events` (a single marker entry is written afterwards noting who cleared it and how many entries were removed), and **Clear log file** truncates `log/<env>.log` to zero bytes — the running logger keeps writing from the start of the now-empty file.
+
 `docker compose down` keeps volumes. `docker compose down -v` removes named volumes and **will delete data**.
 
 ## Music library

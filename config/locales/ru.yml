@@ -23,6 +23,50 @@ ru:
       library: "Библиотека"
       theme: "Тема"
       about: "О системе"
+      logs: "Логи"
+
+    logs:
+      title: "Ключевые действия"
+      entries:
+        one: "%{count} запись"
+        few: "%{count} записи"
+        many: "%{count} записей"
+        other: "%{count} записей"
+      hint: "Хранятся %{days} дней (0 = бессрочно). Настраивается в Система → Логирование."
+      filter_all: "Все"
+      categories:
+        auth: "Вход"
+        artist: "Исполнители"
+        release: "Релизы"
+        track: "Треки"
+        settings: "Настройки"
+        theme: "Тема"
+        library: "Библиотека"
+      columns:
+        time: "Время"
+        actor: "Кто"
+        action: "Действие"
+        target: "Объект"
+        details: "Детали"
+      empty: "Записей пока нет."
+      pagination: "Страницы лога"
+      newer: "← Новее"
+      older: "Старее →"
+      page_of: "Страница %{page} из %{total}"
+      stdout_title: "Файл лога приложения"
+      stdout_path: "Файл"
+      stdout_modified: "обновлён"
+      stdout_missing: "Файл лога не найден или не читается."
+      download_tail: "Скачать последние %{size}"
+      download_full: "Скачать весь файл (%{size})"
+      download_note: "В лог попадает всё: запросы, SQL, вывод задач Sidekiq. На страницу он не выводится — скачивайте файл."
+      clear_audit: "Очистить аудит"
+      clear_audit_confirm: "Удалить все записи аудита (%{count})? Действие нельзя отменить."
+      clear_file: "Очистить файл лога"
+      clear_file_confirm: "Обнулить %{path}? Содержимое лога будет потеряно."
+      audit_cleared: "Аудит очищен (удалено записей: %{count})"
+      file_cleared: "Файл лога обнулён"
+      clear_failed: "Не удалось очистить: %{error}"
 
     about:
       title: "Диагностика"
@@ -113,6 +157,8 @@ ru:
       footer: "Подвал"
       localization: "Локализация"
       security: "Безопасность"
+      logging: "Логирование"
+      logging_hint: "Сколько дней хранить записи аудита на странице «Логи». 0 — хранить бессрочно."
       flash:
         updated: "Настройки обновлены"
         error: "Не удалось обновить настройки"
@@ -193,6 +239,7 @@ ru:
     admin_email: "Почта администратора"
     admin_password: "Пароль администратора"
     admin_password_placeholder: "Оставьте пустым, чтобы не менять"
+    audit_retention_days: "Хранить лог аудита (дней)"
 
   flash:
     alert:

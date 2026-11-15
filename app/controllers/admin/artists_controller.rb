@@ -21,6 +21,8 @@ class Admin::ArtistsController < ApplicationController
     @artist = Artist.new(check_params)
     if @artist.save
       @artists = Artist.all.active
+      AuditLogger.log(action: 'artist.created', target: @artist, request: request,
+                      metadata: { title: @artist.title })
       flash.now[:success] = 'Artist was successfully created.'
       render turbo_stream: turbo_stream.update('admin_body', partial: 'index')
     else
@@ -38,6 +40,8 @@ class Admin::ArtistsController < ApplicationController
   def update
     if @artist.update(check_params)
       @artists = Artist.all.active.order(:title)
+      AuditLogger.log(action: 'artist.updated', target: @artist, request: request,
+                      metadata: { title: @artist.title, changes: check_params.keys })
       flash.now[:success] = t('settings.update', default: 'Updated')
       render turbo_stream: [
         turbo_stream.update('admin_body', partial: 'index'),
@@ -55,6 +59,8 @@ class Admin::ArtistsController < ApplicationController
   def destroy
     if @artist.update(soft_deleted: true)
       @artists = Artist.all.active.order(:title)
+      AuditLogger.log(action: 'artist.deleted', target: @artist, request: request,
+                      metadata: { title: @artist.title })
       flash.now[:success] = t('settings.delete', default: 'Deleted')
       render turbo_stream: [
         turbo_stream.update('admin_body', partial: 'index'),

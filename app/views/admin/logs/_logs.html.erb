@@ -1,0 +1,98 @@
+<div class="admin-logs">
+  <div class="admin-logs-section">
+    <div class="admin-logs-header">
+      <h3><%= t('admin.logs.title') %></h3>
+      <div class="admin-logs-header-actions">
+        <span class="admin-logs-count"><%= t('admin.logs.entries', count: @total_count) %></span>
+        <% if @total_count.positive? %>
+          <%= button_to t('admin.logs.clear_audit'), clear_audit_admin_logs_path, method: :delete,
+                        class: 'btn btn-sm btn-danger',
+                        data: { turbo_confirm: t('admin.logs.clear_audit_confirm', count: @total_count) } %>
+        <% end %>
+      </div>
+    </div>
+    <p class="admin-library-hint"><%= t('admin.logs.hint', days: Setting.audit_retention_days) %></p>
+
+    <div class="admin-logs-filters">
+      <%= link_to t('admin.logs.filter_all'), admin_logs_path,
+                  class: ['admin-logs-filter', ('is-active' if @category == 'all')].compact.join(' '),
+                  data: { turbo_stream: true } %>
+      <% AuditEvent::CATEGORIES.each do |category| %>
+        <%= link_to t("admin.logs.categories.#{category}"), admin_logs_path(category: category),
+                    class: ['admin-logs-filter', ('is-active' if @category == category)].compact.join(' '),
+                    data: { turbo_stream: true } %>
+      <% end %>
+    </div>
+
+    <% if @events.any? %>
+      <div class="table-responsive">
+        <table class="table table-sm admin-logs-table">
+          <thead>
+            <tr>
+              <th scope="col"><%= t('admin.logs.columns.time') %></th>
+              <th scope="col"><%= t('admin.logs.columns.actor') %></th>
+              <th scope="col"><%= t('admin.logs.columns.action') %></th>
+              <th scope="col"><%= t('admin.logs.columns.target') %></th>
+              <th scope="col"><%= t('admin.logs.columns.details') %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @events.each do |event| %>
+              <tr>
+                <td class="text-nowrap"><%= format_datetime(event.created_at) %></td>
+                <td><%= event.actor.presence || '—' %></td>
+                <td><code class="admin-logs-action"><%= event.action %></code></td>
+                <td><%= event.target.presence || '—' %></td>
+                <td class="admin-logs-details"><%= event.details.presence || '—' %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+
+      <% if @total_pages > 1 %>
+        <nav class="admin-logs-pagination" aria-label="<%= t('admin.logs.pagination') %>">
+          <% if @page > 1 %>
+            <%= link_to t('admin.logs.newer'), admin_logs_path(category: @category, page: @page - 1), data: { turbo_stream: true } %>
+          <% end %>
+          <span class="admin-logs-page"><%= t('admin.logs.page_of', page: @page, total: @total_pages) %></span>
+          <% if @page < @total_pages %>
+            <%= link_to t('admin.logs.older'), admin_logs_path(category: @category, page: @page + 1), data: { turbo_stream: true } %>
+          <% end %>
+        </nav>
+      <% end %>
+    <% else %>
+      <p class="admin-logs-empty"><%= t('admin.logs.empty') %></p>
+    <% end %>
+  </div>
+
+  <div class="admin-logs-section">
+    <div class="admin-logs-header">
+      <h3><%= t('admin.logs.stdout_title') %></h3>
+      <% if @log_file.exists && @log_file.size.positive? %>
+        <%= button_to t('admin.logs.clear_file'), clear_file_admin_logs_path, method: :delete,
+                      class: 'btn btn-sm btn-danger',
+                      data: { turbo_confirm: t('admin.logs.clear_file_confirm', path: @log_file.path) } %>
+      <% end %>
+    </div>
+    <p class="admin-library-hint admin-logs-path">
+      <%= t('admin.logs.stdout_path') %>: <code><%= @log_file.path %></code><br>
+      <% if @log_file.exists %>
+        <%= number_to_human_size(@log_file.size) %> ·
+        <%= t('admin.logs.stdout_modified') %>: <%= format_datetime(@log_file.mtime) %>
+      <% end %>
+    </p>
+
+    <% if @log_file.exists %>
+      <div class="admin-logs-downloads">
+        <%= link_to t('admin.logs.download_tail', size: number_to_human_size(LogFile::TAIL_BYTES)),
+                    download_admin_logs_path, class: 'btn btn-sm btn-primary' %>
+        <%= link_to t('admin.logs.download_full', size: number_to_human_size(@log_file.size)),
+                    download_admin_logs_path(scope: 'full'), class: 'btn btn-sm btn-outline-secondary' %>
+      </div>
+      <p class="admin-logs-note"><%= t('admin.logs.download_note') %></p>
+    <% else %>
+      <p class="admin-logs-empty"><%= t('admin.logs.stdout_missing') %></p>
+    <% end %>
+  </div>
+</div>

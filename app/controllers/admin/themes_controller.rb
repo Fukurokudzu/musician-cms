@@ -16,8 +16,14 @@ class Admin::ThemesController < ApplicationController
       attach_background!(background) if background.present?
       attach_favicon!(favicon) if favicon.present?
       Setting.clear_cache if Setting.respond_to?(:clear_cache)
+      AuditLogger.log(action: 'theme.updated', request: request,
+                      metadata: { changes: check_params.keys,
+                                  background_attached: background.present?,
+                                  favicon_attached: favicon.present? })
       flash.now[:success] = t('admin.theme.flash.updated')
     else
+      AuditLogger.log(action: 'theme.update_failed', request: request,
+                      metadata: { error: Array(@settings_errors).presence&.join(', ') || 'error' })
       flash.now[:error] = Array(@settings_errors).presence&.join(', ') ||
                           t('admin.system.flash.error', default: 'Could not update settings')
     end
@@ -28,9 +34,11 @@ class Admin::ThemesController < ApplicationController
   def destroy
     if params[:target] == 'favicon'
       purge_favicon!
+      AuditLogger.log(action: 'theme.asset_removed', request: request, metadata: { target: 'favicon' })
       flash.now[:success] = t('admin.theme.flash.favicon_removed')
     else
       purge_background!
+      AuditLogger.log(action: 'theme.asset_removed', request: request, metadata: { target: 'background' })
       flash.now[:success] = t('admin.theme.flash.background_removed')
     end
     Setting.clear_cache if Setting.respond_to?(:clear_cache)
