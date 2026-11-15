@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :release do
     association :artist
-    title { Faker::Music::RockBand.name }
+    sequence(:title) { |n| "#{Faker::Music::RockBand.name} #{n}" }
     status { :draft }
 
     trait :published do
