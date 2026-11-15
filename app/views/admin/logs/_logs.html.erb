@@ -67,7 +67,7 @@
   <div class="admin-logs-section">
     <div class="admin-logs-header">
       <h3><%= t('admin.logs.stdout_title') %></h3>
-      <% if @log_file.exists && @log_file.size.positive? %>
+      <% if @log_file.exists && @log_file.file_size.positive? %>
         <%= button_to t('admin.logs.clear_file'), clear_file_admin_logs_path, method: :delete,
                       class: 'btn btn-sm btn-danger',
                       data: { turbo_confirm: t('admin.logs.clear_file_confirm', path: @log_file.path) } %>
@@ -76,7 +76,7 @@
     <p class="admin-library-hint admin-logs-path">
       <%= t('admin.logs.stdout_path') %>: <code><%= @log_file.path %></code><br>
       <% if @log_file.exists %>
-        <%= number_to_human_size(@log_file.size) %> ·
+        <%= number_to_human_size(@log_file.file_size) %> ·
         <%= t('admin.logs.stdout_modified') %>: <%= format_datetime(@log_file.mtime) %>
       <% end %>
     </p>
@@ -85,7 +85,7 @@
       <div class="admin-logs-downloads">
         <%= link_to t('admin.logs.download_tail', size: number_to_human_size(LogFile::TAIL_BYTES)),
                     download_admin_logs_path, class: 'btn btn-sm btn-primary' %>
-        <%= link_to t('admin.logs.download_full', size: number_to_human_size(@log_file.size)),
+        <%= link_to t('admin.logs.download_full', size: number_to_human_size(@log_file.file_size)),
                     download_admin_logs_path(scope: 'full'), class: 'btn btn-sm btn-outline-secondary' %>
       </div>
       <p class="admin-logs-note"><%= t('admin.logs.download_note') %></p>

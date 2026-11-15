@@ -44,7 +44,7 @@ RSpec.describe ReleaseManager do
     it 'stores the title taken from the file name without the artist prefix' do
       scan
 
-      track = Track.find_by(release: release)
+      track = Track.find_by(release:)
       expect(track.title).to eq('My Bird')
       expect(track.auto_title).to eq('My Bird')
     end

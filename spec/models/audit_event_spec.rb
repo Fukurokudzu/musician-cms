@@ -18,7 +18,7 @@ RSpec.describe AuditEvent, type: :model do
       AuditEvent.create!(action: 'release.deleted', created_at: 1000.days.ago)
 
       Setting.audit_retention_days = 0
-      expect { AuditEvent.prune! }.not_to change { AuditEvent.count }
+      expect { AuditEvent.prune! }.not_to(change { AuditEvent.count })
     end
   end
 

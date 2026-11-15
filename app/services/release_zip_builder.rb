@@ -36,7 +36,8 @@ class ReleaseZipBuilder
       next unless track.audio_file.attached?
 
       number = track.pos || index + 1
-      name = format('%02d %s%s', number, track_stem(track), extension(track.audio_file))
+      name = format('%<number>02d %<stem>s%<ext>s', number: number,
+                                                    stem: track_stem(track), ext: extension(track.audio_file))
       write_entry(zip, track.audio_file, unique_name(name))
     end
   end

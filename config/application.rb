@@ -1,6 +1,6 @@
-require_relative "boot"
+require_relative 'boot'
 
-require "rails/all"
+require 'rails/all'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -18,9 +18,9 @@ module MusicianCms
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
-    config.time_zone = "Belgrade"
+    config.time_zone = 'Belgrade'
     config.i18n.default_locale = :en
-    config.i18n.available_locales = [:en, :ru]
+    config.i18n.available_locales = %i[en ru]
     config.active_job.queue_adapter = :sidekiq
     config.active_storage.variant_processor = :vips
 
@@ -29,13 +29,12 @@ module MusicianCms
         :rspec,
         view_specs: false,
         helper_specs: false,
-        routing_specs: false,
+        routing_specs: false
       )
     end
 
     # Serve error pages through the app (so they get the site layout and a
     # link back to the main page) instead of the static public/*.html files.
-    config.exceptions_app = self.routes
-
+    config.exceptions_app = routes
   end
 end

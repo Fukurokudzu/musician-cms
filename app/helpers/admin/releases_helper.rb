@@ -1,2 +1,4 @@
-module Admin::ReleasesHelper
+module Admin
+  module ReleasesHelper
+  end
 end

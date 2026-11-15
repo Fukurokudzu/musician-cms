@@ -10,7 +10,8 @@ class ArtistManager
       artist_record = nil
       begin
         artist_record = Artist.find_by(path: artist_path)
-      rescue StandardError
+      rescue StandardError => e
+        Rails.logger.debug("path column may not exist: #{e.message}")
       end
       artist_record ||= Artist.find_by(title: artist)
       artist_record ||= Artist.new
@@ -18,7 +19,8 @@ class ArtistManager
       artist_record.title = artist
       begin
         artist_record.path = artist_path if artist_record.respond_to?(:path=)
-      rescue StandardError
+      rescue StandardError => e
+        Rails.logger.debug("path column may not exist: #{e.message}")
       end
       artist_record.save!
       matched_artist_ids << artist_record.id
@@ -31,9 +33,7 @@ class ArtistManager
     Artist.find_each do |artist|
       next if matched_artist_ids.include?(artist.id)
 
-      if artist.respond_to?(:path) && artist.path.present?
-        next if @artist_folders.values.include?(artist.path)
-      end
+      next if artist.respond_to?(:path) && artist.path.present? && @artist_folders.values.include?(artist.path)
 
       next if @artist_folders.key?(artist.title)
 

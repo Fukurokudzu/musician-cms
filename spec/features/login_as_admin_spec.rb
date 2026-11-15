@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe 'Admin sign in page', type: :feature do
-
   scenario 'Signing in as admin' do
     visit sign_in_path
     fill_in 'admin_email', with: 'admin@admin'
@@ -10,7 +9,7 @@ RSpec.describe 'Admin sign in page', type: :feature do
     visit admin_path
     expect(page).to have_content('Security')
   end
-  
+
   scenario 'Signing in as admin with wrong data' do
     visit sign_in_path
     fill_in 'admin_email', with: 'admin1@admin'
@@ -18,5 +17,4 @@ RSpec.describe 'Admin sign in page', type: :feature do
     click_on 'Login'
     expect(page).to have_no_content('Security')
   end
-
 end

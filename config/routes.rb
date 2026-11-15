@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   mount Sidekiq::Web => '/sidekiq'
 
   # Defines the root path route ("/")
-  root "main#index"
+  root 'main#index'
 
   # Only public reading routes: creating and editing content is done in the
   # admin namespace, visitors never mutate anything.
@@ -28,9 +28,9 @@ Rails.application.routes.draw do
       delete :clear_audit
       delete :clear_file
     end
-    resource :system, only: [:show, :update]
-    resource :library, only: [:show, :update]
-    resource :themes, only: [:show, :update, :destroy]
+    resource :system, only: %i[show update]
+    resource :library, only: %i[show update]
+    resource :themes, only: %i[show update destroy]
     resources :artists
     resources :releases do
       collection do
@@ -43,7 +43,7 @@ Rails.application.routes.draw do
         post :bulk_update_tracks
       end
     end
-    resources :posts, only: [:index, :new, :create, :edit, :update, :destroy]
+    resources :posts, only: %i[index new create edit update destroy]
     resources :uploads, only: [:create]
   end
 

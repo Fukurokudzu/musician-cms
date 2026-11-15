@@ -1,2 +1,4 @@
-module Admin::LibraryHelper
+module Admin
+  module LibraryHelper
+  end
 end

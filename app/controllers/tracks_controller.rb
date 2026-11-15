@@ -6,15 +6,16 @@ class TracksController < ApplicationController
       nil
     end
     return head :not_found unless lookup
+
     @track = Track.includes(release: [:artist]).find(lookup.id)
     @release = @track.release
 
     render json: {
       track: track_json(@track),
       release_tracks: @release.tracks.published.by_position.includes(audio_file_attachment: :blob)
-                                    .to_a
-                                    .select { |track| track.audio_file.attached? }
-                                    .map { |track| track_json(track) }
+                              .to_a
+                              .select { |track| track.audio_file.attached? }
+                              .map { |track| track_json(track) }
     }
   end
 

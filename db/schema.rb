@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_15_183509) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_16_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -56,7 +56,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_15_183509) do
     t.string "path"
     t.string "external_id"
     t.index ["external_id"], name: "index_artists_on_external_id", unique: true
-    t.index ["title"], name: "index_artists_on_title"
+    t.index ["title"], name: "index_artists_on_title", unique: true
   end
 
   create_table "audit_events", force: :cascade do |t|
@@ -100,6 +100,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_15_183509) do
     t.string "external_id"
     t.boolean "allow_zip_download", default: false, null: false
     t.integer "downloads_count", default: 0, null: false
+    t.index ["artist_id", "title"], name: "index_releases_on_artist_id_and_title", unique: true
     t.index ["artist_id"], name: "index_releases_on_artist_id"
     t.index ["external_id"], name: "index_releases_on_external_id", unique: true
     t.index ["title"], name: "index_releases_on_title"

@@ -20,7 +20,7 @@ module ThemeHelper
     # Values are sanitized above (allow-listed colors, clamped radius, Rails-built
     # URL), so the generated CSS can be emitted without HTML escaping: quotes
     # inside url("...") must stay literal, otherwise the rule is invalid.
-    tag.style(theme_css.html_safe, nonce: content_security_policy_nonce)
+    tag.style(theme_css.html_safe, nonce: content_security_policy_nonce) # rubocop:disable Rails/OutputSafety -- values above are allow-listed; escaping would break url()
   end
 
   private

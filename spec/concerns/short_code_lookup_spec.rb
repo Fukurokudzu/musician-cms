@@ -4,7 +4,7 @@ RSpec.describe ShortCodeLookup do
   let(:lookup) { Class.new { include ShortCodeLookup }.new }
 
   def resolve(scope, param)
-    lookup.send(:find_short_codeable!, public_scope: scope, param: param)
+    lookup.send(:find_short_codeable!, public_scope: scope, param:)
   end
 
   it 'resolves a public record by its short code' do

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "Admin::Releases", type: :request do
+RSpec.describe 'Admin::Releases', type: :request do
   def uploaded_file(filename)
     directory = Dir.mktmpdir
     path = File.join(directory, filename)
@@ -8,8 +8,8 @@ RSpec.describe "Admin::Releases", type: :request do
     Rack::Test::UploadedFile.new(path, 'audio/mpeg')
   end
 
-  describe "POST /admin/releases/upload" do
-    it "stores track titles without the artist prefix" do
+  describe 'POST /admin/releases/upload' do
+    it 'stores track titles without the artist prefix' do
       post sessions_path, params: { admin_email: Setting.admin_email, admin_password: 'admin' }
 
       post upload_admin_releases_path, params: {
@@ -28,7 +28,7 @@ RSpec.describe "Admin::Releases", type: :request do
       expect(release.tracks.order(:pos).pluck(:pos)).to eq([1, 2])
     end
 
-    it "creates tracks with the published status when the release is published" do
+    it 'creates tracks with the published status when the release is published' do
       post sessions_path, params: { admin_email: Setting.admin_email, admin_password: 'admin' }
 
       post upload_admin_releases_path, params: {
@@ -51,7 +51,7 @@ RSpec.describe "Admin::Releases", type: :request do
     end
   end
 
-  describe "POST /admin/releases/:id/add_tracks" do
+  describe 'POST /admin/releases/:id/add_tracks' do
     let(:artist) { create(:artist, title: 'Fukurokudzu') }
     let(:release) { create(:release, artist:, title: 'Existing Album') }
 
@@ -59,7 +59,7 @@ RSpec.describe "Admin::Releases", type: :request do
       post sessions_path, params: { admin_email: Setting.admin_email, admin_password: 'admin' }
     end
 
-    it "appends uploaded files to the release as new tracks" do
+    it 'appends uploaded files to the release as new tracks' do
       release.tracks.create!(title: 'First', pos: 2)
 
       post add_tracks_admin_release_path(release), params: {
@@ -75,7 +75,7 @@ RSpec.describe "Admin::Releases", type: :request do
       expect(tracks.last.status).to eq('draft')
     end
 
-    it "reports an error when no audio file is selected" do
+    it 'reports an error when no audio file is selected' do
       tracks_count = release.tracks.count
 
       post add_tracks_admin_release_path(release), params: { tracks: [''] }
@@ -245,18 +245,18 @@ RSpec.describe "Admin::Releases", type: :request do
   end
 end
 
-RSpec.describe "Admin::Releases empty state", type: :request do
+RSpec.describe 'Admin::Releases empty state', type: :request do
   before do
     post sessions_path, params: { admin_email: Setting.admin_email, admin_password: 'admin' }
   end
 
-  it "shows the welcome block on an empty library" do
+  it 'shows the welcome block on an empty library' do
     get admin_releases_path, as: :turbo_stream
 
     expect(response.body).to include('Welcome to Musician CMS!')
   end
 
-  it "hides soft-deleted artists from the upload form" do
+  it 'hides soft-deleted artists from the upload form' do
     create(:artist, title: 'Visible Artist')
     create(:artist, title: 'Deleted Artist', soft_deleted: true)
 

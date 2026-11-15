@@ -38,11 +38,11 @@ RSpec.describe MarkdownRenderer do
       expect(html).to include('puts')
     end
 
-    it 'keeps hard line breaks off by default' do
+    it 'renders single newlines as <br> like GitHub (hard_wrap is on)' do
       html = described_class.call("line one\nline two\n")
 
       expect(html).to include('line one')
-      expect(html).not_to include('<br>')
+      expect(html).to include('<br>')
     end
   end
 end

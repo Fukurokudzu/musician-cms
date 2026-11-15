@@ -10,11 +10,11 @@ class ScanLibJob < ApplicationJob
   include ScanLibHelper
 
   def perform
-    Rails.logger.info "ScanLibHelper JOB STARTED"
+    Rails.logger.info 'ScanLibHelper JOB STARTED'
     @success = false
 
     library_path = Setting.library_path
-    library_path = File.join(Rails.root, library_path) unless Pathname.new(library_path).absolute?
+    library_path = Rails.root.join(library_path).to_s unless Pathname.new(library_path).absolute?
     Rails.logger.info "Scanning library at: #{library_path}"
 
     # Check if directory exists
@@ -32,7 +32,7 @@ class ScanLibJob < ApplicationJob
     artist_manager.create_artists
     release_manager.update_releases
 
-    Rails.logger.info "ScanLibHelper JOB COMPLETED"
+    Rails.logger.info 'ScanLibHelper JOB COMPLETED'
     AuditLogger.log(action: 'library.scan_completed', actor: 'system',
                     metadata: { path: library_path })
     @success = true

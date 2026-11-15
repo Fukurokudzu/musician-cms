@@ -1,2 +1,4 @@
-module Admin::SystemsHelper
+module Admin
+  module SystemsHelper
+  end
 end

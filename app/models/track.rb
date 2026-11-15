@@ -38,7 +38,7 @@ class Track < ApplicationRecord
 
     minutes = (duration / 60).floor
     seconds = duration % 60
-    format('%d:%02d', minutes, seconds)
+    format('%<minutes>d:%<seconds>02d', minutes: minutes, seconds: seconds)
   end
 
   def update_duration!

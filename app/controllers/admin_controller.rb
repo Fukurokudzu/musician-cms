@@ -1,9 +1,7 @@
 class AdminController < ApplicationController
   include AdminAuthorization
 
-  def index
-  end
+  def index; end
 
-  def update
-  end
+  def update; end
 end

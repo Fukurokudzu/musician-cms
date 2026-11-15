@@ -1,14 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe DiagnosticsHelper, type: :helper do
-  REVISION_ENV_KEYS = %w[
-    GIT_BRANCH APP_GIT_BRANCH SOURCE_BRANCH
-    GIT_COMMIT GIT_SHA APP_REVISION APP_GIT_COMMIT SOURCE_COMMIT SOURCE_VERSION
-  ].freeze
-
   around do |example|
-    saved = REVISION_ENV_KEYS.to_h { |key| [key, ENV[key]] }
-    REVISION_ENV_KEYS.each { |key| ENV.delete(key) }
+    keys = DiagnosticsHelper::REVISION_ENV_KEYS
+    saved = keys.index_with { |key| ENV[key] }
+    keys.each { |key| ENV.delete(key) }
 
     example.run
 

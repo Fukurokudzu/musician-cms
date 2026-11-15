@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   before_action :set_page_title, :set_track
   around_action :switch_locale
 
-  def show_flash(type = :success, message)
+  def show_flash(message, type: :success)
     flash.now[type] = message
     render turbo_stream: turbo_stream.prepend('flash_toast', partial: 'layouts/flash_toast')
   end
@@ -49,7 +49,8 @@ class ApplicationController < ActionController::Base
   end
 
   def set_page_title
-    @page_title ||= Setting.page_title || 'Musician CMS'
+    # Views read @page_title; renaming the memoized ivar to match this before_action's name broke the header.
+    @page_title ||= Setting.page_title || 'Musician CMS' # rubocop:disable Naming/MemoizedInstanceVariableName
   end
 
   def set_track
@@ -86,7 +87,7 @@ class ApplicationController < ActionController::Base
 
   def update_admin_password_from_params!(params)
     pw_value = params.delete(:admin_password)
-    return unless pw_value.present?
+    return if pw_value.blank?
 
     Setting.admin_hashed_password = Auth.hash_password(pw_value)
   end
@@ -103,7 +104,7 @@ class ApplicationController < ActionController::Base
 
   def clear_settings_cache
     Setting.clear_cache if Setting.respond_to?(:clear_cache)
-    Rails.cache.delete_matched("rails_settings_cached/*") if Rails.cache.respond_to?(:delete_matched)
+    Rails.cache.delete_matched('rails_settings_cached/*') if Rails.cache.respond_to?(:delete_matched)
     true
   end
 

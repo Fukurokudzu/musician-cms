@@ -3,8 +3,8 @@ require 'rails_helper'
 RSpec.describe 'Release i18n', type: :request do
   let(:artist) { create(:artist) }
   let(:release) do
-    create(:release, :published, artist: artist, allow_zip_download: true,
-                     release_date: Date.new(2026, 11, 3), publisher: 'Some Label')
+    create(:release, :published, artist:, allow_zip_download: true,
+                                 release_date: Date.new(2026, 11, 3), publisher: 'Some Label')
   end
 
   def sign_in_admin

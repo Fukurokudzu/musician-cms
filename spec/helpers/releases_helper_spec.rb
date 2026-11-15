@@ -43,7 +43,7 @@ RSpec.describe ReleasesHelper, type: :helper do
 
     it 'builds a srcset from the matching named variants when requested' do
       html = helper.cover_image_tag(release.cover, size: [500, 500], srcset_sizes: [500, 1000],
-                                                sizes: '(max-width: 500px) 15rem, 500px')
+                                                   sizes: '(max-width: 500px) 15rem, 500px')
 
       expect(html).to include('srcset="')
       expect(html).to match(%r{active_storage/representations.* 500w.*active_storage/representations.* 1000w}m)
@@ -51,7 +51,8 @@ RSpec.describe ReleasesHelper, type: :helper do
     end
 
     it 'resizes to any other size without a named variant' do
-      expect(release.cover).to receive(:variant).with(resize_to_limit: [120, 80], format: :webp, saver: { quality: 90, strip: true }).and_call_original
+      expect(release.cover).to receive(:variant).with(resize_to_limit: [120, 80], format: :webp,
+                                                      saver: { quality: 90, strip: true }).and_call_original
 
       html = helper.cover_image_tag(release.cover, size: [120, 80])
 

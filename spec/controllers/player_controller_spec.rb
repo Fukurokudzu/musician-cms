@@ -125,8 +125,8 @@ RSpec.describe PlayerController, type: :controller do
       expect do
         get :show, params: { id: track.external_id }, format: :json
       end.to change { track.reload.plays_count }.by(1)
-        .and change { release.reload.plays_count }.by(1)
-        .and change { artist.reload.plays_count }.by(1)
+                                                .and change { release.reload.plays_count }.by(1)
+                                                .and change { artist.reload.plays_count }.by(1)
 
       expect(response).to have_http_status(:ok)
       body = response.parsed_body

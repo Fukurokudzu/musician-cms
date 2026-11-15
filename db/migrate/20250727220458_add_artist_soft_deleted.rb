@@ -3,7 +3,7 @@ class AddArtistSoftDeleted < ActiveRecord::Migration[7.2]
     add_column :artists, :soft_deleted, :boolean, default: false, null: false
   end
 
-def down
+  def down
     remove_column :artists, :soft_deleted
   end
 end

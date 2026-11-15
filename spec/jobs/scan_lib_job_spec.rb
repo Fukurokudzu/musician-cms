@@ -22,7 +22,8 @@ RSpec.describe ScanLibJob, type: :job do
   end
 
   it 'lists artist folders in the library' do
-    expect(ScanLibHelper.get_folders_list(@library_root)).to eq('Test Artist' => File.join(@library_root, 'Test Artist'))
+    expect(ScanLibHelper.get_folders_list(@library_root)).to eq('Test Artist' => File.join(@library_root,
+                                                                                           'Test Artist'))
   end
 
   it 'lists tracks for selected release scan' do

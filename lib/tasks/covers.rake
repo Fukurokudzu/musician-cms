@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 namespace :covers do
-  desc "Enqueue ActiveStorage::TransformJob for every preprocessed named cover variant " \
-       "(WebP). Idempotent: variants that already exist on disk are left alone."
+  desc 'Enqueue ActiveStorage::TransformJob for every preprocessed named cover variant ' \
+       '(WebP). Idempotent: variants that already exist on disk are left alone.'
   task preprocess: :environment do
     enqueued = 0
     # Named variants are defined on the attachment reflection (see the

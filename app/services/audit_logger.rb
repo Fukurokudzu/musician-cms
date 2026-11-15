@@ -9,7 +9,7 @@
 # jobs) the actor defaults to 'system'.
 class AuditLogger
   def self.log(action:, actor: nil, target: nil, metadata: {}, request: nil)
-    new(action: action, actor: actor, target: target, metadata: metadata, request: request).log
+    new(action:, actor:, target:, metadata:, request:).log
   end
 
   def initialize(action:, actor:, target:, metadata:, request:)

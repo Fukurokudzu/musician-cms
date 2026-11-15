@@ -5,4 +5,3 @@ class AddStatusToTracksAndReleases < ActiveRecord::Migration[7.0]
     add_column :releases, :status, :string, null: false, default: 'draft' unless column_exists?(:releases, :status)
   end
 end
-

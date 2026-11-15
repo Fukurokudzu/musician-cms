@@ -70,7 +70,8 @@ RSpec.describe 'Admin logs', type: :request do
   describe 'DELETE /admin/logs/clear_file' do
     it 'truncates the application log file' do
       sign_in_admin!
-      fake = LogFile::Result.new(path: Pathname.new('/tmp/opencode_fake.log'), exists: true, size: 123, mtime: Time.current)
+      fake = LogFile::Result.new(path: Pathname.new('/tmp/opencode_fake.log'), exists: true, file_size: 123,
+                                 mtime: Time.current)
       allow(LogFile).to receive(:info).and_return(fake)
       expect(File).to receive(:truncate).with(fake.path, 0)
 
@@ -82,7 +83,7 @@ RSpec.describe 'Admin logs', type: :request do
 
     it 'reports an error when the log file is missing' do
       sign_in_admin!
-      missing = LogFile::Result.new(path: Pathname.new('/tmp/opencode_missing.log'), exists: false, size: 0)
+      missing = LogFile::Result.new(path: Pathname.new('/tmp/opencode_missing.log'), exists: false, file_size: 0)
       allow(LogFile).to receive(:info).and_return(missing)
 
       delete clear_file_admin_logs_path, headers: { 'Accept' => 'text/vnd.turbo-stream.html' }

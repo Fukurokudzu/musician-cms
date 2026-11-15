@@ -30,17 +30,15 @@ class ReleaseManager
 
   def extract_tracks_metadata(tracks)
     tracks.transform_values do |track_path|
-      begin
-        audio = WahWah.open(track_path)
-        {
-          title: audio.title,
-          track_number: audio.track,
-          duration: audio.duration&.round
-        }
-      rescue StandardError => e
-        Rails.logger.error("Failed to extract metadata from #{track_path}: #{e.message}")
-        { title: nil, track_number: nil, duration: nil }
-      end
+      audio = WahWah.open(track_path)
+      {
+        title: audio.title,
+        track_number: audio.track,
+        duration: audio.duration&.round
+      }
+    rescue StandardError => e
+      Rails.logger.error("Failed to extract metadata from #{track_path}: #{e.message}")
+      { title: nil, track_number: nil, duration: nil }
     end
   end
 
@@ -51,7 +49,8 @@ class ReleaseManager
     if release_path
       begin
         release_record = artist_record.releases.find_by(path: release_path)
-      rescue StandardError
+      rescue StandardError => e
+        Rails.logger.debug("path column may not exist: #{e.message}")
       end
     end
     if release_record.nil? && release_path.nil?
@@ -59,7 +58,7 @@ class ReleaseManager
     elsif release_record.nil?
       legacy = artist_record.releases.find_by(title: release)
       # Adopt only legacy records that were never bound to a folder
-      release_record = legacy if legacy && legacy.respond_to?(:path) && legacy.path.blank?
+      release_record = legacy if legacy.respond_to?(:path) && legacy.path.blank?
     end
     release_record ||= artist_record.releases.new
 
@@ -67,8 +66,12 @@ class ReleaseManager
     if release_record.persisted?
       found_by_path = false
       begin
-        found_by_path = release_record.respond_to?(:path) && release_record.path.present? && release_path && release_record.path == release_path
-      rescue StandardError
+        found_by_path = release_record.respond_to?(:path) &&
+                        release_record.path.present? &&
+                        release_path.present? &&
+                        release_record.path == release_path
+      rescue StandardError => e
+        Rails.logger.debug("path column may not exist: #{e.message}")
       end
       if found_by_path
         # If found by path, don't overwrite a custom title
@@ -81,7 +84,8 @@ class ReleaseManager
     release_record.release_date = Date.current if release_record.release_date.nil?
     begin
       release_record.path = release_path if release_record.respond_to?(:path=) && release_path
-    rescue StandardError
+    rescue StandardError => e
+      Rails.logger.debug("path column may not exist: #{e.message}")
     end
     release_record.save!
 
@@ -118,20 +122,22 @@ class ReleaseManager
         track_record = nil
         begin
           track_record = release.tracks.find_by(path: track_path)
-        rescue StandardError
+        rescue StandardError => e
+          Rails.logger.debug("path column may not exist: #{e.message}")
         end
         if track_record.nil?
           candidate = release.tracks.find_by(title: track_title)
           # Only reuse a record matched by title if it isn't already bound to another file
           track_record = candidate if candidate && (candidate.path.blank? || candidate.path == track_path)
         end
-        track_record ||= release.tracks.new(release: release)
+        track_record ||= release.tracks.new(release:)
 
         track_record.release = release
         apply_auto_title(track_record, track_title)
         begin
           track_record.path = track_path if track_record.respond_to?(:path=)
-        rescue StandardError
+        rescue StandardError => e
+          Rails.logger.debug("path column may not exist: #{e.message}")
         end
         track_record.duration = track_info[:duration]
         apply_position(track_record, track_info, taken_positions)
@@ -188,11 +194,17 @@ class ReleaseManager
   def remove_deleted_tracks(release, tracks)
     existing_tracks = release.tracks.to_a
     existing_tracks.each do |track|
-      if track.respond_to?(:path) && track.path.present?
-        next if tracks.values.include?(track.path)
-      end
+      next if track.respond_to?(:path) && track.path.present? && tracks.values.include?(track.path)
 
-      track_path = tracks.values.find { |p| File.basename(p) == (track.audio_file.blob.filename.to_s rescue nil) } if track.audio_file.attached?
+      if track.audio_file.attached?
+        track_path = tracks.values.find do |p|
+          File.basename(p) == begin
+            track.audio_file.blob.filename.to_s
+          rescue StandardError
+            nil
+          end
+        end
+      end
       track_path ||= tracks[track.title] if tracks.key?(track.title)
       if track_path.nil?
         track.audio_file.purge if track.audio_file.attached?
@@ -207,10 +219,8 @@ class ReleaseManager
     artist_record.releases.each do |release|
       next if matched_release_ids.include?(release.id)
 
-      releases_on_disk.values.each do |release_path|
-        if release.respond_to?(:path) && release.path.present? && release.path == release_path
-          next
-        end
+      releases_on_disk.each_value do |release_path|
+        next if release.respond_to?(:path) && release.path.present? && release.path == release_path
       end
 
       release_path_on_disk = nil
@@ -219,9 +229,7 @@ class ReleaseManager
       end
       next if release_path_on_disk
 
-      if releases_on_disk.key?(release.title)
-        next
-      end
+      next if releases_on_disk.key?(release.title)
 
       release.cover.purge if release.cover.attached?
       release.tracks.each { |track| track.audio_file.purge if track.audio_file.attached? }
@@ -235,13 +243,11 @@ class ReleaseManager
     tracks = release.tracks.where(pos: nil).order(:id)
     next_pos = release.tracks.maximum(:pos) || 0
     tracks.each do |track|
-      begin
-        next_pos += 1
-        track.pos = next_pos
-        track.save!
-      rescue StandardError => e
-        Rails.logger.error("Failed to update position for track #{track.title}: #{e.message}")
-      end
+      next_pos += 1
+      track.pos = next_pos
+      track.save!
+    rescue StandardError => e
+      Rails.logger.error("Failed to update position for track #{track.title}: #{e.message}")
     end
   end
 end

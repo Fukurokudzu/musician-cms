@@ -41,9 +41,9 @@ class Release < ApplicationRecord
     seconds = duration % 60
 
     if hours.positive?
-      format('%d:%02d:%02d', hours, minutes, seconds)
+      format('%<hours>d:%<minutes>02d:%<seconds>02d', hours: hours, minutes: minutes, seconds: seconds)
     else
-      format('%d:%02d', minutes, seconds)
+      format('%<minutes>d:%<seconds>02d', minutes: minutes, seconds: seconds)
     end
   end
   private :format_duration
@@ -61,7 +61,7 @@ class Release < ApplicationRecord
   def add_tracks!(files, after_pos: 0)
     Array(files).select { |file| file.respond_to?(:original_filename) }.each_with_index.map do |file, index|
       title = Track.title_from_filename(file.original_filename, artist: artist.title)
-      tracks.create!(title:, auto_title: title, pos: after_pos + index + 1, status: status) do |track|
+      tracks.create!(title:, auto_title: title, pos: after_pos + index + 1, status:) do |track|
         track.audio_file.attach(file)
       end
     end

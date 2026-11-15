@@ -9,14 +9,14 @@ class AuditEvent < ApplicationRecord
   def self.of_category(category)
     return all unless CATEGORIES.include?(category)
 
-    where("action LIKE ?", "#{category}.%")
+    where('action LIKE ?', "#{category}.%")
   end
 
   def self.prune!
     days = Setting.audit_retention_days
     return 0 if days.blank? || days.to_i <= 0
 
-    where("created_at < ?", days.to_i.days.ago).delete_all
+    where('created_at < ?', days.to_i.days.ago).delete_all
   rescue StandardError => e
     Rails.logger.error("AuditEvent prune failed: #{e.class}: #{e.message}")
     0

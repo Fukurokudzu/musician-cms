@@ -1,2 +1,4 @@
-module Admin::ArtistsHelper
+module Admin
+  module ArtistsHelper
+  end
 end

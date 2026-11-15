@@ -4,7 +4,7 @@
 class LogFile
   TAIL_BYTES = 5 * 1024 * 1024
 
-  Result = Struct.new(:path, :exists, :size, :mtime, keyword_init: true)
+  Result = Struct.new(:path, :exists, :file_size, :mtime, keyword_init: true)
 
   def self.info
     new(Rails.root.join('log', "#{Rails.env}.log")).info
@@ -15,11 +15,11 @@ class LogFile
   end
 
   def info
-    return Result.new(path: @path, exists: false, size: 0) unless File.exist?(@path)
+    return Result.new(path: @path, exists: false, file_size: 0) unless File.exist?(@path)
 
-    Result.new(path: @path, exists: true, size: File.size(@path), mtime: File.mtime(@path))
+    Result.new(path: @path, exists: true, file_size: File.size(@path), mtime: File.mtime(@path))
   rescue StandardError => e
     Rails.logger.error("LogFile info failed: #{e.class}: #{e.message}")
-    Result.new(path: @path, exists: false, size: 0)
+    Result.new(path: @path, exists: false, file_size: 0)
   end
 end

@@ -1,5 +1,5 @@
 class ReleasesController < ApplicationController
-  before_action :set_release, only: [:show, :download]
+  before_action :set_release, only: %i[show download]
 
   def show
     @tracks = @release&.tracks&.published&.by_position
@@ -7,7 +7,7 @@ class ReleasesController < ApplicationController
   end
 
   def download
-    return head :not_found unless @release&.published? && @release&.allow_zip_download?
+    return head :not_found unless @release&.published? && @release.allow_zip_download?
 
     builder = ReleaseZipBuilder.new(@release)
     data = builder.call

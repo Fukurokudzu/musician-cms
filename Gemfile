@@ -49,24 +49,24 @@ gem 'tzinfo-data', platforms: %i[windows jruby]
 gem 'bootsnap', require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
-gem "image_processing", "~> 1.2"
+gem 'image_processing', '~> 1.2'
 
 gem 'kramdown'
 gem 'kramdown-parser-gfm'
 gem 'rails-settings-cached'
+gem 'rubyzip', require: 'zip'
 gem 'sidekiq', '~> 8.0'
 gem 'wahwah', '~> 1.3'
-gem 'rubyzip', require: 'zip'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem 'debug', platforms: %i[mri windows]
+  gem 'dockerfile-rails'
+  gem 'dotenv-rails'
   gem 'factory_bot_rails', '~> 6.2'
   gem 'faker'
   gem 'rspec-rails', '~> 6.0'
   gem 'rubocop-rails', require: false
-  gem 'dockerfile-rails'
-  gem 'dotenv-rails'
 end
 
 group :development do

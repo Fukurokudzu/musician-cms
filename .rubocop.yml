@@ -1,3 +1,53 @@
+require: rubocop-rails
+
+AllCops:
+  NewCops: disable
+  SuggestExtensions: false
+  TargetRubyVersion: 3.4
+  # Avoid the shared on-disk cache, which collided with the IDE-managed
+  # rubocop server and made CLI runs flaky.
+  Cache: false
+  Exclude:
+    - 'bin/**/*'
+    - 'db/schema.rb'
+    - 'node_modules/**/*'
+    - 'tmp/**/*'
+    - 'vendor/**/*'
+    - 'storage/**/*'
+
+# Codebase style: nested namespace definitions (matches the Rails skeleton).
+Style/ClassAndModuleChildren:
+  EnforcedStyle: nested
+
+# No magic comment convention in this project.
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+# The codebase opts out of strict metrics; the same holds for the complexity
+# and class size limits. They are useful signals but noisy-gatekeepers here —
+# `upload` / `update_release` and friends are candidates for extraction, not
+# for lint-forcing.
+Metrics/PerceivedComplexity:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
+Metrics/ClassLength:
+  Enabled: false
+
+Metrics/ParameterLists:
+  Enabled: false
+
+# Counter increments, bulk `update_all` in migrations and seeds, and
+# intentionally validation-free updates are used throughout deliberately.
+Rails/SkipsModelValidations:
+  Enabled: false
+
+# No class documentation convention in this project.
+Style/Documentation:
+  Enabled: false
+
 Metrics/BlockLength:
   Enabled: false
 
@@ -6,4 +56,3 @@ Metrics/MethodLength:
 
 Metrics/AbcSize:
   Enabled: false
-
