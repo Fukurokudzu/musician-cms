@@ -124,19 +124,21 @@ RSpec.describe 'Admin::Themes', type: :request do
     end
   end
 
-  describe 'GET /themes/variables' do
-    it 'falls back to the default background when none is set' do
-      get themes_variables_path
+  describe 'inline theme styles' do
+    it 'embeds theme variables and the default background in the layout' do
+      put admin_themes_path, params: { setting: { accent_color: '#123456' } }
 
-      expect(response.media_type).to eq('text/css')
+      get root_path
+
+      expect(response.body).to include('--accent-color: #123456')
       expect(response.body).to include('background-image')
       expect(response.body).to include('korg')
     end
 
-    it 'serves the uploaded background when set' do
+    it 'embeds the uploaded background image' do
       put admin_themes_path, params: { setting: { background_image: image_file } }
 
-      get themes_variables_path
+      get root_path
 
       expect(response.body).to include('/rails/active_storage/blobs')
     end
@@ -144,9 +146,15 @@ RSpec.describe 'Admin::Themes', type: :request do
     it 'does not expose the background signed id as a css variable' do
       put admin_themes_path, params: { setting: { background_image: image_file } }
 
-      get themes_variables_path
+      get root_path
 
       expect(response.body).not_to include('--background-image')
+    end
+
+    it 'does not embed theme styles on admin pages' do
+      get admin_path
+
+      expect(response.body).not_to include('--accent-color')
     end
   end
 end

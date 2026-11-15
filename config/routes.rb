@@ -44,6 +44,4 @@ Rails.application.routes.draw do
   get 'player/next_track', to: 'player#next_track'
   get 'player/previous_track', to: 'player#previous_track'
   get 'player/:id', to: 'player#show'
-
-  get 'themes/variables', to: 'themes#variables'
 end

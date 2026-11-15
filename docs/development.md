@@ -32,6 +32,9 @@ sudo apt install -y build-essential libpq-dev libyaml-dev libffi-dev pkg-config 
    cd musician-cms
    bundle install
    yarn install
+
+   # Compiled CSS lives in app/assets/builds and is generated, not committed.
+   bin/rails dartsass:build
    ```
 
 2. **Configure services and environment**
@@ -46,7 +49,9 @@ sudo apt install -y build-essential libpq-dev libyaml-dev libffi-dev pkg-config 
    ```
 
 4. **Run the application**
-   - Rails server: `bin/rails server`
+   - Rails server + SCSS watcher: `bin/dev`
+   - Or run them separately: `bin/rails server` and `bin/rails dartsass:watch`
+     (run `bin/rails dartsass:build` once if you skip the watcher)
    - Sidekiq worker (separate process): `bundle exec sidekiq`
 
 5. **Open the app**

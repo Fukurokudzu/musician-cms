@@ -39,16 +39,22 @@ class Setting < RailsSettings::Base
     field :footer_url, default: ""
   end
 
+  COLOR_FORMAT = /\A#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})\z/
+
   scope :theme do
-    field :artist_title_color, default: "#ffffff"
-    field :text_color, default: "#ffffff"
-    field :main_menu_bg_color, default: "#16191e"
-    field :footer_bg_color, default: "#16191e"
-    field :player_bg_color, default: "#101011"
-    field :accent_color, default: "#d35400"
-    field :a_color, default: "#ffffff"
-    field :a_hover_color, default: "#ffffff"
-    field :border_radius, default: 5
+    color_validation = { format: { with: COLOR_FORMAT, allow_blank: true } }
+
+    field :artist_title_color, default: "#ffffff", validates: color_validation
+    field :text_color, default: "#ffffff", validates: color_validation
+    field :main_menu_bg_color, default: "#16191e", validates: color_validation
+    field :footer_bg_color, default: "#16191e", validates: color_validation
+    field :player_bg_color, default: "#101011", validates: color_validation
+    field :accent_color, default: "#d35400", validates: color_validation
+    field :a_color, default: "#ffffff", validates: color_validation
+    field :a_hover_color, default: "#ffffff", validates: color_validation
+    field :border_radius, default: 5,
+          validates: { numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 50 },
+                       allow_blank: true }
     field :favicon, default: "", type: :string # ActiveStorage signed_id
     field :background_image, default: "", type: :string # ActiveStorage signed_id
   end

@@ -6,7 +6,7 @@ main.admin-session {
   --a-color: #334155;
   --a-hover-color: #111827;
   --footer-bg-color: #e9ecef;
-  --border-radius: 6;
+  --border-radius: 6px;
   background-color: #eef1f4;
 }
 
@@ -175,7 +175,7 @@ main.admin-session {
   display: inline-block;
   padding: 0.375rem 0.75rem;
   border: 1px solid #ced4da;
-  border-radius: calc(var(--border-radius, 5) * 1px);
+  border-radius: var(--border-radius, 5px);
   background-color: #e9ecef;
   color: #212529;
   font-family: inherit;

@@ -7,9 +7,7 @@
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload"%>
-    <% unless admin_area? %>
-      <link rel="stylesheet" href="<%= themes_variables_path(timestamp: Time.now.to_i) %>">
-    <% end %>
+    <%= theme_style_tag unless admin_area? %>
     <% if (favicon_blob = custom_favicon_blob) %>
       <link rel="icon" href="<%= url_for(favicon_blob) %>">
     <% end %>

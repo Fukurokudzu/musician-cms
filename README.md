@@ -32,7 +32,7 @@ This project is in active development. Expect breaking changes, incomplete featu
   - Theme editor: colors, background image and corner radius — live CSS variables, no code changes needed
   - Configurable site title, description, locale (EN/RU) and footer contact link (email or URL)
 - **Under the hood**
-  - Ruby on Rails 7.2, Hotwire (Turbo + Stimulus)
+  - Ruby on Rails 8.1, Hotwire (Turbo + Stimulus)
   - PostgreSQL, Redis + Sidekiq for background jobs
   - Active Storage for covers and audio
   - Fully containerized: one `docker compose up` brings up web, database, Redis and workers

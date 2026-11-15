@@ -5,7 +5,7 @@ class Track < ApplicationRecord
   has_many :artists, through: :release
   has_one_attached :audio_file
   attribute :status, :string
-  enum status: { draft: 'draft', published: 'published', archived: 'archived' }
+  enum :status, { draft: 'draft', published: 'published', archived: 'archived' }
 
   validates :title, presence: true
 

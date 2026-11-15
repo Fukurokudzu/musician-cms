@@ -9,7 +9,7 @@ class Release < ApplicationRecord
     attachable.variant :detail, resize_to_limit: [1000, 1000], preprocessed: true
   end
   attribute :status, :string
-  enum status: { draft: 'draft', published: 'published', archived: 'archived' }
+  enum :status, { draft: 'draft', published: 'published', archived: 'archived' }
 
   validates :title, presence: true, uniqueness: { scope: :artist_id }
 
