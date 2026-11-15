@@ -1,5 +1,5 @@
 module ThemeHelper
-  DEFAULT_BACKGROUND = 'korg.jpg'.freeze
+  DEFAULT_BACKGROUND = 'korg.webp'.freeze
   COLOR_PATTERN = /\A#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})\z/
   MAX_BORDER_RADIUS = 50
 

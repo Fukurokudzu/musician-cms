@@ -68,7 +68,7 @@
       <p class="admin-field-hint"><%= t('admin.release.hints.tracks', default: 'Audio files: %{extensions}', extensions: Setting.track_extensions.join(', ')) %></p>
       </div>
       <div class="form-actions">
-        <%= form.submit t('admin.release.add') %>
+        <%= form.submit t('admin.release.add'), data: { turbo_submits_with: t('admin.release.adding') } %>
       </div>
     <% end %>
   </div>

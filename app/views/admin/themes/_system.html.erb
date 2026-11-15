@@ -83,7 +83,7 @@
     </div>
 
     <div class="form-actions">
-      <%= f.submit t("settings.update"), class: "btn btn-primary" %>
+      <%= f.submit t("settings.update"), class: "btn btn-primary", data: { turbo_submits_with: t("settings.saving") } %>
     </div>
   <% end %>
 

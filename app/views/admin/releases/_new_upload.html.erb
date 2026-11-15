@@ -43,7 +43,7 @@
     </div>
 
     <div class="form-actions">
-      <%= form.submit t('admin.release.upload') %>
+      <%= form.submit t('admin.release.upload'), data: { turbo_submits_with: t('admin.release.uploading') } %>
     </div>
   <% end %>
 </div>

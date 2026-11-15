@@ -115,6 +115,7 @@ header {
     width: 15rem;
     height: 15rem;
     border-radius: var(--border-radius, 5px);
+    object-fit: cover;
 }
 
 #footer {

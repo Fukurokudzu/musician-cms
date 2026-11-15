@@ -9,8 +9,8 @@ Rails.application.routes.draw do
 
   # Only public reading routes: creating and editing content is done in the
   # admin namespace, visitors never mutate anything.
-  resources :artists, only: [:index, :show]
-  resources :releases, only: [:index, :show] do
+  resources :artists, only: [:show]
+  resources :releases, only: [:show] do
     member do
       get :download
     end

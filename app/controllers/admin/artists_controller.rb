@@ -1,4 +1,4 @@
-class Admin::ArtistsController < ArtistsController
+class Admin::ArtistsController < ApplicationController
   include AdminAuthorization
 
   before_action :set_artist, only: [:show, :edit, :update, :destroy]
@@ -73,5 +73,15 @@ class Admin::ArtistsController < ArtistsController
 
   def set_all_artists
     @artists = Artist.all.active
+  end
+
+  def find_artist
+    Artist.find_by!(external_id: params[:id])
+  rescue ActiveRecord::RecordNotFound
+    Artist.find(params[:id])
+  end
+
+  def check_params
+    params.require(:artist).permit(:title, :first_name, :last_name, :role, :description)
   end
 end

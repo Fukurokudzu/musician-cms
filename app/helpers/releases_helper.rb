@@ -22,7 +22,7 @@ module ReleasesHelper
       when [1000, 1000]
         cover.variant(:detail)
       else
-        cover.variant(resize_to_limit: size)
+        cover.variant(resize_to_limit: size, format: :webp, saver: { quality: 90, strip: true })
       end
 
     image_tag variant, **image_options

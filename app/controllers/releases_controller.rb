@@ -1,9 +1,6 @@
 class ReleasesController < ApplicationController
   before_action :set_release, only: [:show, :download]
 
-  def index
-  end
-
   def show
     @tracks = @release&.tracks&.published&.by_position
     @md_description = MarkdownRenderer.call(@release.description) if @release&.description.present?

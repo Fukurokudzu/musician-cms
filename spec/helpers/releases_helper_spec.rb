@@ -6,9 +6,9 @@ RSpec.describe ReleasesHelper, type: :helper do
 
     before do
       release.cover.attach(
-        io: File.open(Rails.root.join('app/assets/images/korg.jpg')),
-        filename: 'korg.jpg',
-        content_type: 'image/jpeg'
+        io: File.open(Rails.root.join('app/assets/images/korg.webp')),
+        filename: 'korg.webp',
+        content_type: 'image/webp'
       )
     end
 
@@ -40,7 +40,7 @@ RSpec.describe ReleasesHelper, type: :helper do
     end
 
     it 'resizes to any other size without a named variant' do
-      expect(release.cover).to receive(:variant).with(resize_to_limit: [120, 80]).and_call_original
+      expect(release.cover).to receive(:variant).with(resize_to_limit: [120, 80], format: :webp, saver: { quality: 90, strip: true }).and_call_original
 
       html = helper.cover_image_tag(release.cover, size: [120, 80])
 

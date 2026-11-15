@@ -170,14 +170,14 @@ RSpec.describe "Admin::Releases", type: :request do
     end
 
     it 'attaches a cover when the release has none' do
-      cover_file = fixture_file_upload(Rails.root.join('app/assets/images/korg.jpg'), 'image/jpeg')
+      cover_file = fixture_file_upload(Rails.root.join('app/assets/images/korg.webp'), 'image/webp')
 
       expect do
         patch admin_release_path(release), params: { release: { cover: cover_file } }
       end.to change { release.reload.cover.attached? }.from(false).to(true)
 
       expect(response).to have_http_status(:ok)
-      expect(release.reload.cover.blob.filename.to_s).to eq('korg.jpg')
+      expect(release.reload.cover.blob.filename.to_s).to eq('korg.webp')
     end
 
     it 'replaces an existing cover' do

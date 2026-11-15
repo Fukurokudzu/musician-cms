@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'Admin::Themes', type: :request do
   let(:image_file) do
-    fixture_file_upload(Rails.root.join('app/assets/images/korg.jpg'), 'image/jpeg')
+    fixture_file_upload(Rails.root.join('app/assets/images/korg.webp'), 'image/webp')
   end
 
   let(:favicon_file) do
@@ -20,12 +20,13 @@ RSpec.describe 'Admin::Themes', type: :request do
       expect(Setting.accent_color).to eq('#123456')
     end
 
-    it 'attaches the uploaded background image' do
+    it 'attaches the uploaded background image downscaled and re-encoded to WebP' do
       put admin_themes_path, params: { setting: { background_image: image_file } }
 
       blob = ActiveStorage::Blob.find_signed(Setting.background_image)
       expect(blob).to be_present
-      expect(blob.content_type).to eq('image/jpeg')
+      expect(blob.content_type).to eq('image/webp')
+      expect(blob.filename.to_s).to end_with('.webp')
     end
 
     it 'replaces the previous background image' do

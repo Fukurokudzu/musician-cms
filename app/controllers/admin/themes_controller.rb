@@ -48,20 +48,47 @@ class Admin::ThemesController < ApplicationController
                                     :player_bg_color, :accent_color, :a_color, :a_hover_color, :border_radius)
   end
 
+  # Raster backgrounds are downscaled to something sane for a page backdrop
+  # and re-encoded to WebP so anonymous visitors do not download multi-MB
+  # originals on every page view. SVG (vector) and GIF (animation) stay
+  # untouched.
   def attach_background!(file)
-    unless file.content_type.to_s.start_with?('image/')
+    content_type = file.content_type.to_s
+    unless content_type.match?(%r{\Aimage/})
       flash.now[:error] = 'Background must be an image file'
       return
     end
 
     purge_background!
 
+    io, filename, upload_content_type = processed_background_upload(file, content_type)
+
     blob = ActiveStorage::Blob.create_and_upload!(
-      io: file.tempfile,
-      filename: file.original_filename,
-      content_type: file.content_type
+      io: io,
+      filename: filename,
+      content_type: upload_content_type
     )
     Setting.background_image = blob.signed_id
+  ensure
+    io.close! if io.respond_to?(:close!) && io != file.tempfile
+  end
+
+  def processed_background_upload(file, content_type)
+    if content_type.match?(%r{image/(svg\+xml|gif|x-icon|vnd\.microsoft\.icon)})
+      [file.tempfile, file.original_filename, content_type]
+    else
+      processed = ImageProcessing::Vips
+                    .source(file.tempfile)
+                    .resize_to_limit(1920, 1920)
+                    .convert('webp')
+                    .saver(quality: 78, strip: true)
+                    .call
+      base = File.basename(file.original_filename.to_s, '.*').presence || 'background'
+      [processed, "#{base}.webp", 'image/webp']
+    end
+  rescue LoadError, StandardError => e
+    Rails.logger.warn("Background processing failed, using original: #{e.class}: #{e.message}")
+    [file.tempfile, file.original_filename, content_type]
   end
 
   def purge_background!
