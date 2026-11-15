@@ -1,7 +1,15 @@
 <div class="admin-release-edit">
   <h2><%= t('admin.release.edit_title') %></h2>
 
-  <%= form_with model: [:admin, @release], data: { turbo_stream: true } do |form| %>
+  <%= form_with model: [:admin, @release], multipart: true, data: { turbo_stream: true } do |form| %>
+    <div class="form-group">
+      <%= form.label :cover, t('admin.release.cover') %>
+      <% if @release.cover.attached? %>
+        <%= image_tag @release.cover.variant(resize_to_limit: [160, 160]), class: 'release-cover', alt: t('admin.release.cover') %>
+      <% end %>
+      <%= form.file_field :cover, accept: 'image/*', class: 'form-control' %>
+      <p class="admin-field-hint"><%= t('admin.release.hints.cover', default: 'Image file (e.g. JPG, PNG).') %></p>
+    </div>
     <div class="form-group">
       <%= form.label :title, t('admin.release.fields.title') %>
       <%= form.text_field :title %>

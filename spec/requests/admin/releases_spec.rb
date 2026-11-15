@@ -169,6 +169,31 @@ RSpec.describe "Admin::Releases", type: :request do
       expect(release.reload.tracks.count).to eq(1)
     end
 
+    it 'attaches a cover when the release has none' do
+      cover_file = fixture_file_upload(Rails.root.join('app/assets/images/korg.jpg'), 'image/jpeg')
+
+      expect do
+        patch admin_release_path(release), params: { release: { cover: cover_file } }
+      end.to change { release.reload.cover.attached? }.from(false).to(true)
+
+      expect(response).to have_http_status(:ok)
+      expect(release.reload.cover.blob.filename.to_s).to eq('korg.jpg')
+    end
+
+    it 'replaces an existing cover' do
+      release.cover.attach(io: StringIO.new('first-image'), filename: 'first.png', content_type: 'image/png')
+      release.save!
+      first_blob_id = release.cover.blob.id
+
+      cover_file = fixture_file_upload(Rails.root.join('app/assets/images/default_cover.png'), 'image/png')
+      patch admin_release_path(release), params: { release: { cover: cover_file } }
+
+      expect(response).to have_http_status(:ok)
+      expect(release.reload.cover).to be_attached
+      expect(release.cover.blob.id).not_to eq(first_blob_id)
+      expect(release.cover.blob.filename.to_s).to eq('default_cover.png')
+    end
+
     it 'reports validation errors without changing the release' do
       patch admin_release_path(release), params: { release: { title: '' } }
 

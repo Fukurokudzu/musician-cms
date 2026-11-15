@@ -189,6 +189,6 @@ class Admin::ReleasesController < ApplicationController
   end
 
   def release_params
-    params.require(:release).permit(:title, :genre, :publisher, :release_date, :status, :allow_zip_download, :description, tracks_attributes: [:id, :title, :pos, :status, :_destroy])
+    params.require(:release).permit(:title, :genre, :publisher, :release_date, :status, :allow_zip_download, :description, :cover, tracks_attributes: [:id, :title, :pos, :status, :_destroy])
   end
 end
