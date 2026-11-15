@@ -46,6 +46,11 @@ en:
   admin:
     nav:
       admin: "Admin"
+    badge: "Admin"
+    uploads:
+      missing_file: "Choose an image file"
+      invalid_type: "Only PNG, JPG, GIF or WebP images are allowed"
+      too_big: "Image is too large (max %{size})"
     tabs:
       system: "System"
       artists: "Artists"
@@ -55,6 +60,7 @@ en:
       theme: "Theme"
       about: "About"
       logs: "Logs"
+      blog: "Blog"
 
     logs:
       title: "Key actions"
@@ -71,6 +77,7 @@ en:
         settings: "Settings"
         theme: "Theme"
         library: "Library"
+        blog: "Blog"
       columns:
         time: "Time"
         actor: "Actor"
@@ -232,6 +239,7 @@ en:
         tracks_published: "All tracks published"
       stats:
         plays_count: "Plays"
+        downloads_count: "Downloads"
         tracks_count: "Tracks"
         duration: "Duration"
       fields:
@@ -244,6 +252,31 @@ en:
         track_title: "Title"
         track_pos: "Position"
         track_status: "Status"
+
+    posts:
+      new: "New post"
+      new_title: "New post"
+      edit_title: "Edit post"
+      empty: "No posts yet."
+      save: "Save"
+      create: "Create"
+      saving: "Saving…"
+      confirm_delete: "Are you sure?"
+      fields:
+        title: "Title"
+        body: "Body"
+        created_at: "Created"
+      hints:
+        images: "Drag an image into the editor, paste it, or use the image button in the toolbar — the file will upload automatically and be inserted as Markdown."
+      flash:
+        created: "Post created"
+        updated: "Post updated"
+        deleted: "Post deleted"
+
+  blog:
+    title: "Blog"
+    empty: "No posts yet."
+    back: "All posts"
 
   settings:
     email: "Your email"

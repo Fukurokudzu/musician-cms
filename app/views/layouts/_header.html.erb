@@ -1,7 +1,12 @@
 <div class="main-header">
   <div class="artist-title">
-    <%= link_to(root_path) do %>
+    <%= link_to(root_path, data: { controller: 'secret-admin', action: 'click->secret-admin#click' }) do %>
       <%= @page_title %>
     <% end %>
   </div>
+  <% if Post.active.exists? %>
+    <nav class="main-header-nav">
+      <%= link_to t('blog.title'), blog_path %>
+    </nav>
+  <% end %>
 </div>

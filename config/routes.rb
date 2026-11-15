@@ -15,6 +15,8 @@ Rails.application.routes.draw do
       get :download
     end
   end
+  get 'blog', to: 'blog#index', as: 'blog'
+  get 'blog/:id', to: 'blog#show', as: 'blog_post'
   resources :tracks, only: [:show]
 
   get :admin, to: 'admin#index'
@@ -41,6 +43,8 @@ Rails.application.routes.draw do
         post :bulk_update_tracks
       end
     end
+    resources :posts, only: [:index, :new, :create, :edit, :update, :destroy]
+    resources :uploads, only: [:create]
   end
 
   post :sessions, to: 'sessions#create'

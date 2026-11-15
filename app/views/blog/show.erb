@@ -1,0 +1,19 @@
+<div class="blog-container">
+  <div class="blog-left">
+    <article class="blog-post">
+      <h1><%= @post.title %></h1>
+      <time class="blog-post-date" datetime="<%= @post.created_at.iso8601 %>"><%= format_date(@post.created_at) %></time>
+      <% if @md_body.present? %>
+        <div class="blog-post-body">
+          <%= @md_body %>
+        </div>
+      <% end %>
+    </article>
+    <div class="blog-show-info">
+      <%= link_to blog_path, class: 'blog-back-link' do %>
+        <i class="fas fa-arrow-left" aria-hidden="true"></i>
+        <span><%= t('blog.back') %></span>
+      <% end %>
+    </div>
+  </div>
+</div>

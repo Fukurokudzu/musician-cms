@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_15_153406) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_15_183509) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -73,6 +73,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_15_153406) do
     t.index ["created_at"], name: "index_audit_events_on_created_at"
   end
 
+  create_table "posts", force: :cascade do |t|
+    t.string "title", null: false
+    t.text "body"
+    t.boolean "soft_deleted", default: false, null: false
+    t.string "external_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["external_id"], name: "index_posts_on_external_id", unique: true
+    t.index ["soft_deleted"], name: "index_posts_on_soft_deleted"
+  end
+
   create_table "releases", force: :cascade do |t|
     t.string "title"
     t.string "genre"
@@ -88,6 +99,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_15_153406) do
     t.string "path"
     t.string "external_id"
     t.boolean "allow_zip_download", default: false, null: false
+    t.integer "downloads_count", default: 0, null: false
     t.index ["artist_id"], name: "index_releases_on_artist_id"
     t.index ["external_id"], name: "index_releases_on_external_id", unique: true
     t.index ["title"], name: "index_releases_on_title"

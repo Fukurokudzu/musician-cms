@@ -2,7 +2,7 @@
 # AuditLogger (app/services/audit_logger.rb), displayed on /admin/logs,
 # pruned according to Setting.audit_retention_days (0 keeps everything).
 class AuditEvent < ApplicationRecord
-  CATEGORIES = %w[auth artist release track settings theme library].freeze
+  CATEGORIES = %w[auth artist release track settings theme library blog].freeze
 
   scope :recent, -> { order(created_at: :desc) }
 

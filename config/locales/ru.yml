@@ -15,6 +15,11 @@ ru:
   admin:
     nav:
       admin: "Админка"
+    badge: "Администратор"
+    uploads:
+      missing_file: "Выберите файл изображения"
+      invalid_type: "Можно загружать только изображения PNG, JPG, GIF или WebP"
+      too_big: "Изображение слишком большое (максимум %{size})"
     tabs:
       system: "Приложение"
       artists: "Исполнители"
@@ -24,6 +29,7 @@ ru:
       theme: "Тема"
       about: "О системе"
       logs: "Логи"
+      blog: "Блог"
 
     logs:
       title: "Ключевые действия"
@@ -42,6 +48,7 @@ ru:
         settings: "Настройки"
         theme: "Тема"
         library: "Библиотека"
+        blog: "Блог"
       columns:
         time: "Время"
         actor: "Кто"
@@ -205,6 +212,7 @@ ru:
         tracks_published: "Все треки опубликованы"
       stats:
         plays_count: "Прослушивания"
+        downloads_count: "Скачивания"
         tracks_count: "Треки"
         duration: "Длительность"
       fields:
@@ -217,6 +225,31 @@ ru:
         track_title: "Название"
         track_pos: "Позиция"
         track_status: "Статус"
+
+    posts:
+      new: "Новый пост"
+      new_title: "Новый пост"
+      edit_title: "Редактировать пост"
+      empty: "Постов пока нет."
+      save: "Сохранить"
+      create: "Создать"
+      saving: "Сохранение…"
+      confirm_delete: "Вы уверены?"
+      fields:
+        title: "Заголовок"
+        body: "Текст"
+        created_at: "Создан"
+      hints:
+        images: "Перетащите изображение в редактор, вставьте из буфера или нажмите кнопку с картинкой на панели — файл загрузится автоматически и вставится как Markdown."
+      flash:
+        created: "Пост создан"
+        updated: "Пост обновлён"
+        deleted: "Пост удалён"
+
+  blog:
+    title: "Блог"
+    empty: "Постов пока нет."
+    back: "Все посты"
 
   settings:
     email: "Почта"

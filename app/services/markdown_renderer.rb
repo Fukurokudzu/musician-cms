@@ -8,7 +8,9 @@ class MarkdownRenderer
     toc_levels: (1..6),
     smart_quotes: ['lsquo', 'rsquo', 'ldquo', 'rdquo'],
     input: 'GFM',
-    hard_wrap: false,
+    # GFM renders a single newline as <br> (like GitHub); without this the
+    # editor inserts a line break that would silently vanish in the output.
+    hard_wrap: true,
     enable_coderay: true,
     coderay_line_numbers: nil,
     coderay_css: :style,

@@ -65,6 +65,24 @@ header {
     z-index: 1000;
 }
 
+.main-header-nav {
+    border-left: 1px solid rgba(255, 255, 255, 0.18);
+    padding-left: 1rem;
+    margin-left: 0.25rem;
+
+    a {
+        color: var(--a-color);
+        opacity: 0.85;
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: var(--a-hover-color);
+        opacity: 1;
+        text-decoration: underline;
+    }
+}
+
 .artist-title a {
     font-size: 1.5rem;
     font-weight: bold;

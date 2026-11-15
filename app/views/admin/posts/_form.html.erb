@@ -1,0 +1,23 @@
+<div class="admin-post-edit">
+  <h2><%= post.persisted? ? t('admin.posts.edit_title') : t('admin.posts.new_title') %></h2>
+
+  <%= form_with model: [:admin, post], data: { turbo_stream: true } do |f| %>
+    <div class="form-group">
+      <%= f.label :title, t('admin.posts.fields.title') %>
+      <%= f.text_field :title, class: 'form-control' %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :body, t('admin.posts.fields.body') %>
+      <%= f.text_area :body, class: 'admin-md-editor', data: { controller: 'md-editor' } %>
+      <p class="admin-field-hint"><%= t('admin.posts.hints.images') %></p>
+    </div>
+
+    <div class="form-actions">
+      <%= f.submit(post.persisted? ? t('admin.posts.save') : t('admin.posts.create'),
+                   class: 'btn btn-primary', data: { turbo_submits_with: t('admin.posts.saving') }) %>
+      <%= link_to t('admin.release.cancel', default: 'Cancel'), admin_posts_path, class: 'btn',
+                  data: { turbo_stream: true, turbo_prefetch: false } %>
+    </div>
+  <% end %>
+</div>

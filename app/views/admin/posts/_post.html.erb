@@ -1,0 +1,19 @@
+<div class="admin-release admin-post">
+  <div class="release-title">
+    <%= link_to edit_admin_post_path(post), data: { turbo_stream: true, turbo_prefetch: false } do %>
+      <%= post.title %>
+    <% end %>
+  </div>
+  <div class="admin-release-stats">
+    <div class="admin-release-stats-item">
+      <span class="admin-release-stats-item-title"><%= t('admin.posts.fields.created_at') %>:</span>
+      <span class="admin-release-stats-item-value"><%= format_date(post.created_at) || '-' %></span>
+    </div>
+    <div class="admin-actions admin-release-summary-actions">
+      <%= link_to t('settings.edit', default: 'Edit'), edit_admin_post_path(post), class: 'btn btn-primary',
+                  data: { turbo_stream: true, turbo_prefetch: false } %>
+      <%= button_to t('settings.delete', default: 'Delete'), [:admin, post], method: :delete, class: 'btn btn-danger',
+                     data: { turbo_confirm: t('admin.posts.confirm_delete') } %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+<div class="blog-container">
+  <div class="blog-left">
+    <h1 class="visually-hidden"><%= t('blog.title') %></h1>
+    <% if @posts.any? %>
+      <% @posts.each do |post| %>
+        <article class="blog-feed-item">
+          <h2 class="blog-feed-title">
+            <%= link_to post.title, blog_post_path(post) %>
+          </h2>
+          <time class="blog-post-date" datetime="<%= post.created_at.iso8601 %>"><%= format_date(post.created_at) %></time>
+          <% if post.body.present? %>
+            <div class="blog-post-body">
+              <%= MarkdownRenderer.call(post.body) %>
+            </div>
+          <% end %>
+        </article>
+      <% end %>
+    <% else %>
+      <div class="blog-empty"><%= t('blog.empty') %></div>
+    <% end %>
+  </div>
+</div>

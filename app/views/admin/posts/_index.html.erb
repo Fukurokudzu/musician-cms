@@ -1,0 +1,15 @@
+<div class="admin-posts">
+  <div class="admin-actions admin-releases-header">
+    <%= link_to t('admin.posts.new'), new_admin_post_path, class: 'btn btn-primary',
+                data: { turbo_stream: true, turbo_prefetch: false } %>
+  </div>
+
+  <% posts = Post.active.recent %>
+  <% if posts.any? %>
+    <div class="admin-releases-list">
+      <%= render partial: 'admin/posts/post', collection: posts, as: :post %>
+    </div>
+  <% else %>
+    <p class="admin-field-hint"><%= t('admin.posts.empty') %></p>
+  <% end %>
+</div>

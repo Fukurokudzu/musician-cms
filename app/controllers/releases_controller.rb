@@ -10,7 +10,9 @@ class ReleasesController < ApplicationController
     return head :not_found unless @release&.published? && @release&.allow_zip_download?
 
     builder = ReleaseZipBuilder.new(@release)
-    send_data builder.call,
+    data = builder.call
+    @release.increment!(:downloads_count)
+    send_data data,
               filename: builder.filename,
               type: 'application/zip',
               disposition: 'attachment'
