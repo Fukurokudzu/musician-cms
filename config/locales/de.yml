@@ -1,0 +1,340 @@
+# German (de) translations for musician-cms.
+# Keep key parity with en.yml.
+
+de:
+  title: "Titel"
+  first_name: "Vorname"
+  last_name: "Nachname"
+  role: "Rolle"
+
+  app:
+    profile: "Profil"
+
+  register:
+    email: "E-Mail"
+    password: "Passwort"
+
+  admin:
+    nav:
+      admin: "Admin"
+    badge: "Admin"
+    uploads:
+      missing_file: "Wähle eine Bilddatei aus"
+      invalid_type: "Nur PNG-, JPG-, GIF- oder WebP-Bilder sind erlaubt"
+      too_big: "Das Bild ist zu groß (max. %{size})"
+    tabs:
+      system: "System"
+      artists: "Künstler"
+      releases: "Releases"
+      credentials: "Zugangsdaten"
+      library: "Bibliothek"
+      theme: "Theme"
+      about: "Über"
+      logs: "Protokolle"
+      blog: "Blog"
+
+    logs:
+      title: "Schlüsselereignisse"
+      entries:
+        one: "%{count} Eintrag"
+        other: "%{count} Einträge"
+      hint: "Aufbewahrung: %{days} Tage (0 = unbegrenzt). Änderbar unter System → Protokollierung."
+      filter_all: "Alle"
+      categories:
+        auth: "Anmeldung"
+        artist: "Künstler"
+        release: "Releases"
+        track: "Titel"
+        settings: "Einstellungen"
+        theme: "Theme"
+        library: "Bibliothek"
+        blog: "Blog"
+      columns:
+        time: "Zeit"
+        action: "Aktion"
+        target: "Ziel"
+        details: "Details"
+      empty: "Noch keine Einträge."
+      pagination: "Protokollseiten"
+      newer: "← Neuere"
+      older: "Ältere →"
+      page_of: "Seite %{page} von %{total}"
+      stdout_title: "Anwendungsprotokoll-Datei"
+      stdout_path: "Datei"
+      stdout_modified: "aktualisiert"
+      stdout_missing: "Protokolldatei nicht gefunden oder nicht lesbar."
+      download_tail: "Letzte %{size} herunterladen"
+      download_full: "Gesamte Datei herunterladen (%{size})"
+      download_note: "Das Protokoll enthält alles: Anfragen, SQL, Sidekiq-Ausgabe. Es wird nie direkt auf dieser Seite angezeigt; laden Sie es stattdessen herunter."
+      clear_audit: "Audit-Log leeren"
+      clear_audit_confirm: "Alle %{count} Audit-Einträge löschen? Dies kann nicht rückgängig gemacht werden."
+      clear_file: "Protokolldatei leeren"
+      clear_file_confirm: "%{path} auf null Bytes kürzen? Der vorhandene Protokollinhalt geht verloren."
+      audit_cleared: "Audit-Log geleert (%{count} Einträge entfernt)"
+      file_cleared: "Protokolldatei gekürzt"
+      clear_failed: "Leeren fehlgeschlagen: %{error}"
+
+    about:
+      title: "Diagnose"
+      runtime: "Laufzeitumgebung"
+      environment: "Umgebung"
+      branch: "Branch"
+      commit: "Commit"
+      database: "Datenbank"
+      adapter: "Adapter"
+      db_name: "Datenbankname"
+      pool: "Verbindungs-Pool"
+      active_storage: "Active Storage"
+      service: "Dienst"
+      processor: "Prozessor"
+      content: "Inhalt"
+      artists: "Künstler"
+      releases: "Releases"
+      tracks: "Titel"
+      storage_records: "Speichereinträge"
+      redis_sidekiq: "Redis / Sidekiq"
+      neighbor_services: "Nachbardienste (docker-compose)"
+      not_detected: "nicht erkannt"
+      not_set: "nicht gesetzt"
+      unavailable: "nicht verfügbar"
+      processes: "Prozesse"
+      queues: "Warteschlangen"
+      empty: "leer"
+      paths_disk: "Speicher und Festplatte"
+      storage_path: "Speicherpfad"
+      disk_total: "Gesamt"
+      disk_free: "Frei"
+      used: "belegt"
+      time: "Zeit"
+      timezone: "Zeitzone"
+      copy: "Diagnose kopieren"
+      copied: "Kopiert"
+
+    artists:
+      title: "Künstler"
+      new: "Neuer Künstler"
+
+    statuses:
+      draft: "Entwurf"
+      published: "Veröffentlicht"
+      archived: "Archiviert"
+    bulk:
+      select_all: "Alle auswählen"
+      choose_action: "Aktion auswählen"
+      apply: "Anwenden"
+
+    library:
+      scan: "Bibliothek scannen"
+      scan_hint: "Der Scan verwendet den gespeicherten Bibliothekspfad."
+      library_path: "Bibliothekspfad"
+      flash:
+        started: "Scan-Auftrag gestartet..."
+
+    theme:
+      background: "Hintergrund"
+      background_image: "Hintergrundbild"
+      favicon: "Favicon"
+      colors: "Farben"
+      artist_title_color: "Künstlertitel"
+      text_color: "Text"
+      main_menu_bg_color: "Hintergrund des Hauptmenüs"
+      footer_bg_color: "Hintergrund der Fußzeile"
+      player_bg_color: "Hintergrund des Players"
+      accent_color: "Akzent"
+      a_color: "Links"
+      a_hover_color: "Links bei Mauszeiger"
+      other: "Sonstiges"
+      border_radius: "Eckenradius (px)"
+      remove_favicon: "Favicon entfernen"
+      remove_favicon_confirm: "Favicon entfernen?"
+      remove_background: "Hintergrund entfernen"
+      remove_background_confirm: "Hintergrundbild entfernen?"
+      hints:
+        background: "Eine beliebige Bilddatei."
+        favicon: "Erlaubte Formate: PNG, JPG, ICO, SVG, WebP. Große Rasterbilder werden automatisch auf maximal 512×512 px skaliert."
+      flash:
+        updated: "Einstellungen aktualisiert"
+        background_removed: "Hintergrundbild entfernt"
+        favicon_removed: "Favicon entfernt"
+        favicon_invalid: "Das Favicon muss eine Bilddatei sein (PNG, JPG, ICO, SVG oder WebP)"
+
+    system:
+      general: "Allgemein"
+      footer: "Fußzeile"
+      localization: "Lokalisierung"
+      security: "Sicherheit"
+      logging: "Protokollierung"
+      logging_hint: "Anzahl der Tage, die wichtige Einträge auf der Protokollseite aufbewahrt werden. 0 = unbegrenzt."
+      flash:
+        updated: "Einstellungen aktualisiert"
+        error: "Einstellungen konnten nicht aktualisiert werden"
+
+    release:
+      edit_title: "Release bearbeiten"
+      upload_title: "Release hochladen"
+      upload: "Hochladen"
+      uploading: "Wird hochgeladen…"
+      saving: "Wird gespeichert…"
+      adding: "Wird hinzugefügt…"
+      tracks: "Titel"
+      save: "Speichern"
+      cancel: "Abbrechen"
+      edit: "Bearbeiten"
+      back_to_releases: "Zurück zu den Releases"
+      delete: "Löschen"
+      confirm_delete: "Sind Sie sicher?"
+      add_track: "Titel hinzufügen"
+      add: "Hinzufügen"
+      publish_all_tracks: "Alle Titel veröffentlichen"
+      allow_zip_download: "Download des Releases als ZIP erlauben"
+      zip_download: "ZIP-Download"
+      enabled: "aktiviert"
+      disabled: "deaktiviert"
+      artist: "Künstler"
+      new_artist_name: "Name des neuen Künstlers"
+      select_artist: "Wähle einen Künstler aus oder erstelle unten einen neuen"
+      cover: "Cover"
+      hints:
+        cover: "Bilddatei (z. B. JPG, PNG)."
+        tracks: "Audiodateien: %{extensions}."
+      flash:
+        uploaded: "Release hochgeladen"
+        updated: "Release aktualisiert"
+        deleted: "Release gelöscht"
+        delete_failed: "Release konnte nicht gelöscht werden"
+        no_track_file: "Wähle mindestens eine Audiodatei aus"
+        tracks_added:
+          one: "Titel hinzugefügt"
+          other: "Titel hinzugefügt"
+        tracks_published: "Alle Titel veröffentlicht"
+      stats:
+        plays_count: "Wiedergaben"
+        downloads_count: "Downloads"
+        tracks_count: "Titel"
+        duration: "Dauer"
+      fields:
+        title: "Titel"
+        genre: "Genre"
+        publisher: "Label"
+        release_date: "Erscheinungsdatum"
+        description: "Beschreibung"
+        status: "Status"
+        track_title: "Titel"
+        track_pos: "Position"
+        track_status: "Status"
+
+    posts:
+      new: "Neuer Beitrag"
+      new_title: "Neuer Beitrag"
+      edit_title: "Beitrag bearbeiten"
+      empty: "Noch keine Beiträge."
+      save: "Speichern"
+      create: "Erstellen"
+      saving: "Wird gespeichert…"
+      confirm_delete: "Sind Sie sicher?"
+      fields:
+        title: "Titel"
+        body: "Text"
+        created_at: "Erstellt"
+      hints:
+        images: "Ziehe ein Bild in den Editor, füge es aus der Zwischenablage ein oder nutze den Bild-Button in der Symbolleiste — die Datei wird automatisch hochgeladen und als Markdown eingefügt."
+      flash:
+        created: "Beitrag erstellt"
+        updated: "Beitrag aktualisiert"
+        deleted: "Beitrag gelöscht"
+
+    welcome:
+      title: "Willkommen bei Musician CMS!"
+      body: "Es gibt noch keine Künstler oder Releases. Lade dein erstes Release hoch — du kannst einen vorhandenen Künstler auswählen oder direkt im Formular einen neuen anlegen."
+      upload: "Erstes Release hochladen"
+
+  blog:
+    title: "Blog"
+    empty: "Noch keine Beiträge."
+    back: "Alle Beiträge"
+
+  settings:
+    email: "Ihre E-Mail"
+    timezone: "Zeitzone"
+    locale: "Sprache"
+    date_format: "Datumsformat"
+    update: "Aktualisieren"
+    saving: "Wird gespeichert…"
+    create: "Erstellen"
+    delete: "Löschen"
+    edit: "Bearbeiten"
+    page_title: "Seitentitel"
+    description: "Beschreibung"
+    footer_link_type: "Link in der Fußzeile"
+    footer_type_email: "E-Mail"
+    footer_type_url: "Web-Link"
+    footer_email: "Kontakt-E-Mail"
+    footer_subject: "E-Mail-Betreff"
+    footer_url: "Link-URL"
+    admin_email: "Admin-E-Mail"
+    admin_password: "Admin-Passwort"
+    admin_password_placeholder: "Leer lassen, um das aktuelle Passwort zu behalten"
+    audit_retention_days: "Audit-Log aufbewahren (Tage)"
+
+  flash:
+    alert:
+      login: "E-Mail oder Passwort sind falsch"
+      settings:
+        email_empty: "Das E-Mail-Feld darf nicht leer sein"
+        error: "Das E-Mail-Feld ist nicht gesetzt oder diese Adresse ist bereits vergeben"
+
+  login:
+    login_btn: "Anmelden"
+    register_link: "oder registrieren!"
+    new_login: "Anmeldeinformationen"
+    signout: "Abmelden"
+    remember_me: "Angemeldet bleiben"
+
+  player:
+    empty: "Keine Titel verfügbar"
+
+  errors:
+    not_found_title: "Seite nicht gefunden"
+    not_found: "Die gesuchte Seite existiert nicht, wurde verschoben oder ist privat"
+    internal_error_title: "Etwas ist schiefgelaufen"
+    internal_error: "Auf dem Server ist ein unerwarteter Fehler aufgetreten. Bitte versuchen Sie es erneut."
+    back_home: "Zurück zur Startseite"
+
+  welcome:
+    title: "Willkommen bei Musician CMS!"
+    body: "Die Website läuft, aber es ist noch nichts veröffentlicht. So geht's los:"
+    step_signin: "Öffne das Admin-Panel und melde dich mit deinen Zugangsdaten an"
+    step_release: "Lade dein erstes Release hoch — den Künstler kannst du direkt im Upload-Formular anlegen"
+    step_publish: "Veröffentliche das Release, und es erscheint auf dieser Seite"
+    admin: "Admin-Panel öffnen"
+    github: "Dokumentation auf GitHub"
+
+  artists:
+    show:
+      releases: "Releases"
+
+  release:
+    show:
+      tracks_count: "Titel:"
+      duration: "Dauer:"
+      no_published_tracks: "Keine veröffentlichten Titel verfügbar"
+      download_zip: "Release herunterladen"
+      view_cover: "Cover ansehen"
+      released_on: "veröffentlicht am %{date}"
+      released_by: "von %{publisher}"
+
+  date:
+    month_names:
+      -
+      - Januar
+      - Februar
+      - März
+      - April
+      - Mai
+      - Juni
+      - Juli
+      - August
+      - September
+      - Oktober
+      - November
+      - Dezember

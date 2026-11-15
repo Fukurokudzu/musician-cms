@@ -17,6 +17,21 @@ module ApplicationHelper
     Setting::DATE_FORMATS.map { |fmt, label| ["#{DATE_FORMAT_EXAMPLE.strftime(fmt)} (#{label})", fmt] }
   end
 
+  # [label, value] pairs for the site locale select in the admin settings
+  # form, e.g. ["Español", "es"]. Falls back to the raw code for locales
+  # without a name listed here.
+  LANGUAGE_NAMES = {
+    'en' => 'English',
+    'ru' => 'Русский',
+    'es' => 'Español',
+    'fr' => 'Français',
+    'de' => 'Deutsch'
+  }.freeze
+
+  def locale_options
+    I18n.available_locales.map(&:to_s).map { |code| [LANGUAGE_NAMES.fetch(code, code), code] }
+  end
+
   # Signed blob of the custom favicon from settings, or nil when unset/invalid.
   def custom_favicon_blob
     return nil if Setting.favicon.blank?

@@ -51,7 +51,7 @@
       </div>
       <div class="form-group">
         <%= label_tag 'setting_locale', t('settings.locale', default: 'Locale') %>
-        <%= select_tag 'setting[locale]', options_for_select(I18n.available_locales.map(&:to_s), Setting.locale), class: "form-select", id: 'setting_locale' %>
+        <%= select_tag 'setting[locale]', options_for_select(locale_options, Setting.locale), class: "form-select", id: 'setting_locale' %>
       </div>
       <div class="form-group">
         <%= label_tag 'setting_date_format', t('settings.date_format', default: 'Date format') %>

@@ -28,7 +28,7 @@ RSpec.describe 'Locale switching', type: :request do
   it 'ignores an unknown locale parameter and keeps the configured one' do
     Setting.locale = 'ru'
 
-    get release_path(release, locale: 'de')
+    get release_path(release, locale: 'xx')
 
     expect(response.body).to include('треков')
   end
@@ -60,7 +60,7 @@ RSpec.describe 'Locale switching', type: :request do
   it 'ignores an unknown lang parameter and keeps the configured one' do
     Setting.locale = 'ru'
 
-    get release_path(release, lang: 'de')
+    get release_path(release, lang: 'xx')
 
     expect(response.body).to include('треков')
   end
@@ -92,12 +92,21 @@ RSpec.describe 'Locale switching', type: :request do
   end
 
   it 'falls back to the default locale when the configured one is unusable' do
-    Setting.locale = 'de'
+    Setting.locale = 'xx'
 
-    get release_path(release, locale: 'de')
+    get release_path(release, locale: 'xx')
 
     expect(response).to have_http_status(:ok)
     expect(response.body).to include('tracks:')
     expect(response.body).not_to include('translation_missing')
+  end
+
+  { 'es' => 'pistas:', 'fr' => 'pistes :', 'de' => 'titel:' }.each do |locale, marker|
+    it "renders the site in #{locale}" do
+      get release_path(release, locale:)
+
+      expect(response.body).to include(marker)
+      expect(response.body).not_to include('translation_missing')
+    end
   end
 end

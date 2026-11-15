@@ -20,7 +20,7 @@ module MusicianCms
     # config.eager_load_paths << Rails.root.join("extras")
     config.time_zone = 'Belgrade'
     config.i18n.default_locale = :en
-    config.i18n.available_locales = %i[en ru]
+    config.i18n.available_locales = %i[en ru es fr de]
     config.active_job.queue_adapter = :sidekiq
     config.active_storage.variant_processor = :vips
 

@@ -34,7 +34,7 @@ This project is in active development. Expect breaking changes, incomplete featu
   - Scan a local music folder and import new releases automatically (Sidekiq job)
   - Blog: create, edit and soft-delete markdown posts (GFM, rendered and sanitized server-side)
   - Theme editor: colors, background image, favicon and corner radius — live CSS variables, no code changes needed
-  - Configurable site title, description, locale (EN/RU, also switchable via `?locale=` or `?lang=`), date format and footer contact link (email or URL)
+  - Configurable site title, description, locale (EN/RU/ES/FR/DE, also switchable via `?locale=` or `?lang=`), date format and footer contact link (email or URL)
   - Logs: audit trail of admin actions with category filters and configurable retention (default 90 days), plus download/truncate of the raw application log
   - About: build diagnostics — branch/commit/source (from a git tag, CI environment or the container build args)
 - **Under the hood**
@@ -113,6 +113,27 @@ Then use the *Library* tab in the admin panel to check the library path and run 
 ## Documentation
 
 - [DEPLOY.md](DEPLOY.md) — deployment details: volumes, build caching, credentials, the music library and the admin Logs tab
+
+## Contributing
+
+Contributions are welcome via pull requests (PR):
+
+1. Fork the repository and branch off `dev`.
+2. Make your changes and cover them with specs — the suite must stay green
+   (`bundle exec rspec`); run rubocop for Ruby changes.
+3. Open an PR against `dev` describing the problem and the fix. Small, focused
+   PRs are easier to review.
+
+For local setup, see [docs/development.md](docs/development.md).
+
+### Translations
+
+To add a language, add `config/locales/<lang>.yml` with keys matching `en.yml`
+one-to-one (plus `date.month_names` for `%B` rendering), then register it in
+`config/application.rb` (`available_locales`), `app/models/setting.rb`
+(`locale` `option_values`) and `locale_options`
+(`app/helpers/application_helper.rb`). If the language has non-trivial plural
+forms, add CLDR rules to `config/locales/plural_rules.rb`.
 
 ## Live example
 

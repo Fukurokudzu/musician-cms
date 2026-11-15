@@ -1,0 +1,340 @@
+# French (fr) translations for musician-cms.
+# Keep key parity with en.yml.
+
+fr:
+  title: "Titre"
+  first_name: "Prénom"
+  last_name: "Nom"
+  role: "Rôle"
+
+  app:
+    profile: "Profil"
+
+  register:
+    email: "E-mail"
+    password: "Mot de passe"
+
+  admin:
+    nav:
+      admin: "Admin"
+    badge: "Admin"
+    uploads:
+      missing_file: "Choisissez un fichier image"
+      invalid_type: "Seules les images PNG, JPG, GIF ou WebP sont autorisées"
+      too_big: "L'image est trop lourde (max %{size})"
+    tabs:
+      system: "Système"
+      artists: "Artistes"
+      releases: "Sorties"
+      credentials: "Identifiants"
+      library: "Bibliothèque"
+      theme: "Thème"
+      about: "À propos"
+      logs: "Journaux"
+      blog: "Blog"
+
+    logs:
+      title: "Actions clés"
+      entries:
+        one: "%{count} entrée"
+        other: "%{count} entrées"
+      hint: "Conservés pendant %{days} jours (0 = pour toujours). Modifiable dans Système → Journalisation."
+      filter_all: "Tous"
+      categories:
+        auth: "Connexion"
+        artist: "Artistes"
+        release: "Sorties"
+        track: "Pistes"
+        settings: "Réglages"
+        theme: "Thème"
+        library: "Bibliothèque"
+        blog: "Blog"
+      columns:
+        time: "Heure"
+        action: "Action"
+        target: "Cible"
+        details: "Détails"
+      empty: "Aucune entrée pour l'instant."
+      pagination: "Pages du journal"
+      newer: "← Plus récentes"
+      older: "Plus anciennes →"
+      page_of: "Page %{page} sur %{total}"
+      stdout_title: "Fichier journal de l'application"
+      stdout_path: "Fichier"
+      stdout_modified: "modifié"
+      stdout_missing: "Fichier journal introuvable ou illisible."
+      download_tail: "Télécharger les derniers %{size}"
+      download_full: "Télécharger le fichier entier (%{size})"
+      download_note: "Le journal contient tout : requêtes, SQL, sortie de Sidekiq. Il n'est jamais affiché sur cette page ; téléchargez-le à la place."
+      clear_audit: "Effacer le journal d'audit"
+      clear_audit_confirm: "Supprimer les %{count} entrées d'audit ? Cette action est irréversible."
+      clear_file: "Vider le fichier journal"
+      clear_file_confirm: "Tronquer %{path} à zéro octet ? Le contenu du journal sera perdu."
+      audit_cleared: "Journal d'audit effacé (%{count} entrées supprimées)"
+      file_cleared: "Fichier journal tronqué"
+      clear_failed: "Échec de l'effacement : %{error}"
+
+    about:
+      title: "Diagnostic"
+      runtime: "Environnement d'exécution"
+      environment: "Environnement"
+      branch: "Branche"
+      commit: "Commit"
+      database: "Base de données"
+      adapter: "Adaptateur"
+      db_name: "Nom de la base de données"
+      pool: "Pool"
+      active_storage: "Active Storage"
+      service: "Service"
+      processor: "Processeur"
+      content: "Contenu"
+      artists: "Artistes"
+      releases: "Sorties"
+      tracks: "Pistes"
+      storage_records: "Enregistrements de stockage"
+      redis_sidekiq: "Redis / Sidekiq"
+      neighbor_services: "Services voisins (docker-compose)"
+      not_detected: "non détecté"
+      not_set: "non défini"
+      unavailable: "indisponible"
+      processes: "Processus"
+      queues: "Files d'attente"
+      empty: "vide"
+      paths_disk: "Stockage et disque"
+      storage_path: "Chemin de stockage"
+      disk_total: "Total"
+      disk_free: "Libre"
+      used: "utilisé"
+      time: "Heure"
+      timezone: "Fuseau horaire"
+      copy: "Copier le diagnostic"
+      copied: "Copié"
+
+    artists:
+      title: "Artistes"
+      new: "Nouvel artiste"
+
+    statuses:
+      draft: "Brouillon"
+      published: "Publié"
+      archived: "Archivé"
+    bulk:
+      select_all: "Tout sélectionner"
+      choose_action: "Choisir une action"
+      apply: "Appliquer"
+
+    library:
+      scan: "Analyser la bibliothèque"
+      scan_hint: "Le scan utilise le chemin de bibliothèque enregistré."
+      library_path: "Chemin de la bibliothèque"
+      flash:
+        started: "Tâche de scan démarrée..."
+
+    theme:
+      background: "Arrière-plan"
+      background_image: "Image d'arrière-plan"
+      favicon: "Favicon"
+      colors: "Couleurs"
+      artist_title_color: "Titre de l'artiste"
+      text_color: "Texte"
+      main_menu_bg_color: "Arrière-plan du menu principal"
+      footer_bg_color: "Arrière-plan du pied de page"
+      player_bg_color: "Arrière-plan du lecteur"
+      accent_color: "Accent"
+      a_color: "Liens"
+      a_hover_color: "Liens au survol"
+      other: "Autres"
+      border_radius: "Arrondi des coins (px)"
+      remove_favicon: "Supprimer le favicon"
+      remove_favicon_confirm: "Supprimer le favicon ?"
+      remove_background: "Supprimer l'arrière-plan"
+      remove_background_confirm: "Supprimer l'image d'arrière-plan ?"
+      hints:
+        background: "N'importe quel fichier image."
+        favicon: "Formats autorisés : PNG, JPG, ICO, SVG, WebP. Les grandes images matricielles sont automatiquement redimensionnées à 512×512 px max."
+      flash:
+        updated: "Réglages mis à jour"
+        background_removed: "Image d'arrière-plan supprimée"
+        favicon_removed: "Favicon supprimé"
+        favicon_invalid: "Le favicon doit être un fichier image (PNG, JPG, ICO, SVG ou WebP)"
+
+    system:
+      general: "Général"
+      footer: "Pied de page"
+      localization: "Localisation"
+      security: "Sécurité"
+      logging: "Journalisation"
+      logging_hint: "Nombre de jours de conservation des actions clés sur la page Journaux. 0 = conservation illimitée."
+      flash:
+        updated: "Réglages mis à jour"
+        error: "Impossible de mettre à jour les réglages"
+
+    release:
+      edit_title: "Modifier la sortie"
+      upload_title: "Téléversement d'une sortie"
+      upload: "Téléverser"
+      uploading: "Téléversement…"
+      saving: "Enregistrement…"
+      adding: "Ajout…"
+      tracks: "Pistes"
+      save: "Enregistrer"
+      cancel: "Annuler"
+      edit: "Modifier"
+      back_to_releases: "Retour aux sorties"
+      delete: "Supprimer"
+      confirm_delete: "Êtes-vous sûr ?"
+      add_track: "Ajouter une piste"
+      add: "Ajouter"
+      publish_all_tracks: "Publier toutes les pistes"
+      allow_zip_download: "Autoriser le téléchargement de la sortie en ZIP"
+      zip_download: "Téléchargement ZIP"
+      enabled: "activé"
+      disabled: "désactivé"
+      artist: "Artiste"
+      new_artist_name: "Nom du nouvel artiste"
+      select_artist: "Sélectionnez un artiste ou créez-en un nouveau ci-dessous"
+      cover: "Pochette"
+      hints:
+        cover: "Fichier image (ex. JPG, PNG)."
+        tracks: "Fichiers audio : %{extensions}."
+      flash:
+        uploaded: "Sortie téléversée"
+        updated: "Sortie mise à jour"
+        deleted: "Sortie supprimée"
+        delete_failed: "Impossible de supprimer la sortie"
+        no_track_file: "Sélectionnez au moins un fichier audio"
+        tracks_added:
+          one: "Piste ajoutée"
+          other: "Pistes ajoutées"
+        tracks_published: "Toutes les pistes publiées"
+      stats:
+        plays_count: "Lectures"
+        downloads_count: "Téléchargements"
+        tracks_count: "Pistes"
+        duration: "Durée"
+      fields:
+        title: "Titre"
+        genre: "Genre"
+        publisher: "Label"
+        release_date: "Date de sortie"
+        description: "Description"
+        status: "Statut"
+        track_title: "Titre"
+        track_pos: "Position"
+        track_status: "Statut"
+
+    posts:
+      new: "Nouvel article"
+      new_title: "Nouvel article"
+      edit_title: "Modifier l'article"
+      empty: "Aucun article pour l'instant."
+      save: "Enregistrer"
+      create: "Créer"
+      saving: "Enregistrement…"
+      confirm_delete: "Êtes-vous sûr ?"
+      fields:
+        title: "Titre"
+        body: "Texte"
+        created_at: "Créé"
+      hints:
+        images: "Glissez une image dans l'éditeur, collez-la ou utilisez le bouton image de la barre d'outils — le fichier sera téléversé automatiquement et inséré en Markdown."
+      flash:
+        created: "Article créé"
+        updated: "Article mis à jour"
+        deleted: "Article supprimé"
+
+    welcome:
+      title: "Bienvenue sur Musician CMS !"
+      body: "Aucun artiste ni sortie pour l'instant. Téléversez votre première sortie — vous pouvez choisir un artiste existant ou en créer un directement dans le formulaire."
+      upload: "Téléverser votre première sortie"
+
+  blog:
+    title: "Blog"
+    empty: "Aucun article pour l'instant."
+    back: "Tous les articles"
+
+  settings:
+    email: "Votre e-mail"
+    timezone: "Fuseau horaire"
+    locale: "Langue"
+    date_format: "Format de date"
+    update: "Mettre à jour"
+    saving: "Enregistrement…"
+    create: "Créer"
+    delete: "Supprimer"
+    edit: "Modifier"
+    page_title: "Titre de la page"
+    description: "Description"
+    footer_link_type: "Lien du pied de page"
+    footer_type_email: "E-mail"
+    footer_type_url: "Lien web"
+    footer_email: "E-mail de contact"
+    footer_subject: "Objet du message"
+    footer_url: "URL du lien"
+    admin_email: "E-mail de l'administrateur"
+    admin_password: "Mot de passe de l'administrateur"
+    admin_password_placeholder: "Laissez vide pour conserver le mot de passe actuel"
+    audit_retention_days: "Conserver le journal d'audit (jours)"
+
+  flash:
+    alert:
+      login: "L'e-mail ou le mot de passe est incorrect"
+      settings:
+        email_empty: "Le champ e-mail ne peut pas être vide"
+        error: "Le champ e-mail n'est pas défini ou cette adresse est déjà utilisée"
+
+  login:
+    login_btn: "Connexion"
+    register_link: "ou inscrivez-vous !"
+    new_login: "Informations de connexion"
+    signout: "Déconnexion"
+    remember_me: "Se souvenir de moi"
+
+  player:
+    empty: "Aucune piste disponible"
+
+  errors:
+    not_found_title: "Page introuvable"
+    not_found: "La page que vous cherchez n'existe pas, a été déplacée ou est privée"
+    internal_error_title: "Une erreur est survenue"
+    internal_error: "Le serveur a rencontré une erreur inattendue. Veuillez réessayer."
+    back_home: "Retour à la page principale"
+
+  welcome:
+    title: "Bienvenue sur Musician CMS !"
+    body: "Le site est en ligne, mais rien n'est publié pour l'instant. Voici comment commencer :"
+    step_signin: "Ouvrez le panneau d'administration et connectez-vous avec vos identifiants"
+    step_release: "Téléversez votre première sortie — vous pouvez créer l'artiste directement dans le formulaire"
+    step_publish: "Publiez la sortie et elle apparaîtra sur cette page"
+    admin: "Ouvrir le panneau d'administration"
+    github: "Documentation sur GitHub"
+
+  artists:
+    show:
+      releases: "Sorties"
+
+  release:
+    show:
+      tracks_count: "Pistes :"
+      duration: "Durée :"
+      no_published_tracks: "Aucune piste publiée disponible"
+      download_zip: "Télécharger la sortie"
+      view_cover: "Voir la pochette"
+      released_on: "publiée le %{date}"
+      released_by: "par %{publisher}"
+
+  date:
+    month_names:
+      -
+      - janvier
+      - février
+      - mars
+      - avril
+      - mai
+      - juin
+      - juillet
+      - août
+      - septembre
+      - octobre
+      - novembre
+      - décembre

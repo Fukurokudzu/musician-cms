@@ -23,7 +23,7 @@ class Setting < RailsSettings::Base
   scope :application do
     field :app_name, default: 'Musician CMS', validates: { presence: true, length: { in: 2..30 } }
     field :host, default: 'https://example.com'
-    field :locale, default: 'en', validates: { presence: true }, option_values: %w[en ru]
+    field :locale, default: 'en', validates: { presence: true }, option_values: %w[en ru es fr de]
     field :timezone, default: ''
     field :date_format, default: DEFAULT_DATE_FORMAT,
                         validates: { presence: true, inclusion: { in: DATE_FORMATS.keys } },
