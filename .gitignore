@@ -41,6 +41,9 @@
 # Ignore music assets
 /app/music/*
 
+# Ignore host-specific compose overrides (e.g. bind mount for the music library)
+/docker-compose.override.yml
+
 # Ignore idea files
 /.idea
 

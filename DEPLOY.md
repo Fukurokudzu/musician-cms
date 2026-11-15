@@ -79,6 +79,20 @@ You can either:
 - copy files into the named volume, or
 - replace it with a bind mount, for example: `- /path/to/your/music:/rails/app/music:ro` (read-only is fine/recommended for a scan source).
 
+Do not edit `docker-compose.yml` on the deploy host to switch to a bind mount: it is a tracked file and every `git pull` will conflict. Put host-specific paths in a git-ignored `docker-compose.override.yml` instead. Compose v2 merges it automatically, and volume entries are matched by the container path, so this replaces the `music_library` mount for both app services:
+
+```yaml
+services:
+  web:
+    volumes:
+      - /srv/music:/rails/app/music:ro
+  sidekiq:
+    volumes:
+      - /srv/music:/rails/app/music:ro
+```
+
+Check the result with `docker compose config` (expect `bind` + `read_only: true` for `/rails/app/music` in both services).
+
 The library path defaults to `app/music` in application settings and can be reviewed/used from the admin panel (Library tab / scan).
 
 The library path is a **source directory for scanning/import**: the scan job reads audio/cover files from it and attaches copies to Active Storage. It does not need write access, so `:ro` is appropriate for an external collection. Releases uploaded through the admin UI are stored in Active Storage (`storage_data`), not written into the music library folder. Use a writable mount only if other container-side processes must modify files there.
