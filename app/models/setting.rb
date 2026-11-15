@@ -2,6 +2,15 @@
 class Setting < RailsSettings::Base
   cache_prefix { "v1" }
 
+  DATE_FORMATS = {
+    "%d.%m.%Y" => "DD.MM.YYYY",
+    "%m/%d/%Y" => "MM/DD/YYYY",
+    "%d/%m/%Y" => "DD/MM/YYYY",
+    "%Y-%m-%d" => "YYYY-MM-DD",
+    "%-d %B %Y" => "D Month YYYY"
+  }.freeze
+  DEFAULT_DATE_FORMAT = "%d.%m.%Y".freeze
+
   # Define your fields
   # field :host, type: :string, default: "http://localhost:3000"
   # field :default_locale, default: "en", type: :string
@@ -15,6 +24,8 @@ class Setting < RailsSettings::Base
     field :host, default: "https://example.com"
     field :locale, default: "en", validates: { presence: true }, option_values: %w[en ru]
     field :timezone, default: ""
+    field :date_format, default: DEFAULT_DATE_FORMAT,
+          validates: { presence: true, inclusion: { in: DATE_FORMATS.keys } }, option_values: DATE_FORMATS.keys
     field :cover_filenames, default: %w[cover artwork], validates: { presence: true }
     field :cover_extensions, default: %w[jpg jpeg png], validates: { presence: true }
     field :track_extensions, default: %w[mp3 wav wave], validates: { presence: true }

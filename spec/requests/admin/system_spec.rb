@@ -32,6 +32,24 @@ RSpec.describe "Admin::Systems", type: :request do
       expect(Setting.locale).to eq('ru')
     end
 
+    it 'stores the chosen date format' do
+      patch admin_system_path, params: { setting: { date_format: '%m/%d/%Y' } }, as: :turbo_stream
+
+      expect(response).to have_http_status(:see_other)
+      expect(Setting.date_format).to eq('%m/%d/%Y')
+    end
+
+    it 'rejects an unsupported date format with 422 and leaves the stored value intact' do
+      previous = Setting.date_format
+
+      expect do
+        patch admin_system_path, params: { setting: { date_format: 'bogus' } }, as: :turbo_stream
+      end.not_to raise_error
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(Setting.date_format).to eq(previous)
+    end
+
     it 'changes the admin password and locks the current session out' do
       previous_hash = Setting.admin_hashed_password
 

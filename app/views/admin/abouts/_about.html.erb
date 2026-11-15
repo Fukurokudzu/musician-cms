@@ -54,14 +54,14 @@
   revision_branch = revision[:branch].presence || t('admin.about.not_detected', default: 'not detected')
   revision_commit = revision[:commit].presence || t('admin.about.not_detected', default: 'not detected')
 
-  ui_time_str = (l(Time.current, format: :long) rescue Time.current.to_s)
+  ui_time_str = format_datetime(Time.current)
   tz_str = Time.zone&.name || t('admin.about.not_set', default: 'not set')
   na = t('admin.about.unavailable', default: 'unavailable')
 
   copy_branch = revision[:branch].presence || 'not detected'
   copy_commit = revision[:commit].presence || 'not detected'
   copy_tz = Time.zone&.name || 'not set'
-  copy_time = Time.current.strftime('%Y-%m-%d %H:%M:%S %z')
+  copy_time = format_datetime(Time.current)
 
   diagnostics_text = [
     'Diagnostics',

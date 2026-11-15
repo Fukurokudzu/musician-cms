@@ -172,6 +172,7 @@ ru:
   settings:
     email: "Почта"
     timezone: "Часовой пояс"
+    date_format: "Формат даты"
     update: "Обновить"
     locale: "Язык"
     edit: "Редактировать"

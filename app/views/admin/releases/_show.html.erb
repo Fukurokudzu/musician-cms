@@ -21,7 +21,7 @@
       </div>
       <div class="admin-release-stats-item">
         <span class="admin-release-stats-item-title"><%= t('admin.release.fields.release_date') %>:</span>
-        <span class="admin-release-stats-item-value"><%= @release.release_date || '-' %></span>
+        <span class="admin-release-stats-item-value"><%= format_date(@release.release_date) || '-' %></span>
       </div>
       <div class="admin-release-stats-item">
         <span class="admin-release-stats-item-title"><%= t('admin.release.zip_download') %>:</span>
