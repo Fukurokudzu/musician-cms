@@ -23,7 +23,7 @@
 }
 
 .release-show-cover img {
-  max-width: 500px;
+  max-width: min(100%, 500px);
   max-height: 500px;
   width: auto;
   height: auto;

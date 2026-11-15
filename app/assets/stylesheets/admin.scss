@@ -23,6 +23,12 @@ main.admin-session {
   align-self: center;
 }
 
+@media (max-width: 640px) {
+  .admin {
+    padding: 1rem;
+  }
+}
+
 .admin h2 {
   margin-bottom: 1.25rem;
 }
@@ -398,10 +404,15 @@ main.admin-session {
 
 .admin .track-item {
   display: grid;
-  grid-template-columns: 2rem 1fr 6rem;
+  grid-template-columns: 2rem minmax(0, 1fr) 6rem;
   gap: 1rem;
   padding: 0.375rem 0;
   border-bottom: 1px solid #eee;
+}
+
+.admin .track-item .track-title {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .admin .track-item--published {
@@ -558,13 +569,23 @@ main.admin-session {
 .admin-release-tracks-count,
 .admin-release-stats-duration {
   display: grid;
-  grid-template-columns: 8rem 1fr;
+  grid-template-columns: minmax(0, 8rem) minmax(0, 1fr);
   gap: 0.5rem;
   align-items: baseline;
 }
 
 .admin-release-stats-item-title {
   color: #495057;
+  overflow-wrap: anywhere;
+}
+
+.admin-release-stats-item-value {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.admin-release-stats {
+  min-width: 0;
 }
 
 /* Theme settings */

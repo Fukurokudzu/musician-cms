@@ -157,6 +157,11 @@ header {
         padding-bottom: 11rem;
     }
 
+    /* mobile admin player is taller (big buttons + track-info row) */
+    main.admin-session {
+        padding-bottom: 12rem;
+    }
+
     .releases-container {
         justify-content: center;
     }

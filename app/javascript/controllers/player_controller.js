@@ -57,10 +57,10 @@ export default class extends Controller {
             this.playPauseTarget.innerHTML = '<i class="fas fa-pause"></i>';
         }
         if (this.hasArtistTitleTarget) {
-            this.artistTitleTarget.textContent = artist || '';
+            this.artistTitleTargets.forEach(el => el.textContent = artist || '');
         }
         if (this.hasTrackTitleTarget) {
-            this.trackTitleTarget.textContent = title || '';
+            this.trackTitleTargets.forEach(el => el.textContent = title || '');
         }
 
         let release_id = null;
