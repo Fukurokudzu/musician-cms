@@ -15,6 +15,7 @@ class Admin::ThemesController < ApplicationController
     if update_system_settings(check_params)
       attach_background!(background) if background.present?
       attach_favicon!(favicon) if favicon.present?
+      Setting.clear_cache if Setting.respond_to?(:clear_cache)
       flash.now[:success] = t('admin.theme.flash.updated')
     end
 
@@ -29,6 +30,7 @@ class Admin::ThemesController < ApplicationController
       purge_background!
       flash.now[:success] = t('admin.theme.flash.background_removed')
     end
+    Setting.clear_cache if Setting.respond_to?(:clear_cache)
 
     render turbo_stream: [
       turbo_stream.update('admin_body', partial: 'system'),
@@ -65,23 +67,47 @@ class Admin::ThemesController < ApplicationController
   end
 
   def attach_favicon!(file)
-    unless file.content_type.to_s.match?(%r{image/(png|jpeg|jpg|x-icon|vnd\.microsoft\.icon|svg\+xml|webp)})
+    content_type = file.content_type.to_s
+    unless content_type.match?(%r{image/(png|jpeg|jpg|x-icon|vnd\.microsoft\.icon|svg\+xml|webp)})
       flash.now[:error] = t('admin.theme.flash.favicon_invalid', default: 'Favicon must be an image file (PNG, JPG, ICO, SVG or WebP)')
       return
     end
 
     purge_favicon!
 
+    io, filename, upload_content_type = processed_favicon_upload(file, content_type)
+
     blob = ActiveStorage::Blob.create_and_upload!(
-      io: file.tempfile,
-      filename: file.original_filename,
-      content_type: file.content_type
+      io: io,
+      filename: filename,
+      content_type: upload_content_type
     )
     Setting.favicon = blob.signed_id
+  ensure
+    io.close! if io.respond_to?(:close!) && io != file.tempfile
+  end
+
+  def processed_favicon_upload(file, content_type)
+    if content_type.match?(%r{image/(svg\+xml|x-icon|vnd\.microsoft\.icon)})
+      [file.tempfile, file.original_filename, content_type]
+    else
+      processed = ImageProcessing::Vips
+                    .source(file.tempfile)
+                    .resize_to_limit(512, 512)
+                    .call
+      [processed, file.original_filename, content_type]
+    end
+  rescue LoadError, StandardError => e
+    Rails.logger.warn("Favicon processing failed, using original: #{e.class}: #{e.message}")
+    [file.tempfile, file.original_filename, content_type]
   end
 
   def purge_favicon!
-    ActiveStorage::Blob.find_signed(Setting.favicon.presence)&.purge
+    signed_id = Setting.favicon.presence
+    blob = ActiveStorage::Blob.find_signed(signed_id) if signed_id
+    blob&.purge_later
+    Setting.favicon = ''
+  rescue ActiveRecord::RecordNotFound, ActiveSupport::MessageVerifier::InvalidSignature
     Setting.favicon = ''
   end
 end

@@ -95,10 +95,14 @@ ru:
       remove_favicon_confirm: "Удалить favicon?"
       remove_background: "Удалить фон"
       remove_background_confirm: "Удалить фоновое изображение?"
+      hints:
+        background: "Любой файл изображения."
+        favicon: "Допустимые форматы: PNG, JPG, ICO, SVG, WebP. Большие растровые изображения автоматически уменьшаются до 512×512 px."
       flash:
         updated: "Настройки обновлены"
         background_removed: "Фоновая картинка удалена"
         favicon_removed: "Favicon удалён"
+        favicon_invalid: "Favicon должен быть файлом изображения (PNG, JPG, ICO, SVG или WebP)"
 
     system:
       general: "Основные"
@@ -130,6 +134,8 @@ ru:
       new_artist_name: "Имя нового исполнителя"
       select_artist: "Выберите исполнителя или создайте нового ниже"
       cover: "Обложка"
+      hints:
+        cover: "Файл изображения (например, JPG, PNG)."
       flash:
         uploaded: "Релиз загружен"
         updated: "Релиз обновлён"

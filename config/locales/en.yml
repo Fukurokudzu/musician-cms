@@ -126,10 +126,14 @@ en:
       remove_favicon_confirm: "Remove favicon?"
       remove_background: "Remove background"
       remove_background_confirm: "Remove background image?"
+      hints:
+        background: "Any image file."
+        favicon: "Allowed formats: PNG, JPG, ICO, SVG, WebP. Large raster images are automatically resized to 512×512 px max."
       flash:
         updated: "Settings updated"
         background_removed: "Background image removed"
         favicon_removed: "Favicon removed"
+        favicon_invalid: "Favicon must be an image file (PNG, JPG, ICO, SVG or WebP)"
 
     system:
       general: "General"
@@ -161,6 +165,8 @@ en:
       new_artist_name: "New Artist Name"
       select_artist: "Select artist or create new below"
       cover: "Cover"
+      hints:
+        cover: "Image file (e.g. JPG, PNG)."
       flash:
         uploaded: "Release uploaded"
         updated: "Release updated"
