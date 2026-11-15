@@ -15,7 +15,7 @@ RSpec.describe 'Release ZIP download', type: :request do
 
   describe 'GET /releases/:id/download' do
     context 'when the setting is enabled' do
-      let(:release) { create(:release, artist:, title: 'Test Release', allow_zip_download: true) }
+      let(:release) { create(:release, :published, artist:, title: 'Test Release', allow_zip_download: true) }
 
       before do
         release.cover.attach(io: StringIO.new('cover-bytes'), filename: 'cover.jpg')
@@ -53,7 +53,7 @@ RSpec.describe 'Release ZIP download', type: :request do
     end
 
     context 'when the setting is disabled' do
-      let(:release) { create(:release, artist:, title: 'Test Release', allow_zip_download: false) }
+      let(:release) { create(:release, :published, artist:, title: 'Test Release', allow_zip_download: false) }
 
       it 'responds with not found' do
         get download_release_path(release)
@@ -73,11 +73,11 @@ RSpec.describe 'Release ZIP download', type: :request do
 
   describe 'GET /releases/:id' do
     it 'shows the download icon only when the setting is enabled' do
-      enabled = create(:release, artist:, allow_zip_download: true)
+      enabled = create(:release, :published, artist:, allow_zip_download: true)
       get release_path(enabled)
       expect(response.body).to include('fa-download')
 
-      disabled = create(:release, artist:, allow_zip_download: false)
+      disabled = create(:release, :published, artist:, allow_zip_download: false)
       get release_path(disabled)
       expect(response.body).not_to include('fa-download')
     end

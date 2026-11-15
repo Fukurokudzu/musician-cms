@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'Artist and release links', type: :request do
   let(:artist) { create(:artist) }
-  let!(:release) { create(:release, artist:) }
+  let!(:release) { create(:release, :published, artist:) }
 
   it 'links to artist and release pages with short codes on the main page' do
     get root_path

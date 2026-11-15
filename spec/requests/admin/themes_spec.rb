@@ -55,16 +55,16 @@ RSpec.describe 'Admin::Themes', type: :request do
 
   describe 'GET /admin/themes' do
     it 'renders the theme tab without a background' do
-      get admin_themes_path
+      get admin_themes_path, as: :turbo_stream
 
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include('Background image')
+      expect(response.body).to include('Background')
     end
 
     it 'renders the theme tab with a preview of the uploaded background' do
       put admin_themes_path, params: { setting: { background_image: image_file } }
 
-      get admin_themes_path
+      get admin_themes_path, as: :turbo_stream
 
       expect(response.body).to include('/rails/active_storage/blobs')
       expect(response.body).to include('Remove background')

@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe PlayerController, type: :controller do
   describe '#find_next_or_previous_track' do
     let(:artist) { create(:artist, title: 'Test Artist') }
-    let(:release) { create(:release, artist:, title: 'Test Release') }
+    let(:release) { create(:release, :published, artist:, title: 'Test Release') }
     let(:track1) { create(:track, release:, title: 'Track 1', pos: 1) }
     let(:track2) { create(:track, release:, title: 'Track 2', pos: 2) }
     let(:track3) { create(:track, release:, title: 'Track 3', pos: 3) }
@@ -47,7 +47,7 @@ RSpec.describe PlayerController, type: :controller do
 
   describe '#select_track' do
     let(:artist) { create(:artist, title: 'Test Artist') }
-    let(:release) { create(:release, artist:, title: 'Test Release') }
+    let(:release) { create(:release, :published, artist:, title: 'Test Release') }
 
     # Creation (id) order deliberately differs from position order,
     # so wrap-around must follow pos, not id.
@@ -83,7 +83,7 @@ RSpec.describe PlayerController, type: :controller do
 
   describe 'JSON actions' do
     let(:artist) { create(:artist, title: 'Test Artist') }
-    let(:release) { create(:release, artist:, title: 'Test Release') }
+    let(:release) { create(:release, :published, artist:, title: 'Test Release') }
     let!(:first_track) { create(:track, release:, title: 'First Track', pos: 1) }
     let!(:last_track) { create(:track, release:, title: 'Last Track', pos: 2) }
 
