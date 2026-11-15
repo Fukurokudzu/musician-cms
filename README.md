@@ -16,7 +16,7 @@ This project is in active development. Expect breaking changes, incomplete featu
 
 ## What it does
 
-`musician-cms` is aimed at musicians who want a small personal music site: an artist page with releases, cover art, a persistent audio player and a lightweight admin panel for uploading music. No accounts for visitors, no comments, no bloat — just a clean portfolio site you can host yourself.
+`musician-cms` is aimed at musicians who want a small personal music site: an artist page with releases, cover art, a persistent audio player, a small markdown blog and a lightweight admin panel for uploading music. No accounts for visitors, no comments, no bloat — just a clean portfolio site you can host yourself.
 
 ## Features
 
@@ -25,12 +25,18 @@ This project is in active development. Expect breaking changes, incomplete featu
   - Release pages with tracklists, cover art and optional ZIP downloads
   - Built-in audio player that persists across page navigation (Turbo)
   - Random "now playing" track when you first arrive
+  - Blog at `/blog` — markdown posts managed from the admin panel; the header link appears once at least one post exists
+  - Fresh installs show a welcome screen instead of a blank page until the first release is published
+  - 404/500 error pages rendered through the site layout (not static HTML)
 - **Admin panel**
-  - Upload releases: audio files, cover art, titles, dates and statuses (draft/published/archived)
+  - Upload releases: audio files, cover art, titles, dates and statuses (draft/published/archived); uploaded tracks inherit the release status
   - Manage artists, tracks, play counters and library paths
   - Scan a local music folder and import new releases automatically (Sidekiq job)
-  - Theme editor: colors, background image and corner radius — live CSS variables, no code changes needed
-  - Configurable site title, description, locale (EN/RU) and footer contact link (email or URL)
+  - Blog: create, edit and soft-delete markdown posts (GFM, rendered and sanitized server-side)
+  - Theme editor: colors, background image, favicon and corner radius — live CSS variables, no code changes needed
+  - Configurable site title, description, locale (EN/RU, also switchable via `?locale=` or `?lang=`), date format and footer contact link (email or URL)
+  - Logs: audit trail of admin actions with category filters and configurable retention (default 90 days), plus download/truncate of the raw application log
+  - About: build diagnostics — branch/commit/source (from a git tag, CI environment or the container build args)
 - **Under the hood**
   - Ruby on Rails 8.1, Hotwire (Turbo + Stimulus)
   - PostgreSQL, Redis + Sidekiq for background jobs
@@ -82,6 +88,8 @@ The web app will be available at `http://localhost:3003` (the port is mapped to 
 2. Sign in with the default credentials: **admin@admin / admin**
 3. **Change the password immediately** in the *System* tab of the admin panel
 
+Until the first release is published, visitors to `/` see a welcome screen pointing to the sign-in page instead of an empty page.
+
 ### Music library
 
 By default the compose file mounts a named volume to `/rails/app/music`. You can either copy files into the volume or replace it with a bind mount in `docker-compose.yml`:
@@ -104,7 +112,7 @@ Then use the *Library* tab in the admin panel to check the library path and run 
 
 ## Documentation
 
-- [DEPLOY.md](DEPLOY.md) — deployment details: volumes, build caching, credentials and the music library
+- [DEPLOY.md](DEPLOY.md) — deployment details: volumes, build caching, credentials, the music library and the admin Logs tab
 
 ## Live example
 
