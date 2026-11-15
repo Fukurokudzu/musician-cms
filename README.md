@@ -61,7 +61,9 @@ cp .env.example .env
 
 The helper runs `docker compose up -d --build` and automatically fills in
 `GIT_COMMIT`/`GIT_BRANCH` from the current checkout (used by the *Admin → About*
-diagnostics). Any extra arguments are forwarded to Compose, e.g.
+diagnostics). When the checkout is exactly on a git tag (e.g. after
+`git checkout v1.2.3`), the tag name is used as the commit; otherwise the short
+commit hash is used. Any extra arguments are forwarded to Compose, e.g.
 `./bin/prod-deploy --build`.
 
 If you prefer, the plain Compose command works too:

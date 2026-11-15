@@ -2,7 +2,7 @@ module DiagnosticsHelper
   def app_revision_info
     @app_revision_info ||= begin
       branch = env_revision_value('GIT_BRANCH', 'APP_GIT_BRANCH', 'SOURCE_BRANCH') || read_revision_file('BRANCH') || git_revision(%w[git rev-parse --abbrev-ref HEAD])
-      commit = env_revision_value('GIT_COMMIT', 'GIT_SHA', 'APP_REVISION', 'APP_GIT_COMMIT', 'SOURCE_COMMIT', 'SOURCE_VERSION') || read_revision_file('REVISION') || git_revision(%w[git rev-parse --short HEAD])
+      commit = env_revision_value('GIT_COMMIT', 'GIT_SHA', 'APP_REVISION', 'APP_GIT_COMMIT', 'SOURCE_COMMIT', 'SOURCE_VERSION') || read_revision_file('REVISION') || git_revision(%w[git describe --tags --exact-match]) || git_revision(%w[git rev-parse --short HEAD])
       {
         branch: branch.presence,
         commit: commit.presence,

@@ -51,6 +51,9 @@ What it does:
 - resolves `GIT_COMMIT` and `GIT_BRANCH` from the current git checkout
   (when run inside a git work tree) and exports them, so the **Admin → About**
   diagnostics show the deployed revision without editing `.env`;
+- uses the current tag as `GIT_COMMIT` when the checkout is exactly on a git
+  tag (e.g. after `git checkout v1.2.3`), otherwise falls back to the short
+  commit hash (`git rev-parse --short HEAD`);
 - falls back to any pre-existing `GIT_COMMIT`/`GIT_BRANCH`/`REVISION`/`BRANCH`
   values when git metadata is unavailable (for example, when deploying from a
   tarball);
@@ -78,7 +81,7 @@ Runtime service configuration such as `DATABASE_URL`, `REDIS_URL`, and `RAILS_EN
 Because `.git` is excluded from the Docker build context, branch/commit cannot be auto-detected during image build. Pass them when building:
 
 ```bash
-GIT_COMMIT=$(git rev-parse --short HEAD) \
+GIT_COMMIT=$(git describe --tags --exact-match 2>/dev/null || git rev-parse --short HEAD) \
 GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD) \
 docker compose up -d --build
 ```
@@ -142,7 +145,7 @@ Cached behavior (high level):
 Optional build args for revision metadata (used in diagnostics/About): `GIT_COMMIT`, `GIT_BRANCH`.
 Example:
 ```bash
-GIT_COMMIT=$(git rev-parse --short HEAD) \
+GIT_COMMIT=$(git describe --tags --exact-match 2>/dev/null || git rev-parse --short HEAD) \
 GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD) \
 docker compose build
 ```

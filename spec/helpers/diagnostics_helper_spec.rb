@@ -65,6 +65,17 @@ RSpec.describe DiagnosticsHelper, type: :helper do
       expect(%i[git unknown]).to include(revision[:source])
     end
 
+    it 'uses the current git tag as the commit when HEAD is exactly on a tag' do
+      allow(helper).to receive(:read_revision_file).and_return(nil)
+      allow(helper).to receive(:git_revision) do |command|
+        command.join(' ').start_with?('git describe') ? 'v1.2.3' : 'deadbee'
+      end
+
+      revision = helper.app_revision_info
+
+      expect(revision[:commit]).to eq('v1.2.3')
+    end
+
     it 'leaves the values empty when nothing can be detected' do
       allow(helper).to receive(:read_revision_file).and_return(nil)
       allow(helper).to receive(:git_revision).and_return(nil)
