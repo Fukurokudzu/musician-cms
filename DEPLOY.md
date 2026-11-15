@@ -11,6 +11,15 @@ This document covers deployment details for `musician-cms` with Docker Compose.
 
 2. Build and start the stack:
    ```bash
+   ./bin/prod-deploy
+   ```
+
+   The helper runs `docker compose up -d --build` and automatically fills in
+   `GIT_COMMIT`/`GIT_BRANCH` from the current checkout. Any extra arguments are
+   forwarded to Compose, e.g. `./bin/prod-deploy --build`.
+
+   If you prefer, the plain Compose command works too:
+   ```bash
    docker compose up -d --build
    ```
 
@@ -27,6 +36,31 @@ On first boot the entrypoint:
 - starts the requested process as the unprivileged `rails` user.
 
 The web app is bound to `127.0.0.1:3003` by default. Put a reverse proxy (Nginx, Caddy, Traefik, etc.) in front for TLS/public access.
+
+## Deploy helper script (`bin/prod-deploy`)
+
+The repository ships a small wrapper, `bin/prod-deploy`, that performs a
+standard production deploy in one step:
+
+```bash
+./bin/prod-deploy
+```
+
+What it does:
+
+- resolves `GIT_COMMIT` and `GIT_BRANCH` from the current git checkout
+  (when run inside a git work tree) and exports them, so the **Admin → About**
+  diagnostics show the deployed revision without editing `.env`;
+- falls back to any pre-existing `GIT_COMMIT`/`GIT_BRANCH`/`REVISION`/`BRANCH`
+  values when git metadata is unavailable (for example, when deploying from a
+  tarball);
+- runs `docker compose up -d --build`, forwarding any extra arguments to
+  Compose, e.g. `./bin/prod-deploy web` or `./bin/prod-deploy --build`.
+
+The script is executable and locates the project root from its own location, so
+it can be invoked from anywhere. It is the recommended entry point for updates
+on a deploy host; the manual `git pull && docker compose up -d --build` flow
+remains supported.
 
 ## Environment variables (`.env`)
 
@@ -119,6 +153,12 @@ Typical update flow:
 ```bash
 git pull
 docker compose up -d --build
+```
+
+Or, using the deploy helper (also records the deployed revision):
+```bash
+git pull
+./bin/prod-deploy
 ```
 
 The entrypoint runs `db:prepare` on startup, so pending migrations are applied automatically. Always keep backups before updating.

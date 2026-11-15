@@ -56,6 +56,17 @@ This project is in active development. Expect breaking changes, incomplete featu
 git clone git@github.com:Fukurokudzu/musician-cms.git
 cd musician-cms
 cp .env.example .env
+./bin/prod-deploy
+```
+
+The helper runs `docker compose up -d --build` and automatically fills in
+`GIT_COMMIT`/`GIT_BRANCH` from the current checkout (used by the *Admin → About*
+diagnostics). Any extra arguments are forwarded to Compose, e.g.
+`./bin/prod-deploy --build`.
+
+If you prefer, the plain Compose command works too:
+
+```bash
 docker compose up -d --build
 ```
 
