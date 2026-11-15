@@ -7,28 +7,54 @@
                 data: { turbo_stream: true, turbo_prefetch: false } %>
   </div>
 
-  <%= form_with url: bulk_update_admin_releases_path, method: :post, id: 'bulk_releases_form', data: { turbo_stream: true } do |bulk_form| %>
-    <div class="admin-bulk-bar">
-      <label class="checkbox-label">
-        <input type="checkbox" onclick="document.querySelectorAll('.release-bulk-checkbox').forEach(function(cb){ cb.checked = this.checked; }.bind(this))">
-        <span><%= t('admin.bulk.select_all', default: 'Select all') %></span>
+  <div class="admin-releases-view" data-controller="releases-list">
+    <div class="admin-releases-toolbar">
+      <label class="admin-releases-sort">
+        <span><%= t('admin.release.toolbar.sort_label') %></span>
+        <select class="admin-releases-sort-select" data-releases-list-target="sort" data-action="change->releases-list#sort">
+          <option value="created_desc"><%= t('admin.release.toolbar.sort_created_desc') %></option>
+          <option value="created_asc"><%= t('admin.release.toolbar.sort_created_asc') %></option>
+          <option value="date_desc"><%= t('admin.release.toolbar.sort_date_desc') %></option>
+          <option value="date_asc"><%= t('admin.release.toolbar.sort_date_asc') %></option>
+          <option value="title_asc"><%= t('admin.release.toolbar.sort_title_asc') %></option>
+          <option value="title_desc"><%= t('admin.release.toolbar.sort_title_desc') %></option>
+          <option value="artist_asc"><%= t('admin.release.toolbar.sort_artist_asc') %></option>
+          <option value="artist_desc"><%= t('admin.release.toolbar.sort_artist_desc') %></option>
+          <option value="plays_desc"><%= t('admin.release.toolbar.sort_plays_desc') %></option>
+          <option value="downloads_desc"><%= t('admin.release.toolbar.sort_downloads_desc') %></option>
+          <option value="tracks_desc"><%= t('admin.release.toolbar.sort_tracks_desc') %></option>
+          <option value="duration_desc"><%= t('admin.release.toolbar.sort_duration_desc') %></option>
+        </select>
       </label>
-      <select name="status">
-        <option value=""><%= t('admin.bulk.choose_action', default: 'Choose action') %></option>
-        <% Release.statuses.keys.each do |s| %>
-          <option value="<%= s %>"><%= t("admin.statuses.#{s}", default: s.humanize) %></option>
-        <% end %>
-      </select>
-      <%= bulk_form.submit t('admin.bulk.apply', default: 'Apply') %>
+      <button type="button" class="btn admin-releases-compact-toggle" data-releases-list-target="compactToggle"
+              data-action="releases-list#toggleCompact" aria-pressed="false"
+              title="<%= t('admin.release.toolbar.compact_hint') %>">
+        <i class="fas fa-th-list" aria-hidden="true"></i>
+        <span><%= t('admin.release.toolbar.compact') %></span>
+      </button>
     </div>
 
-    <div class="admin-releases-list">
-      <% Release.includes(:artist, :tracks, cover_attachment: :blob).order(created_at: :desc).group_by(&:artist).each do |_, releases| %>
-        <% releases.each do |release| %>
+    <%= form_with url: bulk_update_admin_releases_path, method: :post, id: 'bulk_releases_form', data: { turbo_stream: true } do |bulk_form| %>
+      <div class="admin-bulk-bar">
+        <label class="checkbox-label">
+          <input type="checkbox" onclick="document.querySelectorAll('.release-bulk-checkbox').forEach(function(cb){ cb.checked = this.checked; }.bind(this))">
+          <span><%= t('admin.bulk.select_all', default: 'Select all') %></span>
+        </label>
+        <select name="status">
+          <option value=""><%= t('admin.bulk.choose_action', default: 'Choose action') %></option>
+          <% Release.statuses.keys.each do |s| %>
+            <option value="<%= s %>"><%= t("admin.statuses.#{s}", default: s.humanize) %></option>
+          <% end %>
+        </select>
+        <%= bulk_form.submit t('admin.bulk.apply', default: 'Apply') %>
+      </div>
+
+      <div class="admin-releases-list" data-releases-list-target="list">
+        <% Release.includes(:artist, :tracks, cover_attachment: :blob).order(created_at: :desc).each do |release| %>
           <%= render partial: 'release', locals: { release: release } %>
         <% end %>
-      <% end %>
-    </div>
-  <% end %>
+      </div>
+    <% end %>
+  </div>
   <% end %>
 </div>

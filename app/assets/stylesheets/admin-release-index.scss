@@ -1,3 +1,41 @@
+.admin-releases-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.admin .admin-releases-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  font-weight: 500;
+  color: #495057;
+}
+
+.admin .admin-releases-sort-select {
+  width: auto;
+  min-width: 16rem;
+  height: 2.25rem;
+  margin: 0;
+  padding: 0.25rem 0.75rem;
+}
+
+.admin .admin-releases-compact-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.admin .admin-releases-compact-toggle.is-active {
+  background-color: var(--admin-accent, #4a6cf7);
+  border-color: var(--admin-accent, #4a6cf7);
+  color: #fff;
+}
+
 .admin-releases-list {
   display: flex;
   flex-direction: column;
@@ -115,4 +153,45 @@
     width: 6rem;
     height: 6rem;
   }
+}
+/* Compact view: one-line rows, small cover, no stats. Prefixed with .admin so
+   these always outrank the base .admin-release rules above and .admin .release-cover
+   from admin.scss. */
+.admin .admin-releases-list--compact {
+  gap: 0.25rem;
+}
+
+.admin .admin-releases-list--compact .admin-release {
+  grid-template-columns: minmax(0, 1.5rem) minmax(0, 2.25rem) minmax(0, 1fr);
+  grid-template-areas: "checkbox cover title";
+  gap: 0.25rem 0.6rem;
+  align-items: center;
+  padding: 0.35rem 0.5rem;
+}
+
+.admin .admin-releases-list--compact .release-bulk-checkbox-wrap {
+  padding-top: 0;
+}
+
+.admin .admin-releases-list--compact .release-cover {
+  width: 2.25rem;
+  height: 2.25rem;
+  max-width: 2.25rem;
+  max-height: 2.25rem;
+  margin-bottom: 0;
+  border-radius: 0.25rem;
+}
+
+.admin .admin-releases-list--compact .admin-release-stats {
+  display: none;
+}
+
+.admin .admin-releases-list--compact .release-title {
+  align-self: center;
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

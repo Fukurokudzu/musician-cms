@@ -1,4 +1,12 @@
-<div class="admin-release admin-release--<%= release.status %>">
+<div class="admin-release admin-release--<%= release.status %>"
+     data-sort-title="<%= release.title.to_s.downcase %>"
+     data-sort-artist="<%= release.artist.title.to_s.downcase %>"
+     data-sort-date="<%= release.release_date ? release.release_date.to_time.to_i : 0 %>"
+     data-sort-created="<%= release.created_at.to_i %>"
+     data-sort-plays="<%= release.plays_count %>"
+     data-sort-downloads="<%= release.downloads_count %>"
+     data-sort-tracks="<%= release.tracks.size %>"
+     data-sort-duration="<%= release.tracks.sum { |t| t.duration.to_i } %>">
   <div class="release-bulk-checkbox-wrap">
     <input type="checkbox" name="release_ids[]" value="<%= release.id %>" class="release-bulk-checkbox">
   </div>
