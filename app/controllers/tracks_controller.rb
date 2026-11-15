@@ -7,7 +7,7 @@ class TracksController < ApplicationController
     return head :not_found unless @track
 
     @release = @track.release
-    release_tracks = @release.tracks.by_position.includes(:audio_file_attachment)
+    release_tracks = @release.tracks.published.by_position.includes(:audio_file_attachment)
 
     render json: {
       track: track_json(@track),

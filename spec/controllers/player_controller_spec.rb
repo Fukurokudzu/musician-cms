@@ -4,9 +4,9 @@ RSpec.describe PlayerController, type: :controller do
   describe '#find_next_or_previous_track' do
     let(:artist) { create(:artist, title: 'Test Artist') }
     let(:release) { create(:release, :published, artist:, title: 'Test Release') }
-    let(:track1) { create(:track, release:, title: 'Track 1', pos: 1) }
-    let(:track2) { create(:track, release:, title: 'Track 2', pos: 2) }
-    let(:track3) { create(:track, release:, title: 'Track 3', pos: 3) }
+    let(:track1) { create(:track, release:, title: 'Track 1', pos: 1, status: :published) }
+    let(:track2) { create(:track, release:, title: 'Track 2', pos: 2, status: :published) }
+    let(:track3) { create(:track, release:, title: 'Track 3', pos: 3, status: :published) }
 
     before do
       [track1, track2, track3]
@@ -23,13 +23,13 @@ RSpec.describe PlayerController, type: :controller do
     end
 
     it 'returns track with higher ID when no track with higher position exists' do
-      track_same_pos = create(:track, release:, title: 'Same Pos', pos: 3, id: track3.id + 1)
+      track_same_pos = create(:track, release:, title: 'Same Pos', pos: 3, id: track3.id + 1, status: :published)
       result = controller.send(:find_next_or_previous_track, track3, :next)
       expect(result).to eq(track_same_pos)
     end
 
     it 'returns track with lower ID when no track with lower position exists' do
-      track_same_pos = create(:track, release:, title: 'Same Pos', pos: 1, id: track1.id - 1)
+      track_same_pos = create(:track, release:, title: 'Same Pos', pos: 1, id: track1.id - 1, status: :published)
       result = controller.send(:find_next_or_previous_track, track1, :prev)
       expect(result).to eq(track_same_pos)
     end
@@ -51,9 +51,9 @@ RSpec.describe PlayerController, type: :controller do
 
     # Creation (id) order deliberately differs from position order,
     # so wrap-around must follow pos, not id.
-    let!(:last_track) { create(:track, release:, title: 'Last Track', pos: 3) }
-    let!(:first_track) { create(:track, release:, title: 'First Track', pos: 1) }
-    let!(:middle_track) { create(:track, release:, title: 'Middle Track', pos: 2) }
+    let!(:last_track) { create(:track, release:, title: 'Last Track', pos: 3, status: :published) }
+    let!(:first_track) { create(:track, release:, title: 'First Track', pos: 1, status: :published) }
+    let!(:middle_track) { create(:track, release:, title: 'Middle Track', pos: 2, status: :published) }
 
     it 'returns the next track by position' do
       result = controller.send(:select_track, current_track: first_track, direction: :next)
@@ -84,8 +84,8 @@ RSpec.describe PlayerController, type: :controller do
   describe 'JSON actions' do
     let(:artist) { create(:artist, title: 'Test Artist') }
     let(:release) { create(:release, :published, artist:, title: 'Test Release') }
-    let!(:first_track) { create(:track, release:, title: 'First Track', pos: 1) }
-    let!(:last_track) { create(:track, release:, title: 'Last Track', pos: 2) }
+    let!(:first_track) { create(:track, release:, title: 'First Track', pos: 1, status: :published) }
+    let!(:last_track) { create(:track, release:, title: 'Last Track', pos: 2, status: :published) }
 
     before do
       [first_track, last_track].each do |track|
@@ -115,7 +115,7 @@ RSpec.describe PlayerController, type: :controller do
   describe '#show' do
     let(:artist) { create(:artist, title: 'Test Artist') }
     let(:release) { create(:release, :published, artist:, title: 'Test Release') }
-    let!(:track) { create(:track, release:, title: 'Playable', pos: 1, plays_count: 10) }
+    let!(:track) { create(:track, release:, title: 'Playable', pos: 1, plays_count: 10, status: :published) }
 
     before do
       track.audio_file.attach(io: StringIO.new('fake audio'), filename: 'playable.mp3')

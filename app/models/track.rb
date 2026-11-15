@@ -17,8 +17,9 @@ class Track < ApplicationRecord
   # the player builds a URL for the attachment on every page, so a track that
   # lost its file must never be handed out (the library scan can leave one
   # behind when attaching fails).
+  scope :published, -> { where(status: 'published') }
   scope :playable, lambda {
-    joins(:release).merge(Release.published).joins(:audio_file_attachment)
+    joins(:release).merge(Release.published).where(status: 'published').joins(:audio_file_attachment)
   }
 
   # All screens list tracks in the same order: by position, tracks without a

@@ -68,6 +68,10 @@ ru:
       draft: "Черновик"
       published: "Опубликован"
       archived: "В архиве"
+    bulk:
+      select_all: "Выбрать все"
+      choose_action: "Выберите действие"
+      apply: "Применить"
 
     library:
       scan: "Сканировать библиотеку"
@@ -126,6 +130,7 @@ ru:
       confirm_delete: "Вы уверены?"
       add_track: "Добавить трек"
       add: "Добавить"
+      publish_all_tracks: "Опубликовать все треки"
       allow_zip_download: "Разрешить скачивание релиза в ZIP"
       zip_download: "Скачивание ZIP"
       enabled: "включено"
@@ -136,6 +141,7 @@ ru:
       cover: "Обложка"
       hints:
         cover: "Файл изображения (например, JPG, PNG)."
+        tracks: "Аудиофайлы: %{extensions}."
       flash:
         uploaded: "Релиз загружен"
         updated: "Релиз обновлён"
@@ -147,6 +153,7 @@ ru:
           few: "Трека добавлено"
           many: "Треков добавлено"
           other: "Треков добавлено"
+        tracks_published: "Все треки опубликованы"
       stats:
         plays_count: "Прослушивания"
         tracks_count: "Треки"
@@ -207,6 +214,7 @@ ru:
     show:
       tracks_count: "Треков:"
       duration: "Длительность:"
+      no_published_tracks: "Нет опубликованных треков"
       download_zip: "Скачать релиз"
       released_on: "выпущен %{date}"
       released_by: "— %{publisher}"

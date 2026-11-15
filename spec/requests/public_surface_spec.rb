@@ -62,7 +62,7 @@ RSpec.describe 'Public surface', type: :request do
     end
 
     it 'keeps serving the track json for the player' do
-      track = create(:track, release: create(:release, :published, artist:), duration: 10)
+      track = create(:track, release: create(:release, :published, artist:), duration: 10, status: :published)
       track.audio_file.attach(io: StringIO.new('audio'), filename: 'song.mp3')
 
       get track_path(track)
@@ -93,7 +93,7 @@ RSpec.describe 'Public surface', type: :request do
 
     it 'leaves tracks without audio out of the release tracklist' do
       release = create(:release, :published, artist:)
-      playable = create(:track, release:, title: 'Playable', pos: 1, duration: 10)
+      playable = create(:track, release:, title: 'Playable', pos: 1, duration: 10, status: :published)
       playable.audio_file.attach(io: StringIO.new('audio'), filename: 'song.mp3')
       silent = create(:track, release:, title: 'Silent', pos: 2, duration: 10)
 

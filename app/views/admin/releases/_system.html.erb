@@ -3,11 +3,28 @@
     <%= link_to t('admin.release.upload_title', default: 'Upload Release'), new_upload_admin_releases_path, class: 'btn btn-primary',
                 data: { turbo_stream: true, turbo_prefetch: false } %>
   </div>
-  <div class="admin-releases-list">
-    <% Release.includes(:artist, :tracks, cover_attachment: :blob).order(created_at: :desc).group_by(&:artist).each do |_, releases| %>
-      <% releases.each do |release| %>
-        <%= render partial: 'release', locals: { release: release } %>
+
+  <%= form_with url: bulk_update_admin_releases_path, method: :post, id: 'bulk_releases_form', data: { turbo_stream: true } do |bulk_form| %>
+    <div class="admin-bulk-bar">
+      <label class="checkbox-label">
+        <input type="checkbox" onclick="document.querySelectorAll('.release-bulk-checkbox').forEach(function(cb){ cb.checked = this.checked; }.bind(this))">
+        <span><%= t('admin.bulk.select_all', default: 'Select all') %></span>
+      </label>
+      <select name="status">
+        <option value=""><%= t('admin.bulk.choose_action', default: 'Choose action') %></option>
+        <% Release.statuses.keys.each do |s| %>
+          <option value="<%= s %>"><%= t("admin.statuses.#{s}", default: s.humanize) %></option>
+        <% end %>
+      </select>
+      <%= bulk_form.submit t('admin.bulk.apply', default: 'Apply') %>
+    </div>
+
+    <div class="admin-releases-list">
+      <% Release.includes(:artist, :tracks, cover_attachment: :blob).order(created_at: :desc).group_by(&:artist).each do |_, releases| %>
+        <% releases.each do |release| %>
+          <%= render partial: 'release', locals: { release: release } %>
+        <% end %>
       <% end %>
-    <% end %>
-  </div>
+    </div>
+  <% end %>
 </div>

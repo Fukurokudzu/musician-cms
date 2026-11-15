@@ -112,10 +112,11 @@ RSpec.describe 'Public visibility', type: :request do
 
   describe 'player' do
     it 'only offers tracks of published releases' do
-      playable = attach_audio(create(:track, release: create(:release, :published, artist:, title: 'Published')))
+      playable = attach_audio(create(:track, release: create(:release, :published, artist:, title: 'Published'), status: :published))
       # The draft track has audio as well, so only the release status decides.
       draft = attach_audio(create(:track,
-                                  release: create(:release, artist:, status: :draft, title: 'Unpublished')))
+                                  release: create(:release, artist:, status: :draft, title: 'Unpublished'),
+                                  status: :published))
 
       expect(Track.playable).to contain_exactly(playable)
 

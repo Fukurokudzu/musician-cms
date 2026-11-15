@@ -5,7 +5,7 @@ RSpec.describe 'Tracks API', type: :request do
   let(:release) { create(:release, :published, artist:, title: 'Album') }
 
   def create_track(title, pos)
-    track = release.tracks.create!(title:, pos:)
+    track = release.tracks.create!(title:, pos:, status: :published)
     track.audio_file.attach(io: StringIO.new("audio of #{title}"), filename: "#{title}.mp3")
     track
   end

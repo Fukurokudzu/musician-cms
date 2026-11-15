@@ -1,6 +1,9 @@
-<div class="admin-release">
+<div class="admin-release admin-release--<%= release.status %>">
+  <div class="release-bulk-checkbox-wrap">
+    <input type="checkbox" name="release_ids[]" value="<%= release.id %>" class="release-bulk-checkbox">
+  </div>
   <div class="release-cover-wrap">
-    <%= link_to edit_admin_release_path(release), class: 'admin-release-cover-link', data: { turbo_stream: true, turbo_prefetch: false } do %>
+    <%= link_to admin_release_path(release), class: 'admin-release-cover-link', data: { turbo_stream: true, turbo_prefetch: false } do %>
       <% if release.cover.attached? %>
         <%= image_tag release.cover.variant(resize_to_limit: [160, 160]), class: 'release-cover', id: release.id.to_s + '_cover', loading: 'lazy', decoding: 'async' %>
       <% else %>
@@ -9,11 +12,19 @@
     <% end %>
   </div>
   <div class="release-title">
-    <%= link_to edit_admin_release_path(release), data: { turbo_stream: true, turbo_prefetch: false } do %>
+    <%= link_to admin_release_path(release), data: { turbo_stream: true, turbo_prefetch: false } do %>
       <%= release.artist.title %> - <%= release.title %>
     <% end %>
   </div>
   <div class="admin-release-stats">
+    <div class="admin-release-stats-item">
+      <span class="admin-release-stats-item-title">
+        <%= t('admin.release.fields.status')+':' %>
+      </span>
+      <span class="admin-release-stats-item-value">
+        <%= t("admin.statuses.#{release.status}", default: release.status.to_s.humanize) %>
+      </span>
+    </div>
     <div class="admin-release-stats-item">
       <span class="admin-release-stats-item-title">
         <%= t('admin.release.stats.plays_count')+':' %>

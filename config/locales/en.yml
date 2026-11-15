@@ -99,6 +99,10 @@ en:
       draft: "Draft"
       published: "Published"
       archived: "Archived"
+    bulk:
+      select_all: "Select all"
+      choose_action: "Choose action"
+      apply: "Apply"
 
     library:
       scan: "Scan library"
@@ -157,6 +161,7 @@ en:
       confirm_delete: "Are you sure?"
       add_track: "Add track"
       add: "Add"
+      publish_all_tracks: "Publish all tracks"
       allow_zip_download: "Allow downloading the release as ZIP"
       zip_download: "ZIP download"
       enabled: "enabled"
@@ -167,6 +172,7 @@ en:
       cover: "Cover"
       hints:
         cover: "Image file (e.g. JPG, PNG)."
+        tracks: "Audio files: %{extensions}."
       flash:
         uploaded: "Release uploaded"
         updated: "Release updated"
@@ -176,6 +182,7 @@ en:
         tracks_added:
           one: "Track added"
           other: "Tracks added"
+        tracks_published: "All tracks published"
       stats:
         plays_count: "Plays"
         tracks_count: "Tracks"
@@ -236,6 +243,7 @@ en:
     show:
       tracks_count: "Tracks:"
       duration: "Duration:"
+      no_published_tracks: "No published tracks available"
       download_zip: "Download release"
       released_on: "released on %{date}"
       released_by: "by %{publisher}"

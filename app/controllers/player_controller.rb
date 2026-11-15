@@ -68,11 +68,11 @@ class PlayerController < ApplicationController
   end
 
   def single_track?(current_track)
-    current_track.release.tracks.count <= 1
+    current_track.release.tracks.published.count <= 1
   end
 
   def tracks(current_track)
-    current_track.release.tracks
+    current_track.release.tracks.published
   end
 
   def ordered_tracks(current_track)

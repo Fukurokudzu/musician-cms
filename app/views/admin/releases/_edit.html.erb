@@ -1,5 +1,6 @@
 <div class="admin-release-edit">
   <h2><%= t('admin.release.edit_title') %></h2>
+
   <%= form_with model: [:admin, @release], data: { turbo_stream: true } do |form| %>
     <div class="form-group">
       <%= form.label :title, t('admin.release.fields.title') %>
@@ -33,9 +34,25 @@
     </div>
 
     <h3><%= t('admin.release.tracks') %></h3>
+    <div class="admin-bulk-bar">
+      <label class="checkbox-label">
+        <input type="checkbox" onclick="document.querySelectorAll('.track-bulk-checkbox').forEach(function(cb){ cb.checked = this.checked; }.bind(this))">
+        <span><%= t('admin.bulk.select_all', default: 'Select all') %></span>
+      </label>
+      <select name="bulk_status">
+        <option value=""><%= t('admin.bulk.choose_action', default: 'Choose action') %></option>
+        <% Track.statuses.keys.each do |s| %>
+          <option value="<%= s %>"><%= t("admin.statuses.#{s}", default: s.humanize) %></option>
+        <% end %>
+      </select>
+      <%= form.submit t('admin.bulk.apply', default: 'Apply'), name: 'bulk_apply' %>
+    </div>
     <div id="tracks" class="admin-edit-tracks">
       <%= form.fields_for :tracks, @release.tracks.by_position do |track_form| %>
-        <div class="track-fields">
+        <div class="track-fields track-fields--<%= track_form.object.status %>">
+          <div class="track-field track-field--select">
+            <input type="checkbox" name="track_ids[]" value="<%= track_form.object.id %>" class="track-bulk-checkbox">
+          </div>
           <div class="track-field track-field--title">
             <%= track_form.label :title, t('admin.release.fields.track_title') %>
             <%= track_form.text_field :title %>

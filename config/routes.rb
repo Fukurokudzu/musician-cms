@@ -29,9 +29,11 @@ Rails.application.routes.draw do
       collection do
         get :new_upload
         post :upload
+        post :bulk_update
       end
       member do
         post :add_tracks
+        post :bulk_update_tracks
       end
     end
   end

@@ -13,7 +13,7 @@
     <div class="admin-release-stats">
       <div class="admin-release-stats-item">
         <span class="admin-release-stats-item-title"><%= t('admin.release.fields.status') %>:</span>
-        <span class="admin-release-stats-item-value"><%= @release.status.presence || '-' %></span>
+        <span class="admin-release-stats-item-value"><%= @release.status.present? ? t("admin.statuses.#{@release.status}", default: @release.status.humanize) : '-' %></span>
       </div>
       <div class="admin-release-stats-item">
         <span class="admin-release-stats-item-title"><%= t('admin.release.fields.genre') %>:</span>
@@ -52,10 +52,10 @@
   <div class="tracks-list">
     <h3><%= t('admin.release.tracks') %></h3>
     <% @release.tracks.by_position.each do |track| %>
-      <div class="track-item">
+      <div class="track-item track-item--<%= track.status %>">
         <span class="track-pos"><%= track.pos || '-' %></span>
         <span class="track-title"><%= track.title %></span>
-        <span class="track-status"><%= track.status %></span>
+        <span class="track-status"><%= track.status.present? ? t("admin.statuses.#{track.status}", default: track.status.humanize) : '-' %></span>
       </div>
     <% end %>
 
@@ -63,7 +63,9 @@
                   data: { turbo_stream: true } do |form| %>
       <div class="form-group">
         <%= form.label :tracks, t('admin.release.add_track') %>
-        <%= form.file_field :tracks, multiple: true, accept: 'audio/*', required: true %>
+        <%= form.file_field :tracks, multiple: true, accept: 'audio/*', required: true, class: 'form-control' %>
+      <p class="admin-field-hint"><%= t('admin.release.hints.tracks', default: 'Audio files: %{extensions}', extensions: Setting.track_extensions.join(', ')) %></p>
+      <p class="admin-field-hint"><%= t('admin.release.hints.tracks', default: 'Audio files: %{extensions}', extensions: Setting.track_extensions.join(', ')) %></p>
       </div>
       <div class="form-actions">
         <%= form.submit t('admin.release.add') %>

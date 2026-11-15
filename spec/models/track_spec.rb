@@ -44,7 +44,7 @@ RSpec.describe Track, type: :model do
       draft = create(:release, artist:, status: :draft)
       archived = create(:release, artist:, status: :archived)
 
-      playable = create(:track, release: published)
+      playable = create(:track, release: published, status: :published)
       playable.audio_file.attach(io: StringIO.new('audio'), filename: 'song.mp3')
       create(:track, release: draft).tap do |track|
         track.audio_file.attach(io: StringIO.new('audio'), filename: 'draft.mp3')
@@ -58,7 +58,7 @@ RSpec.describe Track, type: :model do
 
     it 'excludes a track of a published release that lost its audio file' do
       release = create(:release, :published, artist:)
-      silent = create(:track, release:)
+      silent = create(:track, release:, status: :published)
 
       expect(Track.playable).not_to include(silent)
       expect(Track.count).to eq(1)

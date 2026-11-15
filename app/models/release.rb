@@ -24,7 +24,12 @@ class Release < ApplicationRecord
     tracks.sum(:duration)
   end
 
-  def duration_humanized
+  def duration_humanized(published: false)
+    track_list = published ? tracks.published : tracks
+    format_duration(track_list.sum(:duration))
+  end
+
+  def format_duration(duration)
     hours = (duration / 3600).floor
     minutes = ((duration % 3600) / 60).floor
     seconds = duration % 60
@@ -35,6 +40,7 @@ class Release < ApplicationRecord
       format('%d:%02d', minutes, seconds)
     end
   end
+  private :format_duration
 
   def update_plays_count!
     update_column(:plays_count, tracks.sum(:plays_count))

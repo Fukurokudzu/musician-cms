@@ -5,7 +5,7 @@ class ReleasesController < ApplicationController
   end
 
   def show
-    @tracks = @release&.tracks
+    @tracks = @release&.tracks&.published&.by_position
     @md_description = MarkdownRenderer.call(@release.description) if @release&.description.present?
   end
 

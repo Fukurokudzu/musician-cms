@@ -32,12 +32,14 @@
     </div>
     <div class="form-group">
       <%= form.label :cover, t('admin.release.cover') %>
-      <%= form.file_field :cover, accept: 'image/*' %>
+      <%= form.file_field :cover, accept: 'image/*', class: 'form-control' %>
       <p class="admin-field-hint"><%= t('admin.release.hints.cover', default: 'Image file (e.g. JPG, PNG)') %></p>
     </div>
     <div class="form-group">
       <%= form.label :tracks, t('admin.release.tracks') %>
-      <%= form.file_field :tracks, multiple: true, accept: 'audio/*' %>
+      <%= form.file_field :tracks, multiple: true, accept: 'audio/*', class: 'form-control' %>
+      <p class="admin-field-hint"><%= t('admin.release.hints.tracks', default: 'Audio files: %{extensions}', extensions: Setting.track_extensions.join(', ')) %></p>
+      <p class="admin-field-hint"><%= t('admin.release.hints.tracks', default: 'Audio files: %{extensions}', extensions: Setting.track_extensions.join(', ')) %></p>
     </div>
 
     <div class="form-actions">

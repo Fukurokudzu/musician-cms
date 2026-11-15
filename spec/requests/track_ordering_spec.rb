@@ -10,9 +10,9 @@ RSpec.describe 'Track ordering consistency', type: :request do
 
   # Creation order deliberately differs from the position order, and one track
   # has no position at all.
-  let!(:positionless) { create(:track, release:, title: 'Ccc Missing', pos: nil, duration: 60) }
-  let!(:second) { create(:track, release:, title: 'Bbb Two', pos: 2, duration: 60) }
-  let!(:first) { create(:track, release:, title: 'Aaa One', pos: 1, duration: 60) }
+  let!(:positionless) { create(:track, release:, title: 'Ccc Missing', pos: nil, duration: 60, status: :published) }
+  let!(:second) { create(:track, release:, title: 'Bbb Two', pos: 2, duration: 60, status: :published) }
+  let!(:first) { create(:track, release:, title: 'Aaa One', pos: 1, duration: 60, status: :published) }
 
   before do
     [positionless, second, first].each do |track|

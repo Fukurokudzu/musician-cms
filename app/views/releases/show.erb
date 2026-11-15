@@ -2,9 +2,13 @@
   <div class="release-show-left">
     <div class="tracks-container" data-release-id="<%= @release.id %>">
       <h1><%= @release.title %></h1>
-      <ul>
-        <%= render(partial: 'track', collection: @release.tracks.by_position) %>
-      </ul>
+      <% if @tracks.any? %>
+        <ul>
+          <%= render(partial: 'track', collection: @tracks) %>
+        </ul>
+      <% else %>
+        <div class="release-no-published-tracks"><%= t('release.show.no_published_tracks') %></div>
+      <% end %>
     </div>
     <% if @md_description.present? %>
       <div class="release-show-description">
@@ -12,7 +16,7 @@
       </div>
     <% end %>
     <div class="release-show-info">
-      <p><%= t('release.show.tracks_count').downcase %> <%= @release.tracks.count %>, <%= t('release.show.duration').downcase %> <%= @release.duration_humanized %></p>
+      <p><%= t('release.show.tracks_count').downcase %> <%= @tracks.count %>, <%= t('release.show.duration').downcase %> <%= @release.duration_humanized(published: true) %></p>
       <p>
         <%= t('release.show.released_on', date: l(@release.release_date, format: '%-d %B %Y').downcase) if @release.release_date %>
         <%= t('release.show.released_by', publisher: @release.publisher) if @release.publisher.present? %>
