@@ -5,11 +5,13 @@ class Release < ApplicationRecord
   has_many :tracks, dependent: :destroy
   # Named variants are preprocessed via Sidekiq (ActiveStorage::TransformJob)
   # on attach; WebP keeps covers small and strips EXIF metadata.
+  # :medium is the 1x source (and the smallest file for mobile), :detail is the 2x/retina one.
   WEBP_SAVER = { quality: 90, strip: true }.freeze
 
   has_one_attached :cover do |attachable|
     attachable.variant :card, resize_to_limit: [400, 400], format: :webp, saver: WEBP_SAVER, preprocessed: true
     attachable.variant :thumb, resize_to_limit: [200, 200], format: :webp, saver: WEBP_SAVER, preprocessed: true
+    attachable.variant :medium, resize_to_limit: [500, 500], format: :webp, saver: WEBP_SAVER, preprocessed: true
     attachable.variant :detail, resize_to_limit: [1000, 1000], format: :webp, saver: WEBP_SAVER, preprocessed: true
   end
   attribute :status, :string

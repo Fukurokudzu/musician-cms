@@ -35,7 +35,10 @@
   <div class="release-show-cover">
     <% if @release.cover.attached? %>
       <%= link_to url_for(@release.cover), target: '_blank', rel: 'noopener', title: t('release.show.view_cover') do %>
-        <%= cover_image_tag @release.cover, size: [1000, 1000], alt: @release.title, class: 'release-show-cover-image', id: @release.id.to_s + '_cover', loading: 'eager', fetchpriority: 'high' %>
+        <%= cover_image_tag @release.cover, size: [500, 500],
+                            srcset_sizes: [500, 1000], sizes: '(max-width: 500px) 15rem, 500px',
+                            alt: @release.title, class: 'release-show-cover-image', id: @release.id.to_s + '_cover',
+                            loading: 'eager', fetchpriority: 'high' %>
       <% end %>
     <% end %>
   </div>

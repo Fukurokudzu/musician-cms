@@ -36,6 +36,13 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
 
+  # Stream variants/blobs through the app instead of 302-redirecting to an
+  # expiring service URL (default). The proxy controllers respond with
+  # "Cache-Control: max-age=<100 years>, public, immutable" under a stable
+  # URL, so browsers and any front proxy cache covers forever and the
+  # releases index stops paying a redirect round-trip per image.
+  config.active_storage.resolve_model_to_route = :rails_storage_proxy
+
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
 

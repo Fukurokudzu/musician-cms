@@ -32,11 +32,22 @@ RSpec.describe ReleasesHelper, type: :helper do
     it 'picks the named variant matching the requested size' do
       expect(release.cover).to receive(:variant).with(:card).and_call_original
       expect(release.cover).to receive(:variant).with(:thumb).and_call_original
+      expect(release.cover).to receive(:variant).with(:medium).and_call_original
       expect(release.cover).to receive(:variant).with(:detail).and_call_original
 
       helper.cover_image_tag(release.cover, size: [400, 400])
       helper.cover_image_tag(release.cover, size: [200, 200])
+      helper.cover_image_tag(release.cover, size: [500, 500])
       helper.cover_image_tag(release.cover, size: [1000, 1000])
+    end
+
+    it 'builds a srcset from the matching named variants when requested' do
+      html = helper.cover_image_tag(release.cover, size: [500, 500], srcset_sizes: [500, 1000],
+                                                sizes: '(max-width: 500px) 15rem, 500px')
+
+      expect(html).to include('srcset="')
+      expect(html).to match(%r{active_storage/representations.* 500w.*active_storage/representations.* 1000w}m)
+      expect(html).to include('sizes="(max-width: 500px) 15rem, 500px"')
     end
 
     it 'resizes to any other size without a named variant' do
