@@ -37,6 +37,12 @@ This project is in active development. Expect breaking changes, incomplete featu
   - Active Storage for covers and audio
   - Fully containerized: one `docker compose up` brings up web, database, Redis and workers
 
+### Release statuses
+
+- **Draft** — visible only in the admin panel; not shown on the public site and not accessible by direct URL.
+- **Published** — visible publicly (listings, release page, player, ZIP download when enabled).
+- **Archived** — removed from the public site (hidden from listings, not accessible by direct URL, not playable/downloadable), but kept in the admin panel with all data and can be restored by changing status (e.g. back to draft or published).
+
 ## Installation (Docker)
 
 ### Requirements

@@ -10,7 +10,7 @@ class ReleasesController < ApplicationController
   end
 
   def download
-    return head :not_found unless @release&.allow_zip_download?
+    return head :not_found unless @release&.published? && @release&.allow_zip_download?
 
     builder = ReleaseZipBuilder.new(@release)
     send_data builder.call,
@@ -22,6 +22,8 @@ class ReleasesController < ApplicationController
   private
 
   def set_release
-    @release = Release.find_by(external_id: params[:id]) || Release.find_by(id: params[:id])
+    @release = Release.published.find_by(external_id: params[:id]) ||
+               Release.published.find_by(id: params[:id])
+    raise ActiveRecord::RecordNotFound unless @release
   end
 end

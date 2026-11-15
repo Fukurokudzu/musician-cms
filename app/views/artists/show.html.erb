@@ -9,10 +9,11 @@
   </div>
 </div>
 
-<% if @artist.releases.any? %>
+<% published_releases = @artist.releases.select(&:published?) %>
+<% if published_releases.any? %>
   <div class="artist-show-albums">
     <h3 class="artist-releases-title"><%= t('artists.show.releases') %></h3>
-    <% @artist.releases
+    <% published_releases
          .group_by { |release| release.release_date&.year }
          .sort_by { |year, _| year ? -year : Float::INFINITY }.each do |year, releases| %>
       <div class="artist-releases-group">

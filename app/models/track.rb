@@ -10,6 +10,8 @@ class Track < ApplicationRecord
 
   validates :title, presence: true
 
+  scope :playable, -> { joins(:release).merge(Release.published) }
+
   def increment_plays!
     increment!(:plays_count)
     release.increment!(:plays_count)

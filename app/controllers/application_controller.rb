@@ -82,10 +82,10 @@ class ApplicationController < ActionController::Base
   def session_track
     return nil if session[:current_track_id].nil?
 
-    Track.find_by(id: session[:current_track_id])
+    Track.playable.find_by(id: session[:current_track_id])
   end
 
   def random_track
-    @random_track ||= Track.all.sample
+    @random_track ||= Track.playable.sample
   end
 end

@@ -14,8 +14,6 @@ class Release < ApplicationRecord
 
   validates :title, presence: true, uniqueness: { scope: :artist_id }
 
-  scope :active, -> { joins(:artist).where(artists: { soft_deleted: false }) }
-
   accepts_nested_attributes_for :tracks, allow_destroy: true
 
   def duration

@@ -1,6 +1,8 @@
 class PlayerController < ApplicationController
   def show
-    @track = Track.find_by(external_id: params[:id]) || Track.find_by(id: params[:id]) || active_track
+    @track = Track.playable.find_by(external_id: params[:id]) ||
+             Track.playable.find_by(id: params[:id]) ||
+             active_track
     return render_no_tracks unless @track
 
     process_track
