@@ -8,13 +8,17 @@ class Release < ApplicationRecord
     attachable.variant :thumb, resize_to_limit: [200, 200], preprocessed: true
     attachable.variant :detail, resize_to_limit: [1000, 1000], preprocessed: true
   end
-  before_create :set_default_title
   attribute :status, :string
   enum status: { draft: 'draft', published: 'published', archived: 'archived' }
 
   validates :title, presence: true, uniqueness: { scope: :artist_id }
 
   accepts_nested_attributes_for :tracks, allow_destroy: true
+
+  # Runs before validation so a release created without a title still gets a
+  # generated one instead of failing validation (the callback used to be a
+  # before_create, i.e. after validation, and therefore never had a chance).
+  before_validation :set_default_title, on: :create
 
   def duration
     tracks.sum(:duration)
@@ -54,6 +58,6 @@ class Release < ApplicationRecord
   end
 
   def set_default_title
-    self.title ||= "Untitled #{FakerTitle.new.title}"
+    self.title = "Untitled #{FakerTitle.new.title}" if title.blank?
   end
 end

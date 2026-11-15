@@ -17,6 +17,9 @@ class Admin::ThemesController < ApplicationController
       attach_favicon!(favicon) if favicon.present?
       Setting.clear_cache if Setting.respond_to?(:clear_cache)
       flash.now[:success] = t('admin.theme.flash.updated')
+    else
+      flash.now[:error] = Array(@settings_errors).presence&.join(', ') ||
+                          t('admin.system.flash.error', default: 'Could not update settings')
     end
 
     render turbo_stream: turbo_stream.update('flash', partial: 'layouts/flash')

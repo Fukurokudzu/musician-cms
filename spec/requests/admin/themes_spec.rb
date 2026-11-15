@@ -5,6 +5,10 @@ RSpec.describe 'Admin::Themes', type: :request do
     fixture_file_upload(Rails.root.join('app/assets/images/korg.jpg'), 'image/jpeg')
   end
 
+  let(:favicon_file) do
+    fixture_file_upload(Rails.root.join('app/assets/images/default_cover.png'), 'image/png')
+  end
+
   before do
     post sessions_path, params: { admin_email: Setting.admin_email, admin_password: 'admin' }
   end
@@ -50,6 +54,55 @@ RSpec.describe 'Admin::Themes', type: :request do
       delete admin_themes_path
 
       expect(Setting.background_image).to be_blank
+    end
+
+    it 'removes only the background image when no target is given' do
+      put admin_themes_path, params: { setting: { background_image: image_file, favicon: favicon_file } }
+
+      delete admin_themes_path, params: { target: 'background' }
+
+      expect(Setting.background_image).to be_blank
+      expect(Setting.favicon).to be_present
+    end
+  end
+
+  describe 'favicon' do
+    it 'attaches an uploaded favicon' do
+      put admin_themes_path, params: { setting: { favicon: favicon_file } }
+
+      blob = ActiveStorage::Blob.find_signed(Setting.favicon)
+      expect(blob).to be_present
+      expect(blob.content_type).to eq('image/png')
+      expect(blob.filename.to_s).to eq('default_cover.png')
+    end
+
+    it 'serves the favicon from the layout' do
+      put admin_themes_path, params: { setting: { favicon: favicon_file } }
+
+      get root_path
+
+      expect(response.body).to include('rel="icon"')
+      expect(response.body).to include('/rails/active_storage/blobs')
+    end
+
+    it 'rejects a file that is not an image' do
+      file = fixture_file_upload(Rails.root.join('README.md'), 'text/plain')
+
+      put admin_themes_path, params: { setting: { favicon: file } }
+
+      expect(Setting.favicon).to be_blank
+      expect(response.body).to include('Favicon must be an image file')
+    end
+
+    it 'removes the favicon on request' do
+      put admin_themes_path, params: { setting: { favicon: favicon_file } }
+
+      delete admin_themes_path, params: { target: 'favicon' }
+
+      expect(Setting.favicon).to be_blank
+
+      get root_path
+      expect(response.body).not_to include('rel="icon"')
     end
   end
 

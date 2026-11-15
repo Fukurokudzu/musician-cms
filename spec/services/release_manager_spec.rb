@@ -145,4 +145,84 @@ RSpec.describe ReleaseManager do
       end
     end
   end
+
+  describe 'release records' do
+    it 'fills in the current date when the release has none' do
+      scan
+
+      expect(release.release_date).to eq(Date.current)
+    end
+
+    it 'keeps a release that already exists next to a newly added one' do
+      scan
+      FileUtils.mkdir_p(File.join(library_root, 'Another Album'))
+      File.write(File.join(library_root, 'Another Album', 'song.mp3'), 'audio')
+
+      expect { scan }.to change(Release, :count).by(1)
+      expect(Release.pluck(:title)).to contain_exactly('Test Album', 'Another Album')
+    end
+  end
+
+  describe 'cover art' do
+    before { File.write(File.join(release_dir, 'cover.jpg'), 'cover-v1') }
+
+    it 'attaches the cover that sits next to the tracks' do
+      scan
+
+      expect(release.cover).to be_attached
+      expect(release.cover.filename.to_s).to eq('cover.jpg')
+      expect(release.cover.download).to eq('cover-v1')
+    end
+
+    it 'keeps the same cover file on rescan' do
+      scan
+      blob_id = release.cover.blob.id
+
+      scan
+
+      expect(release.reload.cover.blob.id).to eq(blob_id)
+    end
+
+    it 'replaces the cover when its contents change' do
+      scan
+      blob_id = release.cover.blob.id
+      File.write(File.join(release_dir, 'cover.jpg'), 'cover-v2')
+
+      scan
+
+      expect(release.reload.cover.blob.id).not_to eq(blob_id)
+      expect(release.cover.download).to eq('cover-v2')
+    end
+  end
+
+  describe 'removing files from the disk' do
+    context 'when a track file is deleted' do
+      let(:files) { ['a.mp3', 'b.mp3'] }
+
+      it 'drops the track and purges its audio' do
+        scan
+
+        expect do
+          FileUtils.rm_f(File.join(release_dir, 'a.mp3'))
+          scan
+        end.to change(Track, :count).by(-1).and change(ActiveStorage::Blob, :count).by(-1)
+
+        expect(release.tracks.pluck(:title)).to eq(['b'])
+        expect(Track.count).to eq(1)
+      end
+    end
+
+    context 'when the release folder is deleted' do
+      it 'drops the release together with its tracks' do
+        scan
+
+        expect do
+          FileUtils.remove_entry(release_dir)
+          scan
+        end.to change(Release, :count).by(-1).and change(Track, :count).by(-1)
+
+        expect(Release.count).to eq(0)
+      end
+    end
+  end
 end

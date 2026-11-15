@@ -16,12 +16,17 @@ class Admin::SystemsController < ApplicationController
         format.html { redirect_to admin_path, status: :see_other }
       end
     else
-      flash.now[:error] = t('admin.system.flash.error', default: 'Could not update settings')
+      flash.now[:error] = settings_error_message
       render turbo_stream: turbo_stream.update("flash", partial: "layouts/flash"), status: :unprocessable_entity
     end
   end
 
   private
+
+  def settings_error_message
+    Array(@settings_errors).presence&.join(', ') ||
+      t('admin.system.flash.error', default: 'Could not update settings')
+  end
 
   def check_params
     params.require(:setting).permit(:admin_email, :admin_password, :description, :page_title, :timezone, :locale, :library_path,

@@ -51,7 +51,7 @@
 
   <div class="tracks-list">
     <h3><%= t('admin.release.tracks') %></h3>
-    <% @release.tracks.order(Arel.sql('COALESCE(pos, 0) ASC'), :id).each do |track| %>
+    <% @release.tracks.by_position.each do |track| %>
       <div class="track-item">
         <span class="track-pos"><%= track.pos || '-' %></span>
         <span class="track-title"><%= track.title %></span>

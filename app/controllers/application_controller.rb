@@ -19,15 +19,16 @@ class ApplicationController < ActionController::Base
   end
 
   def switch_locale(&action)
-    locale = if locale_set?
-               Setting.locale
-             elsif I18n.available_locales.map(&:to_s).include?(params[:locale])
-               params[:locale] || I18n.default_locale
-             else
-               I18n.default_locale
-             end
+    locale = requested_locale || (locale_set? ? Setting.locale : I18n.default_locale)
 
     I18n.with_locale(locale, &action)
+  end
+
+  # An explicit ?locale= wins over the configured site locale, so a visitor can
+  # switch the language even when the settings store a valid one.
+  def requested_locale
+    value = params[:locale].presence.to_s
+    value if I18n.available_locales.map(&:to_s).include?(value)
   end
 
   def locale_set?
@@ -46,10 +47,28 @@ class ApplicationController < ActionController::Base
     update_session_track_id if session[:current_track_id].nil? && @track&.persisted?
   end
 
+  # Applies the submitted settings as one unit. An invalid value (for example
+  # a page title below the allowed minimum) rolls the whole update back and
+  # returns false with @settings_errors filled in, instead of letting
+  # ActiveRecord::RecordInvalid escape into a 500.
   def update_system_settings(checked_params)
     params = checked_params.dup
-    update_admin_password_from_params!(params)
-    update_settings_from_params(params)
+
+    ActiveRecord::Base.transaction do
+      update_admin_password_from_params!(params)
+      update_settings_from_params(params)
+    end
+    clear_settings_cache
+    true
+  rescue ActiveRecord::RecordInvalid, ActiveModel::ValidationError => e
+    clear_settings_cache
+    @settings_errors = settings_error_messages(e)
+    false
+  end
+
+  def settings_error_messages(error)
+    record = error.record if error.respond_to?(:record)
+    (record || error).errors.full_messages
   end
 
   def update_admin_password_from_params!(params)
@@ -66,6 +85,10 @@ class ApplicationController < ActionController::Base
       value = value.strip if value.respond_to?(:strip)
       Setting.public_send("#{key}=", value)
     end
+    true
+  end
+
+  def clear_settings_cache
     Setting.clear_cache if Setting.respond_to?(:clear_cache)
     Rails.cache.delete_matched("rails_settings_cached/*") if Rails.cache.respond_to?(:delete_matched)
     true

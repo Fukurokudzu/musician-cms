@@ -111,4 +111,56 @@ RSpec.describe PlayerController, type: :controller do
       expect(response.parsed_body.dig('track', 'id')).to eq(first_track.id)
     end
   end
+
+  describe '#show' do
+    let(:artist) { create(:artist, title: 'Test Artist') }
+    let(:release) { create(:release, :published, artist:, title: 'Test Release') }
+    let!(:track) { create(:track, release:, title: 'Playable', pos: 1, plays_count: 10) }
+
+    before do
+      track.audio_file.attach(io: StringIO.new('fake audio'), filename: 'playable.mp3')
+    end
+
+    it 'serves a track by its short code, counts the play and remembers the track' do
+      expect do
+        get :show, params: { id: track.external_id }, format: :json
+      end.to change { track.reload.plays_count }.by(1)
+        .and change { release.reload.plays_count }.by(1)
+        .and change { artist.reload.plays_count }.by(1)
+
+      expect(response).to have_http_status(:ok)
+      body = response.parsed_body
+      expect(body.dig('track', 'id')).to eq(track.id)
+      expect(body.dig('track', 'external_id')).to eq(track.external_id)
+      expect(body.dig('track', 'title')).to eq('Playable')
+      expect(body.dig('track', 'artist')).to eq('Test Artist')
+      expect(body.dig('track', 'data_src')).to include('active_storage')
+      expect(session[:current_track_id]).to eq(track.id)
+    end
+
+    it 'resolves a track by its numeric id' do
+      get :show, params: { id: track.id }, format: :json
+
+      expect(response.parsed_body.dig('track', 'id')).to eq(track.id)
+    end
+
+    it 'falls back to a playable track for an unknown id' do
+      get :show, params: { id: 'zzzzzzzz' }, format: :json
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body.dig('track', 'id')).to eq(track.id)
+    end
+
+    it 'does not serve tracks of unpublished releases' do
+      draft_release = create(:release, artist:, title: 'Draft Release', status: :draft)
+      draft_track = create(:track, release: draft_release, title: 'Hidden', pos: 1, plays_count: 0)
+
+      get :show, params: { id: draft_track.external_id }, format: :json
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body.dig('track', 'id')).to eq(track.id)
+      expect(response.parsed_body.dig('track', 'id')).not_to eq(draft_track.id)
+      expect(draft_track.reload.plays_count).to eq(0)
+    end
+  end
 end

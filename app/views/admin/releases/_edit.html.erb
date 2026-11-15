@@ -34,7 +34,7 @@
 
     <h3><%= t('admin.release.tracks') %></h3>
     <div id="tracks" class="admin-edit-tracks">
-      <%= form.fields_for :tracks, @release.tracks.order(Arel.sql('COALESCE(pos, 0) ASC'), :id) do |track_form| %>
+      <%= form.fields_for :tracks, @release.tracks.by_position do |track_form| %>
         <div class="track-fields">
           <div class="track-field track-field--title">
             <%= track_form.label :title, t('admin.release.fields.track_title') %>

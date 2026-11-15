@@ -3,7 +3,7 @@
     <div class="tracks-container" data-release-id="<%= @release.id %>">
       <h1><%= @release.title %></h1>
       <ul>
-        <%= render(partial: 'track', collection: @release.tracks.order(Arel.sql('COALESCE(pos, 999999)'), :id)) %>
+        <%= render(partial: 'track', collection: @release.tracks.by_position) %>
       </ul>
     </div>
     <% if @md_description.present? %>

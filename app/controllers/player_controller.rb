@@ -76,7 +76,7 @@ class PlayerController < ApplicationController
   end
 
   def ordered_tracks(current_track)
-    tracks(current_track).order(Arel.sql('COALESCE(pos, 0) ASC'), :id)
+    tracks(current_track).by_position
   end
 
   def find_next_or_previous_track(current_track, direction)
@@ -93,23 +93,5 @@ class PlayerController < ApplicationController
     end
 
     nil
-  end
-
-  def sort_tracks_by_direction(current_track, direction)
-    tracks_collection = tracks(current_track)
-    return tracks_collection.order(pos: :asc, id: :asc) if direction == :next
-
-    tracks_collection.order(pos: :desc, id: :desc)
-  end
-
-  def find_track_index(tracks, current_track)
-    tracks.index { |track| track.id == current_track.id }
-  end
-
-  def calculate_next_index(current_index, total_length, direction)
-    next_index = direction == :next ? current_index + 1 : current_index - 1
-    return nil if next_index.negative? || next_index >= total_length
-
-    next_index
   end
 end

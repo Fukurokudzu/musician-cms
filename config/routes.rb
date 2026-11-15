@@ -7,13 +7,15 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root "main#index"
 
-  resources :artists
-  resources :releases do
+  # Only public reading routes: creating and editing content is done in the
+  # admin namespace, visitors never mutate anything.
+  resources :artists, only: [:index, :show]
+  resources :releases, only: [:index, :show] do
     member do
       get :download
     end
   end
-  resources :tracks
+  resources :tracks, only: [:show]
 
   get :admin, to: 'admin#index'
 
@@ -21,7 +23,6 @@ Rails.application.routes.draw do
     resource :about, only: [:show]
     resource :system, only: [:show, :update]
     resource :library, only: [:show, :update]
-    resource :credentials, only: [:show, :update]
     resource :themes, only: [:show, :update, :destroy]
     resources :artists
     resources :releases do

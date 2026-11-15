@@ -44,4 +44,54 @@ RSpec.describe ScanLibJob, type: :job do
     release = artist.releases.find_by!(title: 'Test Release')
     expect(release.tracks.count).to eq(1)
   end
+
+  it 'ignores hidden folders in the library' do
+    FileUtils.mkdir_p(File.join(@library_root, '.hidden-artist'))
+
+    described_class.perform_now
+
+    expect(Artist.pluck(:title)).to eq(['Test Artist'])
+  end
+
+  it 'only picks up files with a configured audio extension' do
+    release_path = File.join(@library_root, 'Test Artist', 'Test Release')
+    File.write(File.join(release_path, 'notes.txt'), 'text')
+    File.write(File.join(release_path, '.hidden.mp3'), 'audio')
+
+    expect(ScanLibHelper.get_tracks_list(release_path).keys).to contain_exactly('01 - Track.mp3')
+  end
+
+  it 'requires the cover to match a known name and a known extension' do
+    release_path = File.join(@library_root, 'Test Artist', 'Test Release')
+    File.write(File.join(release_path, 'front.jpg'), 'not a cover')
+    File.write(File.join(release_path, 'cover.png'), 'wrong extension')
+
+    expect(ScanLibHelper.get_release_cover(release_path)).to eq(File.join(release_path, 'cover.jpg'))
+  end
+
+  describe 'the job result' do
+    it 'reports success after a completed scan' do
+      expect(described_class.perform_now.success?).to be(true)
+    end
+
+    it 'fails without scanning when the library path does not exist' do
+      allow(Setting).to receive(:library_path).and_return('/no/such/library')
+
+      job = described_class.perform_now
+
+      expect(job.success?).to be(false)
+      expect(Artist.count).to eq(0)
+    end
+
+    it 'fails when the library contains no artist folders' do
+      empty_library = Dir.mktmpdir
+      begin
+        allow(Setting).to receive(:library_path).and_return(empty_library)
+
+        expect(described_class.perform_now.success?).to be(false)
+      ensure
+        FileUtils.remove_entry(empty_library)
+      end
+    end
+  end
 end

@@ -14,6 +14,14 @@ RSpec.describe "Admin::Artists", type: :request do
       expect(response).to have_http_status(:ok)
       expect(response.body).to include('Visible Artist')
     end
+
+    it 'leaves soft deleted artists out of the list' do
+      create(:artist, title: 'Retired Artist', soft_deleted: true)
+
+      get admin_artists_path, as: :turbo_stream
+
+      expect(response.body).not_to include('Retired Artist')
+    end
   end
 
   describe "POST /admin/artists" do
@@ -25,6 +33,16 @@ RSpec.describe "Admin::Artists", type: :request do
       expect(response).to have_http_status(:ok)
       expect(Artist.find_by(title: 'New Artist')).to be_present
     end
+
+    it 'does not create an artist with a taken title' do
+      create(:artist, title: 'Duplicate')
+
+      expect do
+        post admin_artists_path, params: { artist: { title: 'Duplicate' } }, as: :turbo_stream
+      end.not_to change(Artist, :count)
+
+      expect(response.body).to include('Could not create artist')
+    end
   end
 
   describe "PATCH /admin/artists/:id" do
@@ -35,6 +53,17 @@ RSpec.describe "Admin::Artists", type: :request do
 
       expect(response).to have_http_status(:ok)
       expect(artist.reload.title).to eq('Updated Name')
+    end
+
+    it 'reports a validation error and keeps the artist untouched' do
+      create(:artist, title: 'Taken')
+      artist = create(:artist, title: 'Mine')
+
+      patch admin_artist_path(artist), params: { artist: { title: 'Taken' } }, as: :turbo_stream
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(artist.reload.title).to eq('Mine')
+      expect(response.body).to include('Title has already been taken')
     end
   end
 

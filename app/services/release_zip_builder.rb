@@ -61,7 +61,7 @@ class ReleaseZipBuilder
   end
 
   def tracks
-    @release.tracks.order(Arel.sql('COALESCE(pos, 999999)'), :id)
+    @release.tracks.by_position
   end
 
   def unique_name(name)

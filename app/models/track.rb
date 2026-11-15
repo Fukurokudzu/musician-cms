@@ -4,13 +4,26 @@ class Track < ApplicationRecord
   belongs_to :release
   has_many :artists, through: :release
   has_one_attached :audio_file
-  before_create :set_default_title
   attribute :status, :string
   enum status: { draft: 'draft', published: 'published', archived: 'archived' }
 
   validates :title, presence: true
 
-  scope :playable, -> { joins(:release).merge(Release.published) }
+  # Runs before validation so a track created without a title still gets a
+  # generated one instead of failing validation (see Release#set_default_title).
+  before_validation :set_default_title, on: :create
+
+  # A playable track belongs to a published release and actually has audio:
+  # the player builds a URL for the attachment on every page, so a track that
+  # lost its file must never be handed out (the library scan can leave one
+  # behind when attaching fails).
+  scope :playable, lambda {
+    joins(:release).merge(Release.published).joins(:audio_file_attachment)
+  }
+
+  # All screens list tracks in the same order: by position, tracks without a
+  # position come last, ties are broken by creation order.
+  scope :by_position, -> { order(Arel.sql('COALESCE(pos, 999999) ASC'), :id) }
 
   def increment_plays!
     increment!(:plays_count)
@@ -37,7 +50,7 @@ class Track < ApplicationRecord
   end
 
   def set_default_title
-    self.title ||= "Untitled #{FakerTitle.new.title}"
+    self.title = "Untitled #{FakerTitle.new.title}" if title.blank?
   end
 
   # Title for a track stored as "<artist> - <title>.mp3": the redundant

@@ -1,32 +1,30 @@
 class TracksController < ApplicationController
-  def index
-    @tracks = Track.all
-    @track = @tracks.first
-  end
-
   def show
-    @track = Track.find_by(external_id: params[:id]) || Track.find_by(id: params[:id])
+    # Same rule as the player: only published releases with attached audio are
+    # exposed, everything else answers 404 instead of leaking or raising.
+    @track = Track.playable.find_by(external_id: params[:id]) ||
+             Track.playable.find_by(id: params[:id])
     return head :not_found unless @track
+
     @release = @track.release
-    @release_tracks = @release.tracks.order(Arel.sql('COALESCE(pos, 0) ASC'), :id)
+    release_tracks = @release.tracks.by_position.includes(:audio_file_attachment)
 
     render json: {
-      track: {
-        id: @track.id,
-        external_id: @track.external_id,
-        data_src: url_for(@track.audio_file),
-        artist: @track.artists.first,
-        title: @track.title
-      },
-      release_tracks: @release_tracks.map { |t|
-        {
-          id: t.id,
-          external_id: t.external_id,
-          data_src: url_for(t.audio_file),
-          artist: t.artists.first,
-          title: t.title
-        }
-      }
+      track: track_json(@track),
+      release_tracks: release_tracks.select { |track| track.audio_file.attached? }
+                                    .map { |track| track_json(track) }
+    }
+  end
+
+  private
+
+  def track_json(track)
+    {
+      id: track.id,
+      external_id: track.external_id,
+      data_src: url_for(track.audio_file),
+      artist: track.artists.first,
+      title: track.title
     }
   end
 end
