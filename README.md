@@ -36,6 +36,7 @@ This project is in active development. Expect breaking changes, incomplete featu
   - Theme editor: colors, background image, favicon and corner radius — live CSS variables, no code changes needed
   - Configurable site title, description, locale (EN/RU/ES/FR/DE, also switchable via `?locale=` or `?lang=`), date format and footer contact link (email or URL)
   - Logs: audit trail of admin actions with category filters and configurable retention (default 90 days), plus download/truncate of the raw application log
+  - Statistics: plays and downloads per release/track, daily activity graph, sortable tables, per-country breakdown (GeoIP)
   - About: build diagnostics — branch/commit/source (from a git tag, CI environment or the container build args)
 - **Under the hood**
   - Ruby on Rails 8.1, Hotwire (Turbo + Stimulus)
@@ -100,6 +101,20 @@ volumes:
 ```
 
 Then use the *Library* tab in the admin panel to check the library path and run a scan — releases and tracks found in the folder are imported for you.
+
+### Statistics
+
+The *Statistics* tab in the admin panel shows plays by release (chart), sortable per-track and per-download tables, a daily activity graph and a per-country breakdown of plays and downloads. Event data is collected from public plays and downloads from the moment tracking was enabled; "all time" counters keep working as before.
+
+Country detection uses the free [DB-IP Lite](https://db-ip.com/dbip-lite.html) database and is optional — everything else works without it. To enable it (about 8 MB download, no account or key required):
+
+```bash
+docker compose exec web bin/rails geoip:update
+```
+
+The database is stored in the persistent storage volume (`storage/geoip/`), so it survives rebuilds. Re-run the command every month or so to keep the country data fresh; without it the stats page shows a hint in place of the geo table. Visitors' IPs are never stored — only a one-way HMAC hash (for unique-listener counts) and the resolved country.
+
+Statistics can also be downloaded as a report: the *Export* section at the bottom of the Statistics tab generates a full CSV or XLSX (summary, daily activity, all tracks and all releases with statuses, creation dates and counters, plus the per-country table) in a Sidekiq job and shows a progress bar while it builds. Generated reports stay downloadable for 24 hours.
 
 ### Volumes
 

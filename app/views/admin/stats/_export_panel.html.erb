@@ -1,0 +1,41 @@
+<%# Renders the export controls + progress for a given StatsExport (or the
+    idle state). Swapped in place by the POST /admin/stats/export turbo_stream
+    response; the stats-export Stimulus controller polls the status endpoint
+    while the export is pending/running and reveals the download link when
+    it finishes. %>
+<% export = local_assigns[:export] %>
+<div class="stats-export-body"
+     data-controller="stats-export"
+     data-stats-export-status-url-value="<%= export_status_admin_stats_path(format: :json) %>"
+     data-stats-export-id-value="<%= export&.id %>"
+     data-stats-export-state-value="<%= export ? export.status : 'idle' %>"
+     data-stats-export-error-prefix-value="<%= t('admin.stats.export_failed') %>">
+  <p class="admin-library-hint"><%= t('admin.stats.export_hint') %></p>
+
+  <div class="admin-actions stats-export-actions">
+    <%= button_to t('admin.stats.export_csv'), export_admin_stats_path(kind: 'csv', range: @range),
+                  class: 'btn btn-sm btn-primary', data: { turbo_stream: true } %>
+    <%= button_to t('admin.stats.export_xlsx'), export_admin_stats_path(kind: 'xlsx', range: @range),
+                  class: 'btn btn-sm', data: { turbo_stream: true } %>
+  </div>
+
+  <div class="stats-export-progress <%= 'hidden' unless export&.in_flight? %>"
+       role="progressbar" aria-valuemin="0" aria-valuemax="100"
+       aria-valuenow="<%= export&.percent || 0 %>" aria-label="<%= t('admin.stats.export_title') %>"
+       data-stats-export-target="progress">
+    <div class="progress">
+      <div class="progress-bar" style="width: <%= export&.percent || 0 %>%" data-stats-export-target="bar"></div>
+    </div>
+    <p class="stats-export-status" data-stats-export-target="status"><%= t('admin.stats.export_in_progress') %></p>
+  </div>
+
+  <p class="stats-export-error <%= 'hidden' unless export&.failed? %>" data-stats-export-target="error">
+    <%= [t('admin.stats.export_failed'), export&.error_message.presence].compact.join(': ') %>
+  </p>
+
+  <div class="stats-export-download <%= 'hidden' unless export&.done? %>" data-stats-export-target="download">
+    <%= link_to t('admin.stats.export_download'), export ? export_download_admin_stats_path(export) : '#',
+                class: 'btn btn-sm btn-primary',
+                data: { turbo_prefetch: false, stats_export_target: 'downloadLink' } %>
+  </div>
+</div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_16_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_16_121000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -112,6 +112,39 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_16_120000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["var"], name: "index_settings_on_var", unique: true
+  end
+
+  create_table "stat_events", force: :cascade do |t|
+    t.string "kind", null: false
+    t.bigint "track_id"
+    t.bigint "release_id"
+    t.bigint "artist_id"
+    t.string "track_title"
+    t.string "release_title"
+    t.string "artist_title"
+    t.string "country_code"
+    t.string "country_name"
+    t.string "ip_hash"
+    t.datetime "created_at", null: false
+    t.index ["artist_id"], name: "index_stat_events_on_artist_id"
+    t.index ["country_code"], name: "index_stat_events_on_country_code"
+    t.index ["created_at"], name: "index_stat_events_on_created_at"
+    t.index ["kind", "created_at"], name: "index_stat_events_on_kind_and_created_at"
+    t.index ["kind"], name: "index_stat_events_on_kind"
+    t.index ["release_id"], name: "index_stat_events_on_release_id"
+    t.index ["track_id"], name: "index_stat_events_on_track_id"
+  end
+
+  create_table "stats_exports", force: :cascade do |t|
+    t.string "status", default: "pending", null: false
+    t.string "kind", null: false
+    t.string "range", default: "30", null: false
+    t.integer "progress", default: 0, null: false
+    t.integer "row_count", default: 0, null: false
+    t.text "error_message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_stats_exports_on_created_at"
   end
 
   create_table "tracks", force: :cascade do |t|

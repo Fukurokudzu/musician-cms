@@ -1,0 +1,255 @@
+<div class="admin-stats">
+  <div class="admin-logs-section">
+    <div class="admin-logs-header">
+      <h3><%= t('admin.stats.title') %></h3>
+      <div class="admin-logs-filters" role="group" aria-label="<%= t('admin.stats.range_label') %>">
+        <% %w[7 30 90 365 all].each do |value| %>
+          <%= link_to t("admin.stats.ranges.#{value}"), admin_stats_path(range: value),
+                      class: ['admin-logs-filter', ('is-active' if @range == value)].compact.join(' '),
+                      data: { turbo_stream: true, turbo_prefetch: false } %>
+        <% end %>
+      </div>
+    </div>
+    <p class="admin-library-hint"><%= t('admin.stats.hint') %></p>
+
+    <% summary = @report.summary %>
+    <div class="admin-stats-cards">
+      <div class="admin-stats-card">
+        <span class="admin-stats-card-value"><%= number_with_delimiter(summary[:plays_period]) %></span>
+        <span class="admin-stats-card-label"><%= t('admin.stats.summary.plays_period') %></span>
+      </div>
+      <div class="admin-stats-card">
+        <span class="admin-stats-card-value"><%= number_with_delimiter(summary[:downloads_period]) %></span>
+        <span class="admin-stats-card-label"><%= t('admin.stats.summary.downloads_period') %></span>
+      </div>
+      <div class="admin-stats-card">
+        <span class="admin-stats-card-value"><%= number_with_delimiter(summary[:unique_listeners]) %></span>
+        <span class="admin-stats-card-label"><%= t('admin.stats.summary.unique_listeners') %></span>
+      </div>
+      <div class="admin-stats-card">
+        <span class="admin-stats-card-value"><%= number_with_delimiter(summary[:countries_count]) %></span>
+        <span class="admin-stats-card-label"><%= t('admin.stats.summary.countries') %></span>
+      </div>
+      <div class="admin-stats-card">
+        <span class="admin-stats-card-value"><%= number_with_delimiter(summary[:plays_all_time]) %></span>
+        <span class="admin-stats-card-label"><%= t('admin.stats.summary.plays_all_time') %></span>
+      </div>
+      <div class="admin-stats-card">
+        <span class="admin-stats-card-value"><%= number_with_delimiter(summary[:downloads_all_time]) %></span>
+        <span class="admin-stats-card-label"><%= t('admin.stats.summary.downloads_all_time') %></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-logs-section">
+    <div class="admin-logs-header">
+      <h3><%= t('admin.stats.chart_title') %></h3>
+      <div class="admin-stats-legend">
+        <span class="admin-stats-legend-item"><span class="admin-stats-dot admin-stats-dot-plays"></span><%= t('admin.stats.chart_plays') %></span>
+        <span class="admin-stats-legend-item"><span class="admin-stats-dot admin-stats-dot-downloads"></span><%= t('admin.stats.chart_downloads') %></span>
+      </div>
+    </div>
+    <% series = @report.daily_series %>
+    <% if series.any? { |row| row[:plays].positive? || row[:downloads].positive? } %>
+      <%= daily_chart_svg(series, max_value: @report.max_series_value) %>
+    <% else %>
+      <p class="admin-logs-empty"><%= t('admin.stats.chart_empty') %></p>
+    <% end %>
+  </div>
+
+  <div class="admin-logs-section">
+    <div class="admin-logs-header">
+      <h3><%= t('admin.stats.releases_chart_title') %></h3>
+    </div>
+    <% top = @report.top_releases %>
+    <% max = @report.max_release_plays %>
+    <% if top.any? %>
+      <div class="admin-stats-bars">
+        <% top.each do |row| %>
+          <div class="admin-stats-bar-row">
+            <span class="admin-stats-bar-label" title="<%= row[:label] %>">
+              <% if row[:release_id] %>
+                <%= link_to row[:label], admin_release_path(row[:release_id]) %>
+              <% else %>
+                <%= row[:label] %>
+              <% end %>
+            </span>
+            <span class="admin-stats-bar-track">
+              <span class="admin-stats-bar" style="width: <%= (row[:value].to_f / max * 100).round(1) %>%"></span>
+            </span>
+            <span class="admin-stats-bar-value"><%= number_with_delimiter(row[:value]) %></span>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="admin-logs-empty"><%= t('admin.stats.releases_chart_empty') %></p>
+    <% end %>
+  </div>
+
+  <div class="admin-logs-section">
+    <div class="admin-logs-header">
+      <h3><%= t('admin.stats.tracks_title') %></h3>
+    </div>
+    <% track_rows = @report.track_page %>
+    <% if track_rows.any? %>
+      <div class="table-responsive">
+        <table class="table table-sm admin-logs-table admin-stats-table admin-stats-table--tracks">
+          <colgroup>
+            <col class="col-track">
+            <col class="col-release">
+            <col class="col-period">
+            <col class="col-total">
+            <col class="col-last-played">
+          </colgroup>
+          <thead>
+            <tr>
+              <th scope="col"><%= stats_sort_link(t('admin.stats.columns.track'), 'title', report: @report, prefix: '') %></th>
+              <th scope="col"><%= stats_sort_link(t('admin.stats.columns.release'), 'release', report: @report, prefix: '') %></th>
+              <th scope="col" class="text-end"><%= stats_sort_link(t('admin.stats.columns.period'), 'period', report: @report, prefix: '') %></th>
+              <th scope="col" class="text-end"><%= stats_sort_link(t('admin.stats.columns.total'), 'total', report: @report, prefix: '') %></th>
+              <th scope="col"><%= stats_sort_link(t('admin.stats.columns.last_played'), 'last_played', report: @report, prefix: '') %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% track_rows.each do |row| %>
+              <tr>
+                <td title="<%= row.title %>"><%= row.title %></td>
+                <td title="<%= row.release_title %>">
+                  <% if row.release_id %>
+                    <%= link_to row.release_title, admin_release_path(row.release_id) %>
+                  <% else %>
+                    <%= row.release_title.presence || '—' %>
+                  <% end %>
+                </td>
+                <td class="text-end"><%= number_with_delimiter(row.period_plays) %></td>
+                <td class="text-end"><%= number_with_delimiter(row.total_plays) %></td>
+                <td class="text-nowrap"><%= row.last_played_at ? format_datetime(row.last_played_at) : '—' %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      <% total_pages = @report.track_total_pages %>
+      <% if total_pages > 1 %>
+        <nav class="admin-logs-pagination" aria-label="<%= t('admin.stats.pagination') %>">
+          <% if @report.page > 1 %>
+            <%= link_to t('admin.stats.prev'), admin_stats_path(range: @range, sort: @report.sort, dir: @report.dir, page: @report.page - 1,
+                                                               dsort: @report.dsort, ddir: @report.ddir, dpage: @report.dpage), data: { turbo_stream: true, turbo_prefetch: false } %>
+          <% end %>
+          <span class="admin-logs-page"><%= t('admin.stats.page_of', page: @report.page, total: total_pages) %></span>
+          <% if @report.page < total_pages %>
+            <%= link_to t('admin.stats.next'), admin_stats_path(range: @range, sort: @report.sort, dir: @report.dir, page: @report.page + 1,
+                                                               dsort: @report.dsort, ddir: @report.ddir, dpage: @report.dpage), data: { turbo_stream: true, turbo_prefetch: false } %>
+          <% end %>
+        </nav>
+      <% end %>
+    <% else %>
+      <p class="admin-logs-empty"><%= t('admin.stats.tracks_empty') %></p>
+    <% end %>
+  </div>
+
+  <div class="admin-logs-section">
+    <div class="admin-logs-header">
+      <h3><%= t('admin.stats.downloads_title') %></h3>
+    </div>
+    <% release_rows = @report.release_page %>
+    <% if release_rows.any? %>
+      <div class="table-responsive">
+        <table class="table table-sm admin-logs-table admin-stats-table admin-stats-table--downloads">
+          <colgroup>
+            <col class="col-release">
+            <col class="col-period">
+            <col class="col-total">
+          </colgroup>
+          <thead>
+            <tr>
+              <th scope="col"><%= stats_sort_link(t('admin.stats.columns.release'), 'release', report: @report, prefix: 'd') %></th>
+              <th scope="col" class="text-end"><%= stats_sort_link(t('admin.stats.columns.period'), 'period', report: @report, prefix: 'd') %></th>
+              <th scope="col" class="text-end"><%= stats_sort_link(t('admin.stats.columns.total'), 'total', report: @report, prefix: 'd') %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% release_rows.each do |row| %>
+              <tr>
+                <td title="<%= row.title %>"><%= link_to row.title, admin_release_path(row.id) %></td>
+                <td class="text-end"><%= number_with_delimiter(row.period_downloads) %></td>
+                <td class="text-end"><%= number_with_delimiter(row.total_downloads) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      <% total_pages = @report.release_total_pages %>
+      <% if total_pages > 1 %>
+        <nav class="admin-logs-pagination" aria-label="<%= t('admin.stats.pagination') %>">
+          <% if @report.dpage > 1 %>
+            <%= link_to t('admin.stats.prev'), admin_stats_path(range: @range, sort: @report.sort, dir: @report.dir, page: @report.page,
+                                                               dsort: @report.dsort, ddir: @report.ddir, dpage: @report.dpage - 1), data: { turbo_stream: true, turbo_prefetch: false } %>
+          <% end %>
+          <span class="admin-logs-page"><%= t('admin.stats.page_of', page: @report.dpage, total: total_pages) %></span>
+          <% if @report.dpage < total_pages %>
+            <%= link_to t('admin.stats.next'), admin_stats_path(range: @range, sort: @report.sort, dir: @report.dir, page: @report.page,
+                                                               dsort: @report.dsort, ddir: @report.ddir, dpage: @report.dpage + 1), data: { turbo_stream: true, turbo_prefetch: false } %>
+          <% end %>
+        </nav>
+      <% end %>
+    <% else %>
+      <p class="admin-logs-empty"><%= t('admin.stats.downloads_empty') %></p>
+    <% end %>
+  </div>
+
+  <div class="admin-logs-section">
+    <div class="admin-logs-header">
+      <h3><%= t('admin.stats.geo_title') %></h3>
+    </div>
+    <% geo_rows = @report.geo_rows %>
+    <% unless @report.geo_available? %>
+      <p class="admin-logs-empty"><%= t('admin.stats.geo_missing_db') %></p>
+    <% end %>
+    <% if geo_rows.any? %>
+      <div class="table-responsive">
+        <table class="table table-sm admin-logs-table admin-stats-table admin-stats-table--geo">
+          <colgroup>
+            <col class="col-country">
+            <col class="col-plays">
+            <col class="col-downloads">
+            <col class="col-unique">
+          </colgroup>
+          <thead>
+            <tr>
+              <th scope="col"><%= t('admin.stats.columns.country') %></th>
+              <th scope="col" class="text-end"><%= t('admin.stats.columns.plays') %></th>
+              <th scope="col" class="text-end"><%= t('admin.stats.columns.downloads') %></th>
+              <th scope="col" class="text-end"><%= t('admin.stats.columns.unique') %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% geo_rows.each do |row| %>
+              <tr>
+                <td>
+                  <span class="admin-stats-country-code"><%= row.country_code %></span>
+                  <%= row.country_name %>
+                </td>
+                <td class="text-end"><%= number_with_delimiter(row.plays) %></td>
+                <td class="text-end"><%= number_with_delimiter(row.downloads) %></td>
+                <td class="text-end"><%= number_with_delimiter(row.unique_listeners) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      <p class="admin-logs-note"><%= t('admin.stats.geo_note') %></p>
+    <% elsif @report.geo_available? %>
+      <p class="admin-logs-empty"><%= t('admin.stats.geo_empty') %></p>
+    <% end %>
+  </div>
+
+  <div class="admin-logs-section" id="stats-export">
+    <div class="admin-logs-header">
+      <h3><%= t('admin.stats.export_title') %></h3>
+    </div>
+    <div id="stats-export-inner">
+      <%= render partial: 'admin/stats/export_panel', locals: { export: @latest_export } %>
+    </div>
+  </div>
+</div>

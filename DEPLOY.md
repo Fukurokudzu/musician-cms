@@ -188,7 +188,7 @@ The entrypoint runs `db:prepare` on startup, so pending migrations are applied a
 Back up persistent data before updates or host changes:
 
 - **PostgreSQL (`postgres_data`)**: use `pg_dump`/`pg_restore` (or volume snapshots) appropriate for your environment.
-- **Active Storage files (`storage_data`)**: uploaded covers/audio and stored files.
+- **Active Storage files (`storage_data`)**: uploaded covers/audio and stored files, plus the optional GeoIP database (`storage/geoip/`, fetched with `bin/rails geoip:update`) used by the **Admin → Statistics** per-country breakdown.
 - **Credentials (`credentials_data`)**: Rails key/credentials files required to decrypt credentials.
 - **Music library (`music_library` or bind mount)**: source files, if managed as data you care about.
 - **Logs (`./log`)**: optional.

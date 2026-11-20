@@ -58,6 +58,12 @@ sudo apt install -y build-essential libpq-dev libyaml-dev libffi-dev pkg-config 
    - Default Rails URL is usually `http://localhost:3000` (unless configured otherwise).
    - Sign in at `/sign_in`. In a fresh/default setup the admin credentials are `admin@admin` / `admin` — change them immediately.
 
+6. **Optional: GeoIP database** (enables the per-country breakdown in **Admin → Statistics**)
+   ```bash
+   bin/rails geoip:update
+   ```
+   This downloads the free DB-IP Country Lite database (~8 MB, no account required) into `storage/geoip/`. Re-run it every month or so to refresh it.
+
 ## Notes
 
 - Library scanning and other background work depend on Sidekiq/Redis being available.

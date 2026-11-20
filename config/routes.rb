@@ -44,6 +44,11 @@ Rails.application.routes.draw do
       end
     end
     resources :posts, only: %i[index new create edit update destroy]
+    resource :stats, only: [:show] do
+      post :export
+      get 'export/status', action: :export_status, as: :export_status
+      get 'export/:id/download', action: :export_download, as: :export_download
+    end
     resources :uploads, only: [:create]
   end
 

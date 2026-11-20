@@ -12,7 +12,11 @@ module Admin
     end
 
     def show
-      render turbo_stream: turbo_stream.update('admin_body', partial: 'show')
+      respond_to do |format|
+        format.turbo_stream { render turbo_stream: turbo_stream.update('admin_body', partial: 'show') }
+        # Full admin page (used for plain links, e.g. from the statistics tab)
+        format.html
+      end
     end
 
     def edit

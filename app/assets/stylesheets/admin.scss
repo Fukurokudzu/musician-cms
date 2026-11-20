@@ -912,3 +912,270 @@ main.admin-session {
 .admin-welcome-actions {
   margin-top: 1.25rem;
 }
+
+/* Stats */
+
+.admin-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.admin-stats-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 0.6rem;
+  margin-top: 0.75rem;
+}
+
+.admin-stats-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.75rem 0.9rem;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 0.375rem;
+}
+
+.admin-stats-card-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1f2933;
+  font-variant-numeric: tabular-nums;
+}
+
+.admin-stats-card-label {
+  font-size: 0.78rem;
+  color: #6c757d;
+}
+
+.admin-stats-legend {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.85rem;
+  color: #495057;
+}
+
+.admin-stats-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.admin-stats-dot {
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+}
+
+.admin-stats-dot-plays {
+  background: #2563eb;
+}
+
+.admin-stats-dot-downloads {
+  background: #16a34a;
+}
+
+.admin-stats .stats-chart {
+  width: 100%;
+  height: auto;
+  margin-top: 0.5rem;
+}
+
+.admin-stats .stats-chart-grid {
+  stroke: #e9ecef;
+  stroke-width: 1;
+}
+
+.admin-stats .stats-chart-y-label {
+  font-size: 10px;
+  fill: #6c757d;
+}
+
+.admin-stats .stats-chart-x-label {
+  font-size: 10px;
+  fill: #6c757d;
+}
+
+.admin-stats .stats-chart-line {
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.admin-stats .stats-chart-line-plays {
+  stroke: #2563eb;
+}
+
+.admin-stats .stats-chart-line-downloads {
+  stroke: #16a34a;
+}
+
+.admin-stats-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-top: 0.5rem;
+}
+
+.admin-stats-bar-row {
+  display: grid;
+  grid-template-columns: minmax(8rem, 16rem) 1fr 3.5rem;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.admin-stats-bar-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.9rem;
+}
+
+.admin-stats-bar-label a {
+  color: inherit;
+}
+
+.admin-stats-bar-track {
+  display: block;
+  height: 1.1rem;
+  background: #f1f3f5;
+  border-radius: 0.25rem;
+  overflow: hidden;
+}
+
+.admin-stats-bar {
+  display: block;
+  height: 100%;
+  background: #2563eb;
+  border-radius: 0.25rem;
+  min-width: 2px;
+}
+
+.admin-stats-bar-value {
+  text-align: right;
+  font-size: 0.9rem;
+  color: #495057;
+  font-variant-numeric: tabular-nums;
+}
+
+.admin-stats-table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.admin-stats-table th,
+.admin-stats-table td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-stats-table--tracks col.col-period { width: 8.5rem; }
+.admin-stats-table--tracks col.col-total { width: 7rem; }
+.admin-stats-table--tracks col.col-last-played { width: 12rem; }
+
+.admin-stats-table--downloads col.col-period { width: 9rem; }
+.admin-stats-table--downloads col.col-total { width: 7.5rem; }
+
+.admin-stats-table--geo col.col-plays { width: 6.5rem; }
+.admin-stats-table--geo col.col-downloads { width: 7.5rem; }
+.admin-stats-table--geo col.col-unique { width: 6.5rem; }
+
+.admin-stats-table .stats-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  color: #495057;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.admin-stats-table .stats-sort-arrow {
+  display: inline-block;
+  width: 1em;
+  text-align: center;
+}
+
+.admin-stats-table .stats-sort:hover {
+  color: #111827;
+}
+
+.admin-stats-table .stats-sort.is-active {
+  color: #111827;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.18em;
+}
+
+.admin-stats-country-code {
+  display: inline-block;
+  min-width: 2rem;
+  margin-right: 0.4rem;
+  padding: 0.05rem 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-align: center;
+  background: #e9ecef;
+  border-radius: 0.25rem;
+  color: #495057;
+}
+
+.stats-export-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 0.25rem;
+}
+
+.stats-export-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.stats-export-progress .progress {
+  height: 0.75rem;
+  background: #e9ecef;
+  border-radius: 0.375rem;
+  overflow: hidden;
+}
+
+.stats-export-progress .progress-bar {
+  background: var(--admin-accent, #475569);
+  transition: width 0.3s ease;
+}
+
+.stats-export-status {
+  margin: 0.35rem 0 0;
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+.stats-export-error {
+  margin: 0;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.85rem;
+  color: #842029;
+  background: #f8d7da;
+  border: 1px solid #f5c2c7;
+  border-radius: 0.375rem;
+}
+
+.stats-export-download {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+@media (max-width: 640px) {
+  .admin-stats-bar-row {
+    grid-template-columns: 1fr 3.5rem;
+  }
+
+  .admin-stats-bar-track {
+    display: none;
+  }
+}

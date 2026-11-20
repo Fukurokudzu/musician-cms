@@ -34,4 +34,15 @@ RSpec.describe 'Admin pages smoke test', type: :request do
       expect(response.body).not_to include('Traceback'), "#{path} raised"
     end
   end
+
+  it 'renders the release as a full admin page on a plain GET (as linked from statistics)' do
+    get admin_release_path(release)
+
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to include('id="admin_body"')
+    expect(response.body).to include(release.title)
+    # the Releases tab must be the active one
+    expect(response.body).to include('nav-link active')
+    expect(response.body).not_to include('translation_missing')
+  end
 end

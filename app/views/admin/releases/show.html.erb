@@ -1,0 +1,10 @@
+<div class="admin">
+  <div id="tabs" data-controller="bs-tabs">
+    <%= render('admin/tabs', active_tab: t('admin.tabs.releases')) %>
+  </div>
+
+  <%= turbo_stream_from("admin_body") %>
+  <div id="admin_body">
+    <%= render('show') %>
+  </div>
+</div>
