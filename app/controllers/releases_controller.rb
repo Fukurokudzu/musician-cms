@@ -12,11 +12,10 @@ class ReleasesController < ApplicationController
     # that wastes CPU/IO and used to record a second download event per click.
     return head :ok if prefetch_request?
 
-    builder = ReleaseZipBuilder.new(@release)
-    data = builder.call
+    blob = ReleaseZipCache.new(@release).blob
     StatTracker.record_download(release: @release, request: request)
-    send_data data,
-              filename: builder.filename,
+    send_data blob.download,
+              filename: blob.filename.to_s.delete_prefix("#{@release.zip_version}--"),
               type: 'application/zip',
               disposition: 'attachment'
   end

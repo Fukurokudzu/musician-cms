@@ -93,7 +93,7 @@ module Admin
       tracks = @release.tracks.where(id: ids)
       attrs = bulk_track_attributes
       if attrs.present?
-        tracks.update_all(attrs.merge(updated_at: Time.current))
+        tracks.find_each { |track| track.update!(attrs) }
         AuditLogger.log(action: 'track.bulk_updated', target: @release, request:,
                         metadata: { release: @release.title, count: tracks.count, changes: attrs.keys })
         flash.now[:success] = t('admin.release.flash.tracks_published', default: 'Tracks updated')
@@ -118,7 +118,7 @@ module Admin
       releases = releases.or(Release.where(external_id: ids)) if ids.any? { |id| !id.match?(/\A\d+\z/) }
       attrs = bulk_release_attributes
       if attrs.present?
-        releases.update_all(attrs.merge(updated_at: Time.current))
+        releases.find_each { |release| release.update!(attrs) }
         AuditLogger.log(action: 'release.bulk_updated', request:,
                         metadata: { count: releases.count, changes: attrs.keys })
         flash.now[:success] = t('admin.release.flash.releases_updated', default: 'Releases updated')
@@ -146,7 +146,7 @@ module Admin
           attrs = bulk_track_attributes
           attrs = { status: params[:bulk_status] } if attrs.blank? && params[:bulk_status].present?
           if attrs.present?
-            @release.tracks.where(id: Array(params[:track_ids])).update_all(attrs.merge(updated_at: Time.current))
+            @release.tracks.where(id: Array(params[:track_ids])).find_each { |track| track.update!(attrs) }
           end
           flash.now[:success] = t('admin.release.flash.updated')
           render turbo_stream: [

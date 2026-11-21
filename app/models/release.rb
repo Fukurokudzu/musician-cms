@@ -8,6 +8,30 @@ class Release < ApplicationRecord
   # :medium is the 1x source (and the smallest file for mobile), :detail is the 2x/retina one.
   WEBP_SAVER = { quality: 90, strip: true }.freeze
 
+  has_one_attached :zip_archive
+
+  # Everything that changes the contents or file names inside the ZIP. The
+  # version is embedded in the archive's blob filename, so attaching it does
+  # not invalidate itself (ActiveStorage touches the record on attach).
+  def zip_version
+    parts = [
+      id,
+      title,
+      artist&.title,
+      tracks.published.includes(audio_file_attachment: :blob).order(:id).map do |track|
+        [track.id, track.title, track.pos, track.audio_file.blob&.id]
+      end,
+      cover.blob&.id
+    ]
+    Digest::SHA256.hexdigest(parts.inspect).first(16)
+  end
+
+  def zip_archive_fresh?
+    return false unless zip_archive.attached?
+
+    zip_archive.blob.filename.to_s.start_with?("#{zip_version}--")
+  end
+
   has_one_attached :cover do |attachable|
     attachable.variant :card, resize_to_limit: [400, 400], format: :webp, saver: WEBP_SAVER, preprocessed: true
     attachable.variant :thumb, resize_to_limit: [200, 200], format: :webp, saver: WEBP_SAVER, preprocessed: true

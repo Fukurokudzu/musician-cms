@@ -13,6 +13,10 @@ RSpec.describe 'Release ZIP download', type: :request do
     entries
   end
 
+  def download_zip(release)
+    get download_release_path(release)
+  end
+
   describe 'GET /releases/:id/download' do
     context 'when the setting is enabled' do
       let(:release) { create(:release, :published, artist:, title: 'Test Release', allow_zip_download: true) }
@@ -28,7 +32,7 @@ RSpec.describe 'Release ZIP download', type: :request do
       end
 
       it 'responds with a zip containing the cover and every track' do
-        get download_release_path(release)
+        download_zip(release)
 
         expect(response).to have_http_status(:ok)
         expect(response.media_type).to eq('application/zip')
@@ -46,7 +50,7 @@ RSpec.describe 'Release ZIP download', type: :request do
       end
 
       it 'stores entries without compression' do
-        get download_release_path(release)
+        download_zip(release)
 
         expect(zip_entries(response.body).map { |e| e[:method] }).to all(eq(Zip::Entry::STORED))
       end
@@ -85,7 +89,7 @@ RSpec.describe 'Release ZIP download', type: :request do
         archived = release.tracks.create!(title: 'Archived song', pos: 4, status: :archived)
         archived.audio_file.attach(io: StringIO.new('archived-audio'), filename: 'archived.mp3')
 
-        get download_release_path(release)
+        download_zip(release)
 
         names = zip_entries(response.body).map { |entry| entry[:name] }
         expect(names).to contain_exactly(
@@ -93,6 +97,29 @@ RSpec.describe 'Release ZIP download', type: :request do
           '01 Fukurokudzu - First song.mp3',
           '02 Fukurokudzu - Second song.flac'
         )
+      end
+
+      it 'reuses the attached archive on a repeated download' do
+        download_zip(release)
+        blob = release.reload.zip_archive.blob
+
+        expect(ReleaseZipBuilder).not_to receive(:new)
+
+        download_zip(release)
+
+        expect(release.reload.zip_archive.blob.id).to eq(blob.id)
+      end
+
+      it 'rebuilds the archive after the release changes' do
+        download_zip(release)
+        old_blob_id = release.reload.zip_archive.blob.id
+
+        release.tracks.first.update!(pos: 7)
+        expect(ReleaseZipBuilder).to receive(:new).and_call_original
+
+        download_zip(release)
+
+        expect(release.reload.zip_archive.blob.id).not_to eq(old_blob_id)
       end
     end
 

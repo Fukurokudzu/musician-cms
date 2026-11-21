@@ -173,4 +173,36 @@ RSpec.describe Release, type: :model do
       expect(create(:release, artist:).artists).to eq([])
     end
   end
+
+  describe '#zip_archive_fresh?' do
+    let(:release) { create(:release, artist:) }
+
+    def attach_archive
+      release.zip_archive.attach(
+        io: StringIO.new('zip'),
+        filename: "#{release.zip_version}--release.zip",
+        content_type: 'application/zip'
+      )
+      release.reload
+    end
+
+    it 'is false without an attached archive' do
+      expect(release.zip_archive_fresh?).to be(false)
+    end
+
+    it 'is true right after the archive is attached' do
+      expect(attach_archive.zip_archive_fresh?).to be(true)
+    end
+
+    it 'becomes false when a published track changes afterwards' do
+      fresh = attach_archive
+      track = fresh.tracks.create!(title: 'Song', pos: 1, status: :published)
+
+      expect(fresh.zip_archive_fresh?).to be(false)
+
+      track.update!(pos: 7)
+      fresh.reload
+      expect(fresh.zip_archive_fresh?).to be(false)
+    end
+  end
 end

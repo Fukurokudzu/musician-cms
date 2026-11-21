@@ -1,7 +1,7 @@
 class Track < ApplicationRecord
   include ShortCodeable
 
-  belongs_to :release
+  belongs_to :release, touch: true
   has_many :artists, through: :release
   has_one_attached :audio_file
   attribute :status, :string

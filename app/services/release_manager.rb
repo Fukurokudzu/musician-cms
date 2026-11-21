@@ -93,6 +93,9 @@ class ReleaseManager
     update_tracks(release_record, tracks, metadata)
     update_track_positions(release_record)
     remove_deleted_tracks(release_record, tracks)
+    # Attaching/purging ActiveStorage blobs does not touch the record by itself,
+    # so bump updated_at explicitly after a scan changed the cover or audio.
+    release_record.touch
     release_record
   end
 
