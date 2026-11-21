@@ -20,10 +20,10 @@ RSpec.describe 'Release ZIP download', type: :request do
       before do
         release.cover.attach(io: StringIO.new('cover-bytes'), filename: 'cover.jpg')
 
-        first = release.tracks.create!(title: 'First song', pos: 1)
+        first = release.tracks.create!(title: 'First song', pos: 1, status: :published)
         first.audio_file.attach(io: StringIO.new('first-audio'), filename: 'first.mp3')
 
-        second = release.tracks.create!(title: 'Second song', pos: 2)
+        second = release.tracks.create!(title: 'Second song', pos: 2, status: :published)
         second.audio_file.attach(io: StringIO.new('second-audio'), filename: 'second.flac')
       end
 
@@ -49,6 +49,50 @@ RSpec.describe 'Release ZIP download', type: :request do
         get download_release_path(release)
 
         expect(zip_entries(response.body).map { |e| e[:method] }).to all(eq(Zip::Entry::STORED))
+      end
+
+      it 'records exactly one download event for a real GET' do
+        expect do
+          get download_release_path(release)
+        end.to change(StatEvent.downloads, :count).by(1)
+      end
+
+      it 'does not build the ZIP or record a download event for a prefetch GET' do
+        expect(ReleaseZipBuilder).not_to receive(:new)
+
+        expect do
+          get download_release_path(release), headers: { 'Purpose' => 'prefetch' }
+        end.not_to change(StatEvent.downloads, :count)
+
+        expect(response).to have_http_status(:ok)
+        expect(response.media_type).not_to eq('application/zip')
+      end
+
+      it 'does not build the ZIP or record a download event for a HEAD request' do
+        expect(ReleaseZipBuilder).not_to receive(:new)
+
+        expect do
+          head download_release_path(release)
+        end.not_to change(StatEvent.downloads, :count)
+
+        expect(response).to have_http_status(:ok)
+        expect(response.media_type).not_to eq('application/zip')
+      end
+
+      it 'excludes draft and archived tracks from the archive' do
+        draft = release.tracks.create!(title: 'Draft song', pos: 3, status: :draft)
+        draft.audio_file.attach(io: StringIO.new('draft-audio'), filename: 'draft.mp3')
+        archived = release.tracks.create!(title: 'Archived song', pos: 4, status: :archived)
+        archived.audio_file.attach(io: StringIO.new('archived-audio'), filename: 'archived.mp3')
+
+        get download_release_path(release)
+
+        names = zip_entries(response.body).map { |entry| entry[:name] }
+        expect(names).to contain_exactly(
+          'cover.jpg',
+          '01 Fukurokudzu - First song.mp3',
+          '02 Fukurokudzu - Second song.flac'
+        )
       end
     end
 
@@ -76,6 +120,9 @@ RSpec.describe 'Release ZIP download', type: :request do
       enabled = create(:release, :published, artist:, allow_zip_download: true)
       get release_path(enabled)
       expect(response.body).to include('fa-download')
+
+      link = Nokogiri::HTML(response.body).at_css('.release-download-link')
+      expect(link['data-turbo-prefetch']).to eq('false')
 
       disabled = create(:release, :published, artist:, allow_zip_download: false)
       get release_path(disabled)

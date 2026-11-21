@@ -5,7 +5,7 @@ RSpec.describe ReleaseZipBuilder do
   let(:release) { create(:release, artist:, title: 'Test Release') }
 
   def attach_track(title:, pos: nil, filename: 'song.mp3')
-    track = release.tracks.create!(title:, pos:)
+    track = release.tracks.create!(title:, pos:, status: :published)
     track.audio_file.attach(io: StringIO.new("audio of #{title}"), filename:)
     track
   end
@@ -81,7 +81,7 @@ RSpec.describe ReleaseZipBuilder do
     end
 
     it 'skips tracks without an attached audio file' do
-      release.tracks.create!(title: 'Silent', pos: 1)
+      release.tracks.create!(title: 'Silent', pos: 1, status: :published)
       attach_track(title: 'Loud', pos: 2)
 
       entries = entries(described_class.new(release).call)
@@ -126,9 +126,21 @@ RSpec.describe ReleaseZipBuilder do
       expect(names).to eq(['01 Fukurokudzu - Loud.mp3'])
     end
 
+    it 'includes only published tracks' do
+      attach_track(title: 'Published', pos: 1)
+      draft = release.tracks.create!(title: 'Draft', pos: 2, status: :draft)
+      draft.audio_file.attach(io: StringIO.new('draft-audio'), filename: 'draft.mp3')
+      archived = release.tracks.create!(title: 'Archived', pos: 3, status: :archived)
+      archived.audio_file.attach(io: StringIO.new('archived-audio'), filename: 'archived.mp3')
+
+      names = entries(described_class.new(release).call).map { |entry| entry[:name] }
+
+      expect(names).to eq(['01 Fukurokudzu - Published.mp3'])
+    end
+
     it 'falls back to a generic entry name when the track title has no usable characters' do
       release.update!(title: '///')
-      track = release.tracks.create!(title: '///', pos: 1)
+      track = release.tracks.create!(title: '///', pos: 1, status: :published)
       track.audio_file.attach(io: StringIO.new('bytes'), filename: 'song.mp3')
 
       names = entries(described_class.new(release).call).map { |entry| entry[:name] }

@@ -62,7 +62,7 @@ class ReleaseZipBuilder
   end
 
   def tracks
-    @release.tracks.by_position
+    @release.tracks.published.by_position
   end
 
   def unique_name(name)
