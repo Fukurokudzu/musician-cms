@@ -60,7 +60,7 @@ sudo apt install -y build-essential libpq-dev libyaml-dev libffi-dev pkg-config 
 
 6. **Optional: GeoIP database** (enables the per-country breakdown in **Admin → Statistics**)
 
-   With Docker this is automatic: the image ships a DB-IP Lite seed and the entrypoint copies it into `storage/geoip/` on first start. For a non-Docker setup (or an immediate refresh), run `bin/rails geoip:update` once — it downloads the free database (~8 MB, no account required) into `storage/geoip/`.
+   With Docker this is best-effort: on first boot with an empty volume the entrypoint attempts a background download (non-blocking, so startup is not delayed). For a non-Docker setup (or an immediate refresh), run `bin/rails geoip:update` once — it downloads the free database (~8 MB, no account required) into `storage/geoip/`.
 
 ## Notes
 

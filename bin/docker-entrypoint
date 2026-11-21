@@ -125,10 +125,10 @@ fi
 exec 201>&-
 
 # Make sure the GeoIP database exists in the persistent storage volume.
-# The image ships a seeded copy; copying it here makes a fresh volume work
-# immediately, offline, with no manual `geoip:update` step. Web and sidekiq
-# share the volume, so the copy is serialized with a lock. This runs after
-# credentials/db setup so the optional online fallback can boot Rails.
+# The image no longer ships a seed (downloaded at build time); if a seed is
+# present it is copied here, otherwise a best-effort background download is
+# started. Web and sidekiq share the volume, so work is serialized with a
+# lock. This runs after credentials/db setup so Rails can boot.
 GEOIP_SEED="/rails/vendor/geoip/dbip-country-lite.mmdb"
 GEOIP_SEED_VERSION="/rails/vendor/geoip/VERSION"
 GEOIP_TARGET="${GEOIP_DB_PATH:-/rails/storage/geoip/dbip-country-lite.mmdb}"
@@ -151,10 +151,9 @@ if mkdir -p "${GEOIP_DIR}" 2>/dev/null && touch "${GEOIP_DIR}/.geoip.lock" 2>/de
                     echo "GeoIP: failed to install seed; country breakdown stays unavailable"
             fi
         elif [ ! -s "${GEOIP_TARGET}" ]; then
-            # No seed baked into the image (DB-IP was unreachable at build time):
-            # one best-effort online attempt, never fatal for container startup.
-            echo "GeoIP: no baked seed, trying an online update..."
-            timeout 90 bin/rails geoip:update || echo "GeoIP: online update failed; country breakdown stays unavailable"
+            # No seed baked into the image: the Rails app enqueues a Sidekiq
+            # job on boot to download it in the background (non-blocking).
+            echo "GeoIP: no database present; the app will download it in the background"
         fi
     else
         echo "GeoIP: lock unavailable, skipping automatic seed"

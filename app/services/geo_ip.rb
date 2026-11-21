@@ -1,9 +1,9 @@
 require 'maxmind/db'
 
 # Resolves the country of an IP address using a local DB-IP / MaxMind
-# Country Lite database (.mmdb). Docker images ship a seed copy and the
-# entrypoint installs it into the storage volume automatically; the
-# `geoip:update` rake task is only needed for manual refreshes.
+# Country Lite database (.mmdb). The entrypoint downloads it into the storage
+# volume in the background on first boot; the
+# `geoip:update` rake task (or the entrypoint's background download) refreshes it.
 #
 # Everything here is best-effort: a missing database, a private/loopback IP
 # or a corrupt file all result in nil, and recording stats must never fail
@@ -47,6 +47,86 @@ class GeoIp
     def reset!
       @reader = nil
       @reader_mtime = nil
+    end
+
+    # Downloads/refreshes the DB-IP Country Lite database into `db_path`.
+    # Serialized with a file lock so concurrent jobs/processes do not download
+    # twice. Raises on failure; safe to call from rake tasks and Sidekiq jobs.
+    def update!
+      require 'net/http'
+      require 'zlib'
+      require 'stringio'
+
+      target = db_path
+      target.dirname.mkpath
+
+      lock_path = target.dirname.join('.geoip-update.lock')
+      lock = File.open(lock_path, File::CREAT | File::RDWR)
+      unless lock.flock(File::LOCK_EX | File::LOCK_NB)
+        Rails.logger.info('GeoIP: another update is already running, skipping')
+        lock.close
+        return
+      end
+
+      begin
+        fetch = lambda do |url, redirects = 5|
+          uri = URI.parse(url)
+          response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https',
+                                                          read_timeout: 120, open_timeout: 15) do |http|
+            http.get(uri.request_uri)
+          end
+
+          case response
+          when Net::HTTPSuccess then response.body
+          when Net::HTTPRedirection
+            raise 'GeoIP: too many redirects' if redirects <= 0
+
+            fetch.call(response['location'], redirects - 1)
+          when Net::HTTPNotFound then nil
+          else raise "GeoIP: HTTP #{response.code} for #{url}"
+          end
+        rescue SystemCallError, SocketError, OpenSSL::SSL::SSLError, Timeout::Error, IOError => e
+          raise "GeoIP: download failed for #{url}: #{e.class}: #{e.message}"
+        end
+
+        today = Date.current
+        candidates = (0..11).map { |months_back| today.prev_month(months_back) }
+
+        compressed = nil
+        candidates.each do |month|
+          url = format('https://download.db-ip.com/free/dbip-country-lite-%<year>04d-%<month>02d.mmdb.gz',
+                       year: month.year, month: month.month)
+          Rails.logger.info("GeoIP: trying #{url}")
+          compressed = fetch.call(url)
+          break if compressed
+        end
+
+        raise 'GeoIP: no DB-IP Country Lite build found for the last 12 months' unless compressed
+
+        data = begin
+          Zlib::GzipReader.new(StringIO.new(compressed)).read
+        rescue Zlib::GzipFile::Error => e
+          raise "GeoIP: downloaded file is not a valid gzip archive: #{e.message}"
+        end
+        raise 'GeoIP: downloaded database is empty' if data.empty?
+
+        tmp = "#{target}.tmp.#{Process.pid}"
+        File.binwrite(tmp, data)
+        File.rename(tmp, target)
+        reset!
+
+        size = ActiveSupport::NumberHelper.number_to_human_size(File.size(target))
+        message = "GeoIP: installed #{target} (#{size})"
+        Rails.logger.info(message)
+        puts message
+      ensure
+        begin
+          lock.flock(File::LOCK_UN)
+        rescue StandardError
+          nil
+        end
+        lock.close
+      end
     end
 
     private
