@@ -217,7 +217,7 @@ class StatsReport
     @sorted_release_rows ||= begin
       period_counts = downloads.group(:release_id).count
 
-      rows = Release.order(:title).map do |release|
+      rows = Release.order(created_at: :desc, id: :desc).map do |release|
         ReleaseRow.new(
           id: release.id,
           title: release.title.to_s,
@@ -252,9 +252,17 @@ class StatsReport
     end
   end
 
+  # Ruby's sort_by is not stable, and reversing an ascending sort also flips
+  # rows with equal values. Decorate with the original index instead: ties keep
+  # the base order (newest first), like the admin releases list does in JS.
   def sort_rows(rows, column, direction, key_fn)
-    sorted = rows.sort_by { |row| key_fn.call(row, column) }
-    direction == 'desc' ? sorted.reverse : sorted
+    rows.each_with_index
+        .sort do |(left, left_index), (right, right_index)|
+          comparison = key_fn.call(left, column) <=> key_fn.call(right, column)
+          comparison = -comparison if direction == 'desc'
+          comparison.nonzero? || (left_index <=> right_index)
+        end
+        .map(&:first)
   end
 
   def paginate(rows, page)
