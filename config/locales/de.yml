@@ -36,7 +36,7 @@ de:
 
     stats:
       title: "Statistiken"
-      hint: "Zeitraumdaten werden seit Aktivierung der Erfassung aus öffentlichen Wiedergaben und Downloads gesammelt. «Insgesamt» nutzt die kumulierten Zähler."
+      hint: "Statistiken werden aus öffentlichen Wiedergaben und Downloads erfasst. Alle Werte, auch «Insgesamt», stammen aus diesen Ereignissen."
       range_label: "Zeitraum"
       ranges:
         '7': "7 Tage"

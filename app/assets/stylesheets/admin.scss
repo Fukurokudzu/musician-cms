@@ -1103,13 +1103,21 @@ main.admin-session {
   gap: 0.25em;
   color: #495057;
   text-decoration: none;
-  // The period header carries the selected range too; let it wrap instead of
-  // being cut off by the fixed column width.
+  // The period header puts the selected range on its own line; allow wrapping
+  // instead of cutting it off with the fixed column width.
   white-space: normal;
 }
 
 .admin-stats-table .stats-sort-label {
   min-width: 0;
+}
+
+.admin-stats-table .stats-sort-period {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 400;
+  line-height: 1.2;
+  color: #6c757d;
 }
 
 .admin-stats-table .stats-sort-arrow {

@@ -65,7 +65,7 @@ en:
 
     stats:
       title: "Statistics"
-      hint: "Period data is collected from public plays and downloads since tracking was enabled. Totals use the cumulative counters."
+      hint: "Statistics are collected from public plays and downloads. All figures, including totals, are derived from these events."
       range_label: "Period"
       ranges:
         '7': "7 days"

@@ -36,7 +36,7 @@ es:
 
     stats:
       title: "Estadísticas"
-      hint: "Los datos del período se recogen de las escuchas y descargas públicas desde que se activó el registro. «Total» usa los contadores acumulados."
+      hint: "Las estadísticas se recogen de las escuchas y descargas públicas. Todos los valores, incluido «Total», proceden de estos eventos."
       range_label: "Período"
       ranges:
         '7': "7 días"

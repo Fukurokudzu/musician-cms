@@ -1,5 +1,9 @@
 <div class="admin-stats">
-  <% period_column_label = "#{t('admin.stats.columns.period')} · #{t("admin.stats.ranges.#{@report.range}")}" %>
+  <% period_column_label = safe_join([
+       t('admin.stats.columns.period'),
+       tag.br,
+       tag.span(t("admin.stats.ranges.#{@report.range}"), class: 'stats-sort-period')
+     ]) %>
 
   <div class="admin-logs-section">
     <div class="admin-logs-header">

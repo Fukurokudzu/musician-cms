@@ -74,6 +74,16 @@ RSpec.describe 'Admin statistics', type: :request do
     expect(headers.size).to eq(4)
   end
 
+  it 'puts the selected range on its own line in the period header' do
+    sign_in_admin!
+
+    turbo_stream_get admin_stats_path, range: '30'
+
+    label = Nokogiri::HTML(response.body).at_css('.admin-stats-table--tracks .stats-sort[href*="&sort=period"] .stats-sort-label')
+    expect(label.at_css('br')).not_to be_nil
+    expect(label.at_css('.stats-sort-period').text).to eq('30 days')
+  end
+
   it 'sorts the tracks table by the requested column and direction' do
     sign_in_admin!
 
@@ -96,9 +106,9 @@ RSpec.describe 'Admin statistics', type: :request do
 
     turbo_stream_get admin_stats_path(range: '7', dsort: 'period')
 
-    expect(response.body).to include(
-      "#{I18n.t('admin.stats.columns.period')} · #{I18n.t('admin.stats.ranges.7')}"
-    )
+    label = Nokogiri::HTML(response.body).at_css('.admin-stats-table--tracks .stats-sort[href*="&sort=period"] .stats-sort-label')
+    expect(label.text).to include(I18n.t('admin.stats.columns.period'))
+    expect(label.at_css('.stats-sort-period').text).to eq(I18n.t('admin.stats.ranges.7'))
 
     hrefs = Nokogiri::HTML(response.body).css('.admin-logs-filter').map { |link| link['href'] }
     expect(hrefs).not_to be_empty

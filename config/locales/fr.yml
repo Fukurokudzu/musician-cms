@@ -36,7 +36,7 @@ fr:
 
     stats:
       title: "Statistiques"
-      hint: "Les données de la période sont collectées à partir des écoutes et téléchargements publics depuis l'activation du suivi. « Total » utilise les compteurs cumulés."
+      hint: "Les statistiques sont collectées à partir des écoutes et téléchargements publics. Toutes les valeurs, y compris « Total », proviennent de ces événements."
       range_label: "Période"
       ranges:
         '7': "7 jours"
