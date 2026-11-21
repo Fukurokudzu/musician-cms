@@ -50,8 +50,14 @@
       </div>
 
       <div class="admin-releases-list" data-releases-list-target="list">
+        <% plays_by_release = StatEvent.plays.group(:release_id).count %>
+        <% downloads_by_release = StatEvent.downloads.group(:release_id).count %>
         <% Release.includes(:artist, :tracks, cover_attachment: :blob).order(created_at: :desc).each do |release| %>
-          <%= render partial: 'release', locals: { release: release } %>
+          <%= render partial: 'release', locals: {
+                release: release,
+                plays_count: plays_by_release[release.id] || 0,
+                downloads_count: downloads_by_release[release.id] || 0
+              } %>
         <% end %>
       </div>
     <% end %>

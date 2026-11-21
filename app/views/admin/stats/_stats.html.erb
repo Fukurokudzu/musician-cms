@@ -1,10 +1,13 @@
 <div class="admin-stats">
+  <% period_column_label = "#{t('admin.stats.columns.period')} · #{t("admin.stats.ranges.#{@report.range}")}" %>
+
   <div class="admin-logs-section">
     <div class="admin-logs-header">
       <h3><%= t('admin.stats.title') %></h3>
       <div class="admin-logs-filters" role="group" aria-label="<%= t('admin.stats.range_label') %>">
         <% %w[7 30 90 365 all].each do |value| %>
-          <%= link_to t("admin.stats.ranges.#{value}"), admin_stats_path(range: value),
+          <%= link_to t("admin.stats.ranges.#{value}"),
+                      admin_stats_path(request.query_parameters.merge('range' => value)),
                       class: ['admin-logs-filter', ('is-active' if @range == value)].compact.join(' '),
                       data: { turbo_stream: true, turbo_prefetch: false } %>
         <% end %>
@@ -99,15 +102,13 @@
             <col class="col-release">
             <col class="col-period">
             <col class="col-total">
-            <col class="col-last-played">
           </colgroup>
           <thead>
             <tr>
               <th scope="col"><%= stats_sort_link(t('admin.stats.columns.track'), 'title', report: @report, prefix: '') %></th>
               <th scope="col"><%= stats_sort_link(t('admin.stats.columns.release'), 'release', report: @report, prefix: '') %></th>
-              <th scope="col" class="text-end"><%= stats_sort_link(t('admin.stats.columns.period'), 'period', report: @report, prefix: '') %></th>
+              <th scope="col" class="text-end"><%= stats_sort_link(period_column_label, 'period', report: @report, prefix: '') %></th>
               <th scope="col" class="text-end"><%= stats_sort_link(t('admin.stats.columns.total'), 'total', report: @report, prefix: '') %></th>
-              <th scope="col"><%= stats_sort_link(t('admin.stats.columns.last_played'), 'last_played', report: @report, prefix: '') %></th>
             </tr>
           </thead>
           <tbody>
@@ -123,7 +124,6 @@
                 </td>
                 <td class="text-end"><%= number_with_delimiter(row.period_plays) %></td>
                 <td class="text-end"><%= number_with_delimiter(row.total_plays) %></td>
-                <td class="text-nowrap"><%= row.last_played_at ? format_datetime(row.last_played_at) : '—' %></td>
               </tr>
             <% end %>
           </tbody>
@@ -164,7 +164,7 @@
           <thead>
             <tr>
               <th scope="col"><%= stats_sort_link(t('admin.stats.columns.release'), 'release', report: @report, prefix: 'd') %></th>
-              <th scope="col" class="text-end"><%= stats_sort_link(t('admin.stats.columns.period'), 'period', report: @report, prefix: 'd') %></th>
+              <th scope="col" class="text-end"><%= stats_sort_link(period_column_label, 'period', report: @report, prefix: 'd') %></th>
               <th scope="col" class="text-end"><%= stats_sort_link(t('admin.stats.columns.total'), 'total', report: @report, prefix: 'd') %></th>
             </tr>
           </thead>

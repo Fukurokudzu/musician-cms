@@ -9,7 +9,7 @@ RSpec.describe 'Admin statistics export', type: :request do
                                  release_date: Date.new(2026, 10, 1), genre: 'Rock')
   end
   let!(:track) do
-    create(:track, release:, title: 'Export Track', pos: 1, status: :published, plays_count: 42,
+    create(:track, release:, title: 'Export Track', pos: 1, status: :published,
                    duration: 123, created_at: Time.zone.local(2026, 10, 2, 12, 0, 0))
   end
 

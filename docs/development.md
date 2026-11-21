@@ -59,10 +59,8 @@ sudo apt install -y build-essential libpq-dev libyaml-dev libffi-dev pkg-config 
    - Sign in at `/sign_in`. In a fresh/default setup the admin credentials are `admin@admin` / `admin` — change them immediately.
 
 6. **Optional: GeoIP database** (enables the per-country breakdown in **Admin → Statistics**)
-   ```bash
-   bin/rails geoip:update
-   ```
-   This downloads the free DB-IP Country Lite database (~8 MB, no account required) into `storage/geoip/`. Re-run it every month or so to refresh it.
+
+   With Docker this is automatic: the image ships a DB-IP Lite seed and the entrypoint copies it into `storage/geoip/` on first start. For a non-Docker setup (or an immediate refresh), run `bin/rails geoip:update` once — it downloads the free database (~8 MB, no account required) into `storage/geoip/`.
 
 ## Notes
 

@@ -8,7 +8,8 @@
 
   <% if @artists.any? %>
     <div class="admin-releases-list">
-      <%= render partial: 'artist', collection: @artists %>
+      <% plays_by_artist = StatEvent.plays.group(:artist_id).count %>
+      <%= render partial: 'artist', collection: @artists, locals: { plays_by_artist: plays_by_artist } %>
     </div>
   <% end %>
 </div>

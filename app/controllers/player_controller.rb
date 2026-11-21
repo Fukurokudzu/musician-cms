@@ -37,7 +37,6 @@ class PlayerController < ApplicationController
     @release = @track.release
     update_session_track_id
     present_track
-    @track.increment_plays!
     StatTracker.record_play(track: @track, request: request)
   end
 

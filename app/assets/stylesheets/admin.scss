@@ -1073,16 +1073,29 @@ main.admin-session {
   white-space: nowrap;
 }
 
-.admin-stats-table--tracks col.col-period { width: 8.5rem; }
+.admin-stats-table--tracks col.col-period { width: 10rem; }
 .admin-stats-table--tracks col.col-total { width: 7rem; }
-.admin-stats-table--tracks col.col-last-played { width: 12rem; }
 
-.admin-stats-table--downloads col.col-period { width: 9rem; }
+.admin-stats-table--downloads col.col-period { width: 10rem; }
 .admin-stats-table--downloads col.col-total { width: 7.5rem; }
 
 .admin-stats-table--geo col.col-plays { width: 6.5rem; }
 .admin-stats-table--geo col.col-downloads { width: 7.5rem; }
 .admin-stats-table--geo col.col-unique { width: 6.5rem; }
+
+// Release links in the stats tables should read like the release titles on
+// the releases page: dark, without an underline until hovered. Filters, sort
+// headers and buttons keep their own styles.
+.admin-stats a:not(.admin-logs-filter):not(.stats-sort):not(.btn) {
+  color: #212529;
+  text-decoration: none;
+}
+
+.admin-stats a:not(.admin-logs-filter):not(.stats-sort):not(.btn):hover {
+  color: #111827;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
 
 .admin-stats-table .stats-sort {
   display: inline-flex;
@@ -1090,7 +1103,13 @@ main.admin-session {
   gap: 0.25em;
   color: #495057;
   text-decoration: none;
-  white-space: nowrap;
+  // The period header carries the selected range too; let it wrap instead of
+  // being cut off by the fixed column width.
+  white-space: normal;
+}
+
+.admin-stats-table .stats-sort-label {
+  min-width: 0;
 }
 
 .admin-stats-table .stats-sort-arrow {

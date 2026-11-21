@@ -27,7 +27,7 @@
       </div>
       <div class="admin-release-stats-item">
         <span class="admin-release-stats-item-title"><%= t('admin.release.stats.plays_count', default: 'Plays') %>:</span>
-        <span class="admin-release-stats-item-value"><%= @artist.plays_count %></span>
+        <span class="admin-release-stats-item-value"><%= StatEvent.plays.where(artist_id: @artist.id).count %></span>
       </div>
       <div class="admin-actions admin-release-summary-actions">
         <%= link_to t('settings.edit', default: 'Edit'), edit_admin_artist_path(@artist), class: 'btn btn-primary',

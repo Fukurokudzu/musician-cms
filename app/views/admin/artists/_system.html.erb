@@ -9,7 +9,9 @@
   <% artists = Artist.active.order(:title) %>
   <% if artists.any? %>
     <div class="admin-releases-list">
-      <%= render partial: 'admin/artists/artist', collection: artists, as: :artist %>
+      <% plays_by_artist = StatEvent.plays.group(:artist_id).count %>
+      <%= render partial: 'admin/artists/artist', collection: artists, as: :artist,
+                locals: { plays_by_artist: plays_by_artist } %>
     </div>
   <% end %>
 </div>

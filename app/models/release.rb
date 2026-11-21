@@ -48,10 +48,6 @@ class Release < ApplicationRecord
   end
   private :format_duration
 
-  def update_plays_count!
-    update_column(:plays_count, tracks.sum(:plays_count))
-  end
-
   # Builds a track for every uploaded audio file. The title comes from
   # the file name ("<artist> - Song.mp3" becomes "Song") and positions continue
   # after +after_pos+. Tracks inherit the release's status so a release

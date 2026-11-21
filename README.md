@@ -30,7 +30,7 @@ This project is in active development. Expect breaking changes, incomplete featu
   - 404/500 error pages rendered through the site layout (not static HTML)
 - **Admin panel**
   - Upload releases: audio files, cover art, titles, dates and statuses (draft/published/archived); uploaded tracks inherit the release status
-  - Manage artists, tracks, play counters and library paths
+  - Manage artists, tracks, play counts and library paths
   - Scan a local music folder and import new releases automatically (Sidekiq job)
   - Blog: create, edit and soft-delete markdown posts (GFM, rendered and sanitized server-side)
   - Theme editor: colors, background image, favicon and corner radius — live CSS variables, no code changes needed
@@ -104,17 +104,11 @@ Then use the *Library* tab in the admin panel to check the library path and run 
 
 ### Statistics
 
-The *Statistics* tab in the admin panel shows plays by release (chart), sortable per-track and per-download tables, a daily activity graph and a per-country breakdown of plays and downloads. Event data is collected from public plays and downloads from the moment tracking was enabled; "all time" counters keep working as before.
+The *Statistics* tab in the admin panel shows plays by release (chart), sortable per-track and per-download tables, a daily activity graph and a per-country breakdown of plays and downloads. All figures, including "all time" totals, are derived from recorded play/download events.
 
-Country detection uses the free [DB-IP Lite](https://db-ip.com/dbip-lite.html) database and is optional — everything else works without it. To enable it (about 8 MB download, no account or key required):
+Country detection uses the free [DB-IP Lite](https://db-ip.com/dbip-lite.html) database (about 8 MB, no account or key required). It is installed automatically: the Docker image ships a seed copy, and the container entrypoint copies it into the persistent `storage_data` volume on first start — no manual command and no network access at startup required. DB-IP publishes a new database monthly, so a fresh image/deploy picks up the latest one. For an immediate manual refresh, `bin/rails geoip:update` is still available. Visitors' IPs are never stored — only a one-way HMAC hash (for unique-listener counts) and the resolved country.
 
-```bash
-docker compose exec web bin/rails geoip:update
-```
-
-The database is stored in the persistent storage volume (`storage/geoip/`), so it survives rebuilds. Re-run the command every month or so to keep the country data fresh; without it the stats page shows a hint in place of the geo table. Visitors' IPs are never stored — only a one-way HMAC hash (for unique-listener counts) and the resolved country.
-
-Statistics can also be downloaded as a report: the *Export* section at the bottom of the Statistics tab generates a full CSV or XLSX (summary, daily activity, all tracks and all releases with statuses, creation dates and counters, plus the per-country table) in a Sidekiq job and shows a progress bar while it builds. Generated reports stay downloadable for 24 hours.
+Statistics can also be downloaded as a report: the *Export* section at the bottom of the Statistics tab generates a full CSV or XLSX (summary, daily activity, all tracks and all releases with statuses, creation dates and play/download totals, plus the per-country table) in a Sidekiq job and shows a progress bar while it builds. Generated reports stay downloadable for 24 hours.
 
 ### Volumes
 

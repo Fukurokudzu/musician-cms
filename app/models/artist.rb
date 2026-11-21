@@ -9,9 +9,5 @@ class Artist < ApplicationRecord
 
   enum :role, { producer: 0, singer: 1, composer: 2, lyricist: 3, arranger: 4, performer: 5, band: 6, other: 7 }
 
-  def update_plays_count!
-    update_column(:plays_count, tracks.sum(:plays_count))
-  end
-
   scope :active, -> { where(soft_deleted: false) }
 end

@@ -65,20 +65,6 @@ RSpec.describe Track, type: :model do
     end
   end
 
-  describe '#increment_plays!' do
-    it 'bumps the track, release and artist counters' do
-      artist = create(:artist, plays_count: 0)
-      release = create(:release, artist:, plays_count: 0)
-      track = create(:track, release:, plays_count: 0)
-
-      track.increment_plays!
-
-      expect(track.reload.plays_count).to eq(1)
-      expect(release.reload.plays_count).to eq(1)
-      expect(artist.reload.plays_count).to eq(1)
-    end
-  end
-
   describe '#duration_formatted' do
     it 'formats a stored duration' do
       expect(create(:track, release: create(:release, artist:), duration: 90).duration_formatted).to eq('1:30')

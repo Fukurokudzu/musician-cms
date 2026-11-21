@@ -1,4 +1,6 @@
 <div class="admin-release-details">
+  <% downloads_count = StatEvent.downloads.where(release_id: @release.id).count %>
+  <% plays_count = StatEvent.plays.where(release_id: @release.id).count %>
   <div class="admin-release admin-release-summary">
     <div class="release-cover-wrap">
       <% if @release.cover.attached? %>
@@ -29,11 +31,11 @@
       </div>
       <div class="admin-release-stats-item">
         <span class="admin-release-stats-item-title"><%= t('admin.release.stats.downloads_count') %>:</span>
-        <span class="admin-release-stats-item-value"><%= @release.downloads_count %></span>
+        <span class="admin-release-stats-item-value"><%= downloads_count %></span>
       </div>
       <div class="admin-release-stats-item">
         <span class="admin-release-stats-item-title"><%= t('admin.release.stats.plays_count') %>:</span>
-        <span class="admin-release-stats-item-value"><%= @release.plays_count %></span>
+        <span class="admin-release-stats-item-value"><%= plays_count %></span>
       </div>
       <div class="admin-release-stats-item">
         <span class="admin-release-stats-item-title"><%= t('admin.release.stats.tracks_count') %>:</span>

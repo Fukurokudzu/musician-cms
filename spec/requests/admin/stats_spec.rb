@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe 'Admin statistics', type: :request do
   let(:artist) { create(:artist, title: 'Stats Artist') }
   let(:release) { create(:release, :published, artist:, title: 'Stats Release', allow_zip_download: true) }
-  let!(:track) { create(:track, release:, title: 'Stats Track', pos: 1, status: :published, plays_count: 7) }
+  let!(:track) { create(:track, release:, title: 'Stats Track', pos: 1, status: :published) }
 
   def sign_in_admin!
     post sessions_path, params: { admin_email: Setting.admin_email, admin_password: 'admin' }
@@ -29,15 +29,17 @@ RSpec.describe 'Admin statistics', type: :request do
     expect(response.body).not_to include('translation_missing')
   end
 
-  it 'redirects a plain html request back to the admin panel' do
+  it 'renders the statistics tab for a plain html request' do
     sign_in_admin!
 
-    get admin_stats_path
+    get admin_stats_path(range: '7')
 
-    expect(response).to redirect_to(admin_path)
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to include('admin-stats')
+    expect(response.body).to include('admin-logs-filter is-active')
   end
 
-  it 'shows all-time counters even without events' do
+  it 'shows the tables even without events' do
     sign_in_admin!
 
     turbo_stream_get admin_stats_path
@@ -63,11 +65,22 @@ RSpec.describe 'Admin statistics', type: :request do
     expect(response.body).to include('Germany')
   end
 
+  it 'does not render the last played column in the tracks table' do
+    sign_in_admin!
+
+    turbo_stream_get admin_stats_path
+
+    headers = Nokogiri::HTML(response.body).css('.admin-stats-table--tracks thead th')
+    expect(headers.size).to eq(4)
+  end
+
   it 'sorts the tracks table by the requested column and direction' do
     sign_in_admin!
 
-    create(:track, release:, title: 'Alpha Song', pos: 2, status: :published, plays_count: 1)
-    create(:track, release:, title: 'Beta Song', pos: 3, status: :published, plays_count: 999)
+    alpha = create(:track, release:, title: 'Alpha Song', pos: 2, status: :published)
+    beta = create(:track, release:, title: 'Beta Song', pos: 3, status: :published)
+    create(:stat_event, :play, track: alpha, release:, artist:)
+    5.times { create(:stat_event, :play, track: beta, release:, artist:) }
 
     turbo_stream_get admin_stats_path, sort: 'title', dir: 'asc'
 
@@ -76,6 +89,20 @@ RSpec.describe 'Admin statistics', type: :request do
     turbo_stream_get admin_stats_path, sort: 'total', dir: 'desc'
 
     expect(response.body.index('Beta Song')).to be < response.body.index('Alpha Song')
+  end
+
+  it 'shows the selected range in the period headers and keeps sort params on range links' do
+    sign_in_admin!
+
+    turbo_stream_get admin_stats_path(range: '7', dsort: 'period')
+
+    expect(response.body).to include(
+      "#{I18n.t('admin.stats.columns.period')} · #{I18n.t('admin.stats.ranges.7')}"
+    )
+
+    hrefs = Nokogiri::HTML(response.body).css('.admin-logs-filter').map { |link| link['href'] }
+    expect(hrefs).not_to be_empty
+    expect(hrefs).to all(include('dsort=period'))
   end
 
   it 'ignores bogus sort and range parameters' do

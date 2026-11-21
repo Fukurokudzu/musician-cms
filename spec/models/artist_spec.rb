@@ -35,27 +35,6 @@ RSpec.describe Artist, type: :model do
     end
   end
 
-  describe '#update_plays_count!' do
-    it 'sums the play counts of the artist tracks' do
-      artist = create(:artist, plays_count: 0)
-      release = create(:release, artist:)
-      create(:track, release:, plays_count: 3)
-      create(:track, release:, plays_count: 7)
-
-      artist.update_plays_count!
-
-      expect(artist.reload.plays_count).to eq(10)
-    end
-
-    it 'resets the counter when the artist has no tracks' do
-      artist = create(:artist, plays_count: 42)
-
-      artist.update_plays_count!
-
-      expect(artist.reload.plays_count).to eq(0)
-    end
-  end
-
   describe 'roles' do
     it 'exposes the role enum' do
       artist = create(:artist, role: :singer)

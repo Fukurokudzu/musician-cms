@@ -8,8 +8,9 @@ require 'stringio'
 #
 #   bin/rails geoip:update
 #
-# Override the target path with GEOIP_DB_PATH. The database is updated monthly
-# by DB-IP; re-run this task from cron/systemd timer to keep it fresh.
+# Override the target path with GEOIP_DB_PATH. Docker images ship a seed copy
+# and the entrypoint installs it automatically; this task is for manual
+# refreshes (DB-IP publishes a new database monthly).
 namespace :geoip do
   desc 'Download the free DB-IP Country Lite database into storage/geoip'
   task update: :environment do
@@ -50,9 +51,15 @@ namespace :geoip do
 
     abort 'GeoIP: no DB-IP Country Lite build found for the last 12 months' unless compressed
 
-    data = Zlib::GzipReader.new(StringIO.new(compressed)).read
+    data = begin
+      Zlib::GzipReader.new(StringIO.new(compressed)).read
+    rescue Zlib::GzipFile::Error => e
+      abort "GeoIP: downloaded file is not a valid gzip archive: #{e.message}"
+    end
+    abort 'GeoIP: downloaded database is empty' if data.empty?
 
-    tmp = "#{target}.tmp"
+    # Unique tmp name avoids races when web and sidekiq both refresh the DB.
+    tmp = "#{target}.tmp.#{Process.pid}"
     File.binwrite(tmp, data)
     File.rename(tmp, target)
     GeoIp.reset!
@@ -68,7 +75,7 @@ namespace :geoip do
       size = ActiveSupport::NumberHelper.number_to_human_size(File.size(path))
       puts "GeoIP: database present at #{path} (#{size})"
     else
-      puts "GeoIP: no database at #{path}. Run `bin/rails geoip:update`."
+      puts "GeoIP: no database at #{path}. The entrypoint installs it automatically; run `bin/rails geoip:update` to refresh manually."
     end
   end
 end

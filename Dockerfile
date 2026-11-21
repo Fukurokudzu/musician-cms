@@ -60,6 +60,28 @@ RUN yarn install --frozen-lockfile
 # Copy application code
 COPY . .
 
+# Ship a GeoIP seed inside the image. A fresh `storage_data` volume is empty,
+# so without this the statistics page would permanently ask the operator to
+# run `geoip:update`. The seed is optional: if DB-IP is unreachable at build
+# time the image still builds and the entrypoint will try an online update.
+RUN set -eux; \
+    mkdir -p /rails/vendor/geoip; \
+    seeded=0; \
+    for i in $(seq 0 11); do \
+        month=$(date -u -d "-${i} month" +%Y-%m); \
+        url="https://download.db-ip.com/free/dbip-country-lite-${month}.mmdb.gz"; \
+        if curl -fsSL --retry 3 --max-time 120 "$url" -o /tmp/geoip.mmdb.gz; then \
+            ruby -rzlib -e 'STDOUT.binmode; Zlib::GzipReader.open("/tmp/geoip.mmdb.gz") { |gz| IO.copy_stream(gz, STDOUT) }' > /rails/vendor/geoip/dbip-country-lite.mmdb.tmp; \
+            test -s /rails/vendor/geoip/dbip-country-lite.mmdb.tmp; \
+            mv /rails/vendor/geoip/dbip-country-lite.mmdb.tmp /rails/vendor/geoip/dbip-country-lite.mmdb; \
+            printf '%s' "$month" > /rails/vendor/geoip/VERSION; \
+            seeded=1; \
+            break; \
+        fi; \
+    done; \
+    rm -f /tmp/geoip.mmdb.gz /rails/vendor/geoip/dbip-country-lite.mmdb.tmp; \
+    if [ "$seeded" -eq 0 ]; then echo "WARNING: GeoIP seed download failed; entrypoint will try an online update"; fi
+
 ARG GIT_COMMIT=""
 ARG GIT_BRANCH=""
 RUN printf '%s' "$GIT_COMMIT" > REVISION && printf '%s' "$GIT_BRANCH" > BRANCH

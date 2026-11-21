@@ -26,12 +26,6 @@ class Track < ApplicationRecord
   # position come last, ties are broken by creation order.
   scope :by_position, -> { order(Arel.sql('COALESCE(pos, 999999) ASC'), :id) }
 
-  def increment_plays!
-    increment!(:plays_count)
-    release.increment!(:plays_count)
-    artists.each { |artist| artist.increment!(:plays_count) }
-  end
-
   def duration_formatted
     update_duration! unless duration
     return '--:--' unless duration

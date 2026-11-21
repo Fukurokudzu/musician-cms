@@ -126,18 +126,6 @@ RSpec.describe Release, type: :model do
     end
   end
 
-  describe '#update_plays_count!' do
-    it 'sums the play counts of its tracks' do
-      release = create(:release, artist:, plays_count: 0)
-      create(:track, release:, plays_count: 5)
-      create(:track, release:, plays_count: 6)
-
-      release.update_plays_count!
-
-      expect(release.reload.plays_count).to eq(11)
-    end
-  end
-
   describe '#add_tracks!' do
     it 'creates draft tracks after the given position and attaches their audio' do
       release = create(:release, artist:)

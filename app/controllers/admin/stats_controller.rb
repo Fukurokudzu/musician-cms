@@ -14,7 +14,10 @@ module Admin
 
       respond_to do |format|
         format.turbo_stream { render turbo_stream: turbo_stream.update('admin_body', partial: 'admin/stats/stats') }
-        format.html { redirect_to admin_path }
+        # Plain GETs (e.g. a link opened in a new tab or a Turbo fallback) must
+        # land on the statistics tab itself, with the requested range intact,
+        # instead of bouncing back to the default System tab.
+        format.html { render :show }
       end
     end
 

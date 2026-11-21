@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_16_121000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_21_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -51,7 +51,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_16_121000) do
     t.datetime "updated_at", null: false
     t.integer "role", default: 0
     t.text "description"
-    t.integer "plays_count", default: 0, null: false
     t.boolean "soft_deleted", default: false, null: false
     t.string "path"
     t.string "external_id"
@@ -94,12 +93,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_16_121000) do
     t.datetime "updated_at", null: false
     t.date "release_date"
     t.text "description"
-    t.integer "plays_count", default: 0, null: false
     t.string "status", default: "draft"
     t.string "path"
     t.string "external_id"
     t.boolean "allow_zip_download", default: false, null: false
-    t.integer "downloads_count", default: 0, null: false
     t.index ["artist_id", "title"], name: "index_releases_on_artist_id_and_title", unique: true
     t.index ["artist_id"], name: "index_releases_on_artist_id"
     t.index ["external_id"], name: "index_releases_on_external_id", unique: true
@@ -153,7 +150,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_16_121000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "pos"
-    t.integer "plays_count", default: 0, null: false
     t.bigint "duration"
     t.string "status", default: "draft"
     t.string "path"

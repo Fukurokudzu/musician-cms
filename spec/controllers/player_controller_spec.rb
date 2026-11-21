@@ -115,18 +115,16 @@ RSpec.describe PlayerController, type: :controller do
   describe '#show' do
     let(:artist) { create(:artist, title: 'Test Artist') }
     let(:release) { create(:release, :published, artist:, title: 'Test Release') }
-    let!(:track) { create(:track, release:, title: 'Playable', pos: 1, plays_count: 10, status: :published) }
+    let!(:track) { create(:track, release:, title: 'Playable', pos: 1, status: :published) }
 
     before do
       track.audio_file.attach(io: StringIO.new('fake audio'), filename: 'playable.mp3')
     end
 
-    it 'serves a track by its short code, counts the play and remembers the track' do
+    it 'serves a track by its short code, records the play and remembers the track' do
       expect do
         get :show, params: { id: track.external_id }, format: :json
-      end.to change { track.reload.plays_count }.by(1)
-                                                .and change { release.reload.plays_count }.by(1)
-                                                .and change { artist.reload.plays_count }.by(1)
+      end.to change(StatEvent.plays, :count).by(1)
 
       expect(response).to have_http_status(:ok)
       body = response.parsed_body
@@ -153,14 +151,14 @@ RSpec.describe PlayerController, type: :controller do
 
     it 'does not serve tracks of unpublished releases' do
       draft_release = create(:release, artist:, title: 'Draft Release', status: :draft)
-      draft_track = create(:track, release: draft_release, title: 'Hidden', pos: 1, plays_count: 0)
+      draft_track = create(:track, release: draft_release, title: 'Hidden', pos: 1)
 
       get :show, params: { id: draft_track.external_id }, format: :json
 
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body.dig('track', 'id')).to eq(track.id)
       expect(response.parsed_body.dig('track', 'id')).not_to eq(draft_track.id)
-      expect(draft_track.reload.plays_count).to eq(0)
+      expect(StatEvent.plays.where(track_id: draft_track.id)).to be_empty
     end
   end
 end

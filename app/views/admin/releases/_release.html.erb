@@ -3,8 +3,8 @@
      data-sort-artist="<%= release.artist.title.to_s.downcase %>"
      data-sort-date="<%= release.release_date ? release.release_date.to_time.to_i : 0 %>"
      data-sort-created="<%= release.created_at.to_i %>"
-     data-sort-plays="<%= release.plays_count %>"
-     data-sort-downloads="<%= release.downloads_count %>"
+     data-sort-plays="<%= plays_count %>"
+     data-sort-downloads="<%= downloads_count %>"
      data-sort-tracks="<%= release.tracks.size %>"
      data-sort-duration="<%= release.tracks.sum { |t| t.duration.to_i } %>">
   <div class="release-bulk-checkbox-wrap">
@@ -38,7 +38,7 @@
         <%= t('admin.release.stats.downloads_count')+':' %>
       </span>
       <span class="admin-release-stats-item-value">
-        <%= release.downloads_count %>
+        <%= downloads_count %>
       </span>
     </div>
     <div class="admin-release-stats-item">
@@ -46,7 +46,7 @@
         <%= t('admin.release.stats.plays_count')+':' %>
       </span>
       <span class="admin-release-stats-item-value">
-        <%= release.plays_count %>
+        <%= plays_count %>
       </span>
     </div>
     <div class="admin-release-tracks-count">

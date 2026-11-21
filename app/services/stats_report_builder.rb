@@ -104,10 +104,10 @@ class StatsReportBuilder
 
   def tracks_section
     period_counts = plays.group(:track_id).count
-    last_played = plays.group(:track_id).maximum(:created_at)
+    total_counts = @report.total_plays_by_track
 
     headers = ['ID', 'Title', 'Artist', 'Release', 'Status', 'Position',
-               'Plays (period)', 'Plays (total)', 'Last played at', 'Duration (s)', 'Created at']
+               'Plays (period)', 'Plays (total)', 'Duration (s)', 'Created at']
     rows = []
     Track.includes(release: :artist).order(:id).find_each do |track|
       rows << [
@@ -118,8 +118,7 @@ class StatsReportBuilder
         track.status,
         track.pos,
         period_counts[track.id] || 0,
-        track.plays_count,
-        format_time(last_played[track.id]),
+        total_counts[track.id] || 0,
         track.duration,
         format_time(track.created_at)
       ]
@@ -131,6 +130,8 @@ class StatsReportBuilder
   def releases_section
     period_downloads = downloads.group(:release_id).count
     period_plays = plays.group(:release_id).count
+    total_downloads = @report.total_downloads_by_release
+    total_plays = @report.total_plays_by_release
 
     headers = ['ID', 'Title', 'Artist', 'Status', 'Release date', 'Genre',
                'ZIP download', 'Downloads (period)', 'Downloads (total)',
@@ -146,9 +147,9 @@ class StatsReportBuilder
         release.genre,
         release.allow_zip_download? ? 'yes' : 'no',
         period_downloads[release.id] || 0,
-        release.downloads_count,
+        total_downloads[release.id] || 0,
         period_plays[release.id] || 0,
-        release.plays_count,
+        total_plays[release.id] || 0,
         format_time(release.created_at)
       ]
     end
@@ -161,7 +162,7 @@ class StatsReportBuilder
     if @report.geo_available?
       rows = @report.geo_rows(limit: nil).map { |row| [row.country_code, row.country_name, row.plays, row.downloads, row.unique_listeners] }
     else
-      rows = [['-', 'GeoIP database not installed; run `bin/rails geoip:update` on the server', nil, nil, nil]]
+      rows = [['-', I18n.t('admin.stats.geo_missing_db'), nil, nil, nil]]
     end
     progress(90)
     { headers:, rows: }

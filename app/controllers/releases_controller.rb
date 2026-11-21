@@ -11,7 +11,6 @@ class ReleasesController < ApplicationController
 
     builder = ReleaseZipBuilder.new(@release)
     data = builder.call
-    @release.increment!(:downloads_count)
     StatTracker.record_download(release: @release, request: request)
     send_data data,
               filename: builder.filename,

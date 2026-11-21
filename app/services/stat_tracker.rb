@@ -1,8 +1,8 @@
 # Records a public play or download into stat_events.
 #
-# Called from the public controllers alongside the legacy plays_count /
-# downloads_count counters. Never raises: stats collection must not take
-# down playback or downloads when the database hiccups or geo lookup fails.
+# stat_events is the single source of truth for statistics. Never raises:
+# stats collection must not take down playback or downloads when the database
+# hiccups or geo lookup fails.
 class StatTracker
   # Builds a stable, non-reversible fingerprint of an IP for unique-visitor
   # counts. Salted with the app secret so hashes are not comparable across

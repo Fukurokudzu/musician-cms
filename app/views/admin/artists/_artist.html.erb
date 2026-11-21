@@ -1,3 +1,4 @@
+<% plays_by_artist = local_assigns.fetch(:plays_by_artist, {}) %>
 <div class="admin-release admin-artist-card">
   <div class="release-cover-wrap">
     <%= link_to edit_admin_artist_path(artist), class: 'admin-release-cover-link', data: { turbo_stream: true, turbo_prefetch: false } do %>
@@ -32,7 +33,7 @@
     </div>
     <div class="admin-release-stats-item">
       <span class="admin-release-stats-item-title"><%= t('admin.release.stats.plays_count', default: 'Plays') %>:</span>
-      <span class="admin-release-stats-item-value"><%= artist.plays_count %></span>
+      <span class="admin-release-stats-item-value"><%= plays_by_artist[artist.id] || 0 %></span>
     </div>
     <div class="admin-actions admin-release-summary-actions">
       <%= link_to t('settings.edit', default: 'Edit'), edit_admin_artist_path(artist), class: 'btn btn-primary',

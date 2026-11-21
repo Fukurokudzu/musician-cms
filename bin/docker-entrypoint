@@ -124,4 +124,44 @@ fi
 # Release the database setup lock
 exec 201>&-
 
+# Make sure the GeoIP database exists in the persistent storage volume.
+# The image ships a seeded copy; copying it here makes a fresh volume work
+# immediately, offline, with no manual `geoip:update` step. Web and sidekiq
+# share the volume, so the copy is serialized with a lock. This runs after
+# credentials/db setup so the optional online fallback can boot Rails.
+GEOIP_SEED="/rails/vendor/geoip/dbip-country-lite.mmdb"
+GEOIP_SEED_VERSION="/rails/vendor/geoip/VERSION"
+GEOIP_TARGET="${GEOIP_DB_PATH:-/rails/storage/geoip/dbip-country-lite.mmdb}"
+GEOIP_TARGET_VERSION="${GEOIP_TARGET}.version"
+
+GEOIP_DIR="$(dirname "${GEOIP_TARGET}")"
+if mkdir -p "${GEOIP_DIR}" 2>/dev/null && touch "${GEOIP_DIR}/.geoip.lock" 2>/dev/null; then
+    exec 202>"${GEOIP_DIR}/.geoip.lock"
+    if flock -w 60 202; then
+        if [ -f "${GEOIP_SEED}" ]; then
+            seed_version=$(cat "${GEOIP_SEED_VERSION}" 2>/dev/null || true)
+            target_version=$(cat "${GEOIP_TARGET_VERSION}" 2>/dev/null || true)
+
+            if [ ! -s "${GEOIP_TARGET}" ] || { [ -n "${target_version}" ] && [ "${seed_version}" != "${target_version}" ]; }; then
+                tmp="${GEOIP_TARGET}.tmp.$$"
+                cp "${GEOIP_SEED}" "${tmp}" &&
+                    mv "${tmp}" "${GEOIP_TARGET}" &&
+                    printf '%s' "${seed_version}" > "${GEOIP_TARGET_VERSION}" &&
+                    echo "GeoIP: installed ${seed_version:-unknown} database into ${GEOIP_TARGET}" ||
+                    echo "GeoIP: failed to install seed; country breakdown stays unavailable"
+            fi
+        elif [ ! -s "${GEOIP_TARGET}" ]; then
+            # No seed baked into the image (DB-IP was unreachable at build time):
+            # one best-effort online attempt, never fatal for container startup.
+            echo "GeoIP: no baked seed, trying an online update..."
+            timeout 90 bin/rails geoip:update || echo "GeoIP: online update failed; country breakdown stays unavailable"
+        fi
+    else
+        echo "GeoIP: lock unavailable, skipping automatic seed"
+    fi
+    exec 202>&-
+else
+    echo "GeoIP: storage not writable, skipping automatic seed"
+fi
+
 exec "${@}"

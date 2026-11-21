@@ -2,17 +2,16 @@
 # headline counters, the daily plays/downloads series, per-release bars,
 # paginated+sortable track and release tables and the per-country breakdown.
 #
-# Charts and period columns are computed from stat_events only (the legacy
-# plays_count / downloads_count counters predate event tracking and are shown
-# as "all time" totals). All-time counters are exposed separately.
+# stat_events is the single source of truth: period columns, charts and all-time
+# totals are all derived from recorded events.
 class StatsReport
-  TRACK_SORTS = %w[title release period total last_played].freeze
+  TRACK_SORTS = %w[title release period total].freeze
   RELEASE_SORTS = %w[release period total].freeze
   PER_PAGE = 15
   TOP_RELEASES = 10
   TOP_COUNTRIES = 15
 
-  TrackRow = Data.define(:id, :title, :release_id, :release_title, :period_plays, :total_plays, :last_played_at)
+  TrackRow = Data.define(:id, :title, :release_id, :release_title, :period_plays, :total_plays)
   ReleaseRow = Data.define(:id, :title, :period_downloads, :total_downloads)
   CountryRow = Data.define(:country_code, :country_name, :plays, :downloads, :unique_listeners)
 
@@ -36,6 +35,18 @@ class StatsReport
 
   delegate :downloads, to: :events
 
+  def total_plays_by_track
+    @total_plays_by_track ||= StatEvent.plays.group(:track_id).count
+  end
+
+  def total_plays_by_release
+    @total_plays_by_release ||= StatEvent.plays.group(:release_id).count
+  end
+
+  def total_downloads_by_release
+    @total_downloads_by_release ||= StatEvent.downloads.group(:release_id).count
+  end
+
   def period_days
     { '7' => 7, '30' => 30, '90' => 90, '365' => 365 }[range]
   end
@@ -46,8 +57,8 @@ class StatsReport
       downloads_period: downloads.count,
       unique_listeners: plays.where.not(ip_hash: nil).distinct.count(:ip_hash),
       countries_count: plays.where.not(country_code: nil).distinct.count(:country_code),
-      plays_all_time: Track.sum(:plays_count),
-      downloads_all_time: Release.sum(:downloads_count)
+      plays_all_time: StatEvent.plays.count,
+      downloads_all_time: StatEvent.downloads.count
     }
   end
 
@@ -195,7 +206,7 @@ class StatsReport
   def sorted_track_rows
     @sorted_track_rows ||= begin
       period_counts = plays.group(:track_id).count
-      last_played = plays.group(:track_id).maximum(:created_at)
+      total_counts = total_plays_by_track
 
       rows = Track.includes(:release).map do |track|
         TrackRow.new(
@@ -204,8 +215,7 @@ class StatsReport
           release_id: track.release_id,
           release_title: track.release&.title.to_s,
           period_plays: period_counts[track.id] || 0,
-          total_plays: track.plays_count,
-          last_played_at: last_played[track.id]
+          total_plays: total_counts[track.id] || 0
         )
       end
 
@@ -216,13 +226,14 @@ class StatsReport
   def sorted_release_rows
     @sorted_release_rows ||= begin
       period_counts = downloads.group(:release_id).count
+      total_counts = total_downloads_by_release
 
       rows = Release.order(created_at: :desc, id: :desc).map do |release|
         ReleaseRow.new(
           id: release.id,
           title: release.title.to_s,
           period_downloads: period_counts[release.id] || 0,
-          total_downloads: release.downloads_count
+          total_downloads: total_counts[release.id] || 0
         )
       end
 
@@ -237,7 +248,6 @@ class StatsReport
       when 'release' then row.release_title.downcase
       when 'period' then row.period_plays
       when 'total' then row.total_plays
-      when 'last_played' then row.last_played_at || Time.zone.at(0)
       end
     end
   end
