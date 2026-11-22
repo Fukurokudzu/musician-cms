@@ -15,7 +15,7 @@ class StatsExportJob < ApplicationJob
     builder = StatsReportBuilder.new(range:) do |percent|
       export.mark_running!(percent)
     end
-    sections = builder.sections # force aggregation before we claim we're writing the file
+    builder.sections # force aggregation before we claim we're writing the file
     row_count = builder.row_count
 
     file_path = Rails.root.join('tmp', "stats-export-#{export.id}.#{export.kind}")

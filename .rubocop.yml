@@ -3,7 +3,7 @@ require: rubocop-rails
 AllCops:
   NewCops: disable
   SuggestExtensions: false
-  TargetRubyVersion: 3.4
+  TargetRubyVersion: 4.0
   # Avoid the shared on-disk cache, which collided with the IDE-managed
   # rubocop server and made CLI runs flaky.
   Cache: false

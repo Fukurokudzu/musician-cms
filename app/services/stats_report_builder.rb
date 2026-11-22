@@ -38,7 +38,7 @@ class StatsReportBuilder
   def to_csv
     @on_progress&.call(90)
     csv = CSV.generate(encoding: 'UTF-8') do |out|
-      out << ["Musician CMS — statistics report"]
+      out << ['Musician CMS — statistics report']
       out << ["Range: #{range_label}", "Generated at: #{format_time(Time.current)}"]
       sections.each do |name, section|
         out << []
@@ -159,11 +159,13 @@ class StatsReportBuilder
 
   def geo_section
     headers = ['Country code', 'Country', 'Plays', 'Downloads', 'Unique listeners']
-    if @report.geo_available?
-      rows = @report.geo_rows(limit: nil).map { |row| [row.country_code, row.country_name, row.plays, row.downloads, row.unique_listeners] }
-    else
-      rows = [['-', I18n.t('admin.stats.geo_missing_db'), nil, nil, nil]]
-    end
+    rows = if @report.geo_available?
+             @report.geo_rows(limit: nil).map do |row|
+               [row.country_code, row.country_name, row.plays, row.downloads, row.unique_listeners]
+             end
+           else
+             [['-', I18n.t('admin.stats.geo_missing_db'), nil, nil, nil]]
+           end
     progress(90)
     { headers:, rows: }
   end

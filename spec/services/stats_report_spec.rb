@@ -24,4 +24,23 @@ RSpec.describe StatsReport do
       expect(report.release_page.map(&:id)).to eq([older.id, newer.id])
     end
   end
+
+  describe '#geo_rows' do
+    let(:artist) { create(:artist) }
+    let(:release) { create(:release, artist:) }
+
+    it 'counts unique visitors from downloads, not only plays' do
+      attrs = { release:, artist:, country_code: 'RS', country_name: 'Serbia' }
+
+      3.times do
+        create(:stat_event, :download, **attrs, ip_hash: 'same-visitor', created_at: 1.day.ago)
+      end
+      create(:stat_event, :download, **attrs, ip_hash: 'another-visitor', created_at: 1.day.ago)
+
+      row = described_class.new(range: 'all').geo_rows(limit: nil).find { |r| r.country_code == 'RS' }
+
+      expect(row.downloads).to eq(4)
+      expect(row.unique_listeners).to eq(2)
+    end
+  end
 end

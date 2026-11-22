@@ -1,12 +1,15 @@
 import { Controller } from '@hotwired/stimulus'
 
-const STORAGE_KEY = 'title-secret-clicks'
+const STORAGE_KEY = 'footer-secret-clicks'
 const WINDOW_MS = 1000
 
-// Hidden shortcut: three quick clicks on the site title take the visitor to
-// /admin. Normal clicks behave as usual (Turbo navigation to /).
+// Hidden shortcut: three quick clicks on the site footer take the visitor to
+// /admin. Clicks on links inside the footer (the contact link) behave as usual.
 export default class extends Controller {
   click(event) {
+    // Never hijack real links or buttons (e.g. the footer contact link).
+    if (event.target.closest('a, button')) return
+
     const now = Date.now()
     const state = this.read()
 

@@ -2,6 +2,9 @@ main.admin-session {
   --admin-accent: #475569;
   --main-menu-bg-color: #1f2933;
   --accent-color: var(--admin-accent);
+  /* The theme stylesheet is intentionally skipped in the admin area, so the
+     player has to inherit readable text colours from the admin palette too. */
+  --text-color: #f8f9fa;
   --artist-title-color: #f8f9fa;
   --a-color: #334155;
   --a-hover-color: #111827;

@@ -3,7 +3,9 @@
   grid-template-rows: auto auto;
   width: 100%;
   background-color: var(--main-menu-bg-color);
-  color: var(--text-color);
+  /* Admin pages skip the theme stylesheet; keep every player readout
+     (track title, artist, timer) readable there too. */
+  color: var(--text-color, #f8f9fa);
   padding: 1rem;
   margin-top: 1rem;
   position: fixed;

@@ -77,9 +77,9 @@ module Admin
               class: ['stats-sort', ('is-active' if active)].compact.join(' '),
               data: { turbo_stream: true, turbo_prefetch: false } do
         safe_join([
-          tag.span(label, class: 'stats-sort-label'),
-          tag.span(arrow, class: 'stats-sort-arrow', 'aria-hidden': 'true')
-        ])
+                    tag.span(label, class: 'stats-sort-label'),
+                    tag.span(arrow, class: 'stats-sort-arrow', 'aria-hidden': 'true')
+                  ])
       end
     end
   end

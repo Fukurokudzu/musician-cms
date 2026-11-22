@@ -121,7 +121,9 @@ RSpec.describe 'Admin statistics export', type: :request do
   end
 
   it 'renders the export panel on the stats page' do
-    turbo_stream_get = ->(path, params = {}) { get path, params:, headers: { 'Accept' => 'text/vnd.turbo-stream.html' } }
+    turbo_stream_get = lambda { |path, params = {}|
+      get path, params:, headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
+    }
     turbo_stream_get.call(admin_stats_path)
 
     expect(response.body).to include('stats-export-inner')

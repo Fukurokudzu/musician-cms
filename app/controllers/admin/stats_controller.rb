@@ -36,7 +36,10 @@ module Admin
       StatsExportJob.perform_later(record.id, range)
 
       respond_to do |format|
-        format.turbo_stream { render turbo_stream: turbo_stream.update('stats-export-inner', partial: 'admin/stats/export_panel', locals: { export: record }) }
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.update('stats-export-inner', partial: 'admin/stats/export_panel',
+                                                                         locals: { export: record })
+        end
         format.html { redirect_to admin_stats_path }
       end
     end

@@ -86,9 +86,9 @@ group :test do
   gem 'selenium-webdriver'
 end
 
-gem "maxmind-db", "~> 1.5"
+gem 'maxmind-db', '~> 1.5'
 
 # Fast XLSX writer (FFI binding for libxlsxwriter, vendored C sources — only needs a C toolchain at build time)
-gem "fast_excel", "~> 0.6.1"
+gem 'fast_excel', '~> 0.6.1'
 
-gem "csv", "~> 3.3"
+gem 'csv', '~> 3.3'

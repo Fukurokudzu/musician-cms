@@ -72,7 +72,7 @@ class GeoIp
         fetch = lambda do |url, redirects = 5|
           uri = URI.parse(url)
           response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https',
-                                                          read_timeout: 120, open_timeout: 15) do |http|
+                                                         read_timeout: 120, open_timeout: 15) do |http|
             http.get(uri.request_uri)
           end
 
@@ -118,7 +118,7 @@ class GeoIp
         size = ActiveSupport::NumberHelper.number_to_human_size(File.size(target))
         message = "GeoIP: installed #{target} (#{size})"
         Rails.logger.info(message)
-        puts message
+        Rails.logger.debug message
       ensure
         begin
           lock.flock(File::LOCK_UN)

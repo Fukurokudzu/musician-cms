@@ -7,9 +7,7 @@ class Auth
     @hashed_id = Setting.admin_hashed_password
   end
 
-  def hash_password(admin_password)
-    self.class.hash_password(admin_password)
-  end
+  delegate :hash_password, to: :class
 
   def self.hash_password(admin_password)
     salt = Setting.admin_salt

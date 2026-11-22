@@ -132,11 +132,13 @@ class StatsReport
     counts = events.where.not(country_code: nil)
                    .group(:country_code, :country_name, :kind)
                    .count
-    uniques = plays.where.not(country_code: nil)
-                   .where.not(ip_hash: nil)
-                   .group(:country_code)
-                   .distinct
-                   .count(:ip_hash)
+    # Unique visitors per country, counted across both plays and downloads:
+    # a country that only produced downloads still has unique visitors.
+    uniques = events.where.not(country_code: nil)
+                    .where.not(ip_hash: nil)
+                    .group(:country_code)
+                    .distinct
+                    .count(:ip_hash)
 
     by_country = Hash.new do |hash, code|
       hash[code] = { country_code: code, country_name: code, plays: 0, downloads: 0, unique_listeners: 0 }

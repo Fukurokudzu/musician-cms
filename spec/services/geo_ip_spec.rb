@@ -22,7 +22,7 @@ RSpec.describe GeoIp do
       first = described_class.send(:reader)
 
       File.binwrite(@geoip_path, 'new database')
-      future = Time.now + 60
+      future = (Time.zone.now + 60).to_time
       File.utime(future, future, @geoip_path)
       second = described_class.send(:reader)
 
