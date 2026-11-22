@@ -4,6 +4,7 @@ class ReleasesController < ApplicationController
   def show
     @tracks = @release&.tracks&.published&.by_position
     @md_description = MarkdownRenderer.call(@release.description) if @release&.description.present?
+    @release_plays_count = StatEvent.plays.where(release_id: @release.id).count
   end
 
   def download

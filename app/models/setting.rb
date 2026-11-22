@@ -53,6 +53,7 @@ class Setting < RailsSettings::Base
     field :footer_link_type, default: 'email', option_values: %w[email url]
     field :footer_subject, default: 'Musician cms'
     field :footer_url, default: ''
+    field :release_plays_visibility, default: 'hidden', option_values: %w[hidden visible visible_if_gt_1000]
   end
 
   COLOR_FORMAT = /\A#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})\z/

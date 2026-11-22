@@ -36,7 +36,7 @@ module Admin
       params.require(:setting).permit(:admin_email, :admin_password, :description, :page_title,
                                       :timezone, :locale, :date_format, :library_path,
                                       :footer_link_type, :footer_email, :footer_subject,
-                                      :footer_url, :audit_retention_days)
+                                      :footer_url, :audit_retention_days, :release_plays_visibility)
     end
 
     # Keys only — never values — plus whether the password changed. The

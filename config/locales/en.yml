@@ -375,6 +375,10 @@ en:
     admin_password: "Admin password"
     admin_password_placeholder: "Leave blank to keep current password"
     audit_retention_days: "Keep audit log for (days)"
+    release_plays_visibility: "Show play count on public release page"
+    release_plays_hidden: "No"
+    release_plays_visible: "Yes"
+    release_plays_visible_if_gt_1000: "If more than 1000 plays"
 
   flash:
     alert:
@@ -417,6 +421,7 @@ en:
     show:
       tracks_count: "Tracks:"
       duration: "Duration:"
+      plays: "Plays:"
       no_published_tracks: "No published tracks available"
       download_zip: "Download release"
       view_cover: "View cover"

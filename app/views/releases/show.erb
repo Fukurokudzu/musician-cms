@@ -16,7 +16,13 @@
       </div>
     <% end %>
     <div class="release-show-info">
-      <p><%= t('release.show.tracks_count').downcase %> <%= @tracks.count %>, <%= t('release.show.duration').downcase %> <%= @release.duration_humanized(published: true) %></p>
+      <p>
+        <%= t('release.show.tracks_count').downcase %> <%= @tracks.count %>,
+        <%= t('release.show.duration').downcase %> <%= @release.duration_humanized(published: true) %>
+        <% if Setting.release_plays_visibility == 'visible' || (Setting.release_plays_visibility == 'visible_if_gt_1000' && @release_plays_count.to_i > 1000) %>
+          , <%= t('release.show.plays').downcase %> <%= @release_plays_count %>
+        <% end %>
+      </p>
       <p>
         <%= t('release.show.released_on', date: l(@release.release_date, format: '%-d %B %Y').downcase) if @release.release_date %>
         <%= t('release.show.released_by', publisher: @release.publisher) if @release.publisher.present? %>

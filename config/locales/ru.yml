@@ -348,6 +348,10 @@ ru:
     admin_password: "Пароль администратора"
     admin_password_placeholder: "Оставьте пустым, чтобы не менять"
     audit_retention_days: "Хранить лог аудита (дней)"
+    release_plays_visibility: "Показывать количество проигрываний на публичной странице релиза"
+    release_plays_hidden: "Нет"
+    release_plays_visible: "Да"
+    release_plays_visible_if_gt_1000: "Если больше 1000 проигрываний"
 
   flash:
     alert:
@@ -390,6 +394,7 @@ ru:
     show:
       tracks_count: "Треков:"
       duration: "Длительность:"
+      plays: "Проигрываний:"
       no_published_tracks: "Нет опубликованных треков"
       download_zip: "Скачать релиз"
       view_cover: "Открыть обложку"

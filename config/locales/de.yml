@@ -346,6 +346,10 @@ de:
     admin_password: "Admin-Passwort"
     admin_password_placeholder: "Leer lassen, um das aktuelle Passwort zu behalten"
     audit_retention_days: "Audit-Log aufbewahren (Tage)"
+    release_plays_visibility: "Wiedergabenanzahl auf der öffentlichen Release-Seite anzeigen"
+    release_plays_hidden: "Nein"
+    release_plays_visible: "Ja"
+    release_plays_visible_if_gt_1000: "Wenn mehr als 1000 Wiedergaben"
 
   flash:
     alert:
@@ -388,6 +392,7 @@ de:
     show:
       tracks_count: "Titel:"
       duration: "Dauer:"
+      plays: "Wiedergaben:"
       no_published_tracks: "Keine veröffentlichten Titel verfügbar"
       download_zip: "Release herunterladen"
       view_cover: "Cover ansehen"

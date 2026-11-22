@@ -11,6 +11,15 @@
         <%= f.label :description, t('settings.description', default: 'Description') %>
         <%= f.text_area :description, value: Setting.description, class: "form-control", rows: 4 %>
       </div>
+      <div class="form-group">
+        <%= f.label :release_plays_visibility, t('settings.release_plays_visibility', default: 'Show play count on public release page') %>
+        <%= f.select :release_plays_visibility,
+                     [[t('settings.release_plays_hidden', default: 'No'), 'hidden'],
+                      [t('settings.release_plays_visible', default: 'Yes'), 'visible'],
+                      [t('settings.release_plays_visible_if_gt_1000', default: 'If more than 1000 plays'), 'visible_if_gt_1000']],
+                     { selected: Setting.release_plays_visibility },
+                     { class: "form-select" } %>
+      </div>
     </div>
 
     <div class="admin-theme-section" data-controller="footer-link">

@@ -346,6 +346,10 @@ fr:
     admin_password: "Mot de passe de l'administrateur"
     admin_password_placeholder: "Laissez vide pour conserver le mot de passe actuel"
     audit_retention_days: "Conserver le journal d'audit (jours)"
+    release_plays_visibility: "Afficher le nombre de lectures sur la page publique de la sortie"
+    release_plays_hidden: "Non"
+    release_plays_visible: "Oui"
+    release_plays_visible_if_gt_1000: "Si plus de 1000 lectures"
 
   flash:
     alert:
@@ -388,6 +392,7 @@ fr:
     show:
       tracks_count: "Pistes :"
       duration: "Durée :"
+      plays: "Lectures :"
       no_published_tracks: "Aucune piste publiée disponible"
       download_zip: "Télécharger la sortie"
       view_cover: "Voir la pochette"

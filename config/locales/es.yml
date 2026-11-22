@@ -346,6 +346,10 @@ es:
     admin_password: "Contraseña del administrador"
     admin_password_placeholder: "Déjalo en blanco para conservar la contraseña actual"
     audit_retention_days: "Conservar el log de auditoría (días)"
+    release_plays_visibility: "Mostrar el número de reproducciones en la página pública del lanzamiento"
+    release_plays_hidden: "No"
+    release_plays_visible: "Sí"
+    release_plays_visible_if_gt_1000: "Si hay más de 1000 reproducciones"
 
   flash:
     alert:
@@ -388,6 +392,7 @@ es:
     show:
       tracks_count: "Pistas:"
       duration: "Duración:"
+      plays: "Reproducciones:"
       no_published_tracks: "No hay pistas publicadas disponibles"
       download_zip: "Descargar lanzamiento"
       view_cover: "Ver portada"
