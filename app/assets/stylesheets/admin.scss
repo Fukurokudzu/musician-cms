@@ -13,6 +13,13 @@ main.admin-session {
   background-color: #eef1f4;
 }
 
+/* The public header is still shown on the admin login screen, where the theme
+   stylesheet is skipped: its nav links need light colours on the dark header. */
+main.admin-session .main-header {
+  --a-color: #e9ecef;
+  --a-hover-color: #ffffff;
+}
+
 .admin {
   width: 100%;
   max-width: 1100px;

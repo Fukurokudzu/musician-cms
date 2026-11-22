@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus'
+import { Turbo } from '@hotwired/turbo-rails'
 
 export default class extends Controller {
   perform(event) {
@@ -14,6 +15,6 @@ export default class extends Controller {
       }
     })
       .catch(() => {})
-      .finally(() => { window.location.href = '/' })
+      .finally(() => { Turbo.visit('/') })
   }
 }

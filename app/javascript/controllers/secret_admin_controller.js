@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus'
+import { Turbo } from '@hotwired/turbo-rails'
 
 const STORAGE_KEY = 'footer-secret-clicks'
 const WINDOW_MS = 1000
@@ -22,7 +23,7 @@ export default class extends Controller {
     if (count >= 3) {
       event.preventDefault()
       window.sessionStorage.removeItem(STORAGE_KEY)
-      window.location.assign('/admin')
+      Turbo.visit('/admin')
       return
     }
     this.store({ count, time: now })

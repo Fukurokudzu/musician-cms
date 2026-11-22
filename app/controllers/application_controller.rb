@@ -13,7 +13,7 @@ class ApplicationController < ActionController::Base
   private
 
   def admin?
-    session[:hashed_id] == Setting.admin_hashed_password
+    AdminAuthorization.allowed?(session)
   end
 
   def admin_area?
