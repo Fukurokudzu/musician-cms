@@ -10,6 +10,10 @@ export default class extends Controller {
 
     initialize() {
         this.currentTrackId = null;
+        this._onTimeUpdate = this.updateTime.bind(this);
+        this._onLoadedMetadata = this.updateDuration.bind(this);
+        this._onEnded = this.nextTrack.bind(this);
+        this._onPlayTrack = this.playTrack.bind(this);
     }
 
     updatePlaySign(newTrackId) {
@@ -25,12 +29,20 @@ export default class extends Controller {
     connect() {
         if (!this.hasAudioTarget) return;
 
-        this.audioTarget.addEventListener("timeupdate", this.updateTime.bind(this));
-        this.audioTarget.addEventListener("loadedmetadata", this.updateDuration.bind(this));
-        this.audioTarget.addEventListener("ended", this.nextTrack.bind(this));
+        this.audioTarget.addEventListener("timeupdate", this._onTimeUpdate);
+        this.audioTarget.addEventListener("loadedmetadata", this._onLoadedMetadata);
+        this.audioTarget.addEventListener("ended", this._onEnded);
 
         document.querySelectorAll('.play-track')
-            .forEach(button => button.addEventListener('click', this.playTrack.bind(this)));
+            .forEach(button => button.addEventListener('click', this._onPlayTrack));
+    }
+
+    disconnect() {
+        if (!this.hasAudioTarget) return;
+
+        this.audioTarget.removeEventListener("timeupdate", this._onTimeUpdate);
+        this.audioTarget.removeEventListener("loadedmetadata", this._onLoadedMetadata);
+        this.audioTarget.removeEventListener("ended", this._onEnded);
     }
 
     async playTrack(event) {
