@@ -62,10 +62,11 @@ de:
       tracks_empty: "Noch keine Titel in der Bibliothek."
       downloads_title: "Downloads nach Release"
       downloads_empty: "Noch keine Releases in der Bibliothek."
-      geo_title: "Geografie"
+      geo_title: "Geografie (Top %{count} Länder)"
       geo_empty: "Noch keine Geodaten im gewählten Zeitraum."
       geo_missing_db: "Die GeoIP-Datenbank ist nicht verfügbar, das Land kann nicht erkannt werden. Sie wird beim Start des Containers automatisch installiert; bei anhaltendem Problem die Container-Logs prüfen."
       geo_note: "Das Land wird beim Hören/Herunterladen erkannt. IPs werden nur als Einweg-Hash gespeichert, Adressen werden nicht aufbewahrt."
+      geo_unattributed: "Land unbekannt"
       columns:
         track: "Titel"
         release: "Release"

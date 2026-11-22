@@ -62,10 +62,11 @@ fr:
       tracks_empty: "Aucun titre dans la bibliothèque pour l'instant."
       downloads_title: "Téléchargements par sortie"
       downloads_empty: "Aucune sortie dans la bibliothèque pour l'instant."
-      geo_title: "Géographie"
+      geo_title: "Géographie (%{count} premiers pays)"
       geo_empty: "Aucune donnée géographique sur la période sélectionnée pour l'instant."
       geo_missing_db: "La base GeoIP n'est pas disponible, le pays ne peut pas être détecté. Elle est installée automatiquement au démarrage du conteneur; si le message persiste, consultez les logs du conteneur."
       geo_note: "Le pays est détecté lors d'une écoute ou d'un téléchargement. Les IP ne sont conservées que sous forme de hachage irréversible."
+      geo_unattributed: "Pays inconnu"
       columns:
         track: "Titre"
         release: "Sortie"

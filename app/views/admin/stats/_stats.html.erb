@@ -204,7 +204,7 @@
 
   <div class="admin-logs-section">
     <div class="admin-logs-header">
-      <h3><%= t('admin.stats.geo_title') %></h3>
+      <h3><%= t('admin.stats.geo_title', count: StatsReport::TOP_COUNTRIES) %></h3>
     </div>
     <% geo_rows = @report.geo_rows %>
     <% unless @report.geo_available? %>
@@ -231,8 +231,12 @@
             <% geo_rows.each do |row| %>
               <tr>
                 <td>
-                  <span class="admin-stats-country-code"><%= row.country_code %></span>
-                  <%= row.country_name %>
+                  <% if row.country_code.present? %>
+                    <span class="admin-stats-country-code"><%= row.country_code %></span>
+                    <%= row.country_name %>
+                  <% else %>
+                    <%= t('admin.stats.geo_unattributed') %>
+                  <% end %>
                 </td>
                 <td class="text-end"><%= number_with_delimiter(row.plays) %></td>
                 <td class="text-end"><%= number_with_delimiter(row.downloads) %></td>

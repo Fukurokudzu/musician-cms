@@ -91,10 +91,11 @@ en:
       tracks_empty: "No tracks in the library yet."
       downloads_title: "Downloads by release"
       downloads_empty: "No releases in the library yet."
-      geo_title: "Geography"
+      geo_title: "Geography (top %{count} countries)"
       geo_empty: "No geo data in the selected period yet."
       geo_missing_db: "GeoIP database is unavailable, so countries cannot be detected. It is installed automatically when the container starts; check the container logs if this persists."
       geo_note: "Country is detected when a visitor plays or downloads. IPs are stored only as a one-way hash; no addresses are kept."
+      geo_unattributed: "Unknown country"
       columns:
         track: "Track"
         release: "Release"

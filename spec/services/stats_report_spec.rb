@@ -42,5 +42,42 @@ RSpec.describe StatsReport do
       expect(row.downloads).to eq(4)
       expect(row.unique_listeners).to eq(2)
     end
+
+    it 'includes events without country code as a separate unattributed row' do
+      create(:stat_event, :download, release:, artist:, country_code: 'RS', country_name: 'Serbia', created_at: 1.day.ago)
+      create(:stat_event, :download, release:, artist:, country_code: nil, country_name: nil, ip_hash: 'u1', created_at: 1.day.ago)
+      create(:stat_event, :play, release:, artist:, country_code: nil, country_name: nil, ip_hash: 'u1', created_at: 1.day.ago)
+      create(:stat_event, :play, release:, artist:, country_code: nil, country_name: nil, ip_hash: 'u2', created_at: 1.day.ago)
+
+      report = described_class.new(range: 'all')
+      rows = report.geo_rows(limit: nil)
+      unknown = rows.find { |row| row.country_code.nil? }
+
+      expect(unknown).to have_attributes(downloads: 1, plays: 2, unique_listeners: 2)
+      expect(rows.map(&:country_code)).to include('RS', nil)
+    end
+
+    it 'keeps the unattributed row separate from the known-country limit' do
+      attrs = { release:, artist:, created_at: 1.day.ago }
+      create_list(:stat_event, 2, :download, **attrs, country_code: 'RS', country_name: 'Serbia')
+      create(:stat_event, :download, **attrs, country_code: 'US', country_name: 'United States')
+      create(:stat_event, :download, **attrs, country_code: nil, country_name: nil)
+
+      rows = described_class.new(range: 'all').geo_rows(limit: 1)
+
+      expect(rows.map(&:country_code)).to contain_exactly('RS', nil)
+    end
+  end
+
+  describe '#summary' do
+    let(:artist) { create(:artist) }
+    let(:release) { create(:release, artist:) }
+
+    it 'counts countries with downloads even when there are no plays from them' do
+      create(:stat_event, :download, release:, artist:, country_code: 'RS', country_name: 'Serbia', created_at: 1.day.ago)
+      create(:stat_event, :play, release:, artist:, country_code: 'US', country_name: 'United States', created_at: 1.day.ago)
+
+      expect(described_class.new(range: 'all').summary[:countries_count]).to eq(2)
+    end
   end
 end

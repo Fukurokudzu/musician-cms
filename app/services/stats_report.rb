@@ -56,7 +56,7 @@ class StatsReport
       plays_period: plays.count,
       downloads_period: downloads.count,
       unique_listeners: plays.where.not(ip_hash: nil).distinct.count(:ip_hash),
-      countries_count: plays.where.not(country_code: nil).distinct.count(:country_code),
+      countries_count: events.where.not(country_code: nil).distinct.count(:country_code),
       plays_all_time: StatEvent.plays.count,
       downloads_all_time: StatEvent.downloads.count
     }
@@ -129,13 +129,10 @@ class StatsReport
   end
 
   def geo_rows(limit: TOP_COUNTRIES)
-    counts = events.where.not(country_code: nil)
-                   .group(:country_code, :country_name, :kind)
-                   .count
+    counts = events.group(:country_code, :country_name, :kind).count
     # Unique visitors per country, counted across both plays and downloads:
     # a country that only produced downloads still has unique visitors.
-    uniques = events.where.not(country_code: nil)
-                    .where.not(ip_hash: nil)
+    uniques = events.where.not(ip_hash: nil)
                     .group(:country_code)
                     .distinct
                     .count(:ip_hash)
@@ -151,10 +148,11 @@ class StatsReport
     end
     uniques.each { |code, count| by_country[code][:unique_listeners] = count }
 
-    by_country.values
-              .map { |row| CountryRow.new(**row) }
-              .sort_by { |row| -(row.plays + row.downloads) }
-              .then { |rows| limit.nil? ? rows : rows.first(limit) }
+    rows = by_country.values.map { |row| CountryRow.new(**row) }
+    unknown, known = rows.partition { |row| row.country_code.nil? }
+    known.sort_by! { |row| -(row.plays + row.downloads) }
+    known = known.first(limit) unless limit.nil?
+    known + unknown
   end
 
   def geo_available?

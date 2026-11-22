@@ -161,7 +161,9 @@ class StatsReportBuilder
     headers = ['Country code', 'Country', 'Plays', 'Downloads', 'Unique listeners']
     rows = if @report.geo_available?
              @report.geo_rows(limit: nil).map do |row|
-               [row.country_code, row.country_name, row.plays, row.downloads, row.unique_listeners]
+               code = row.country_code.presence || '-'
+               name = row.country_name.presence || I18n.t('admin.stats.geo_unattributed')
+               [code, name, row.plays, row.downloads, row.unique_listeners]
              end
            else
              [['-', I18n.t('admin.stats.geo_missing_db'), nil, nil, nil]]
