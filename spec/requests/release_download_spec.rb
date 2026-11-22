@@ -72,6 +72,17 @@ RSpec.describe 'Release ZIP download', type: :request do
         expect(response.media_type).not_to eq('application/zip')
       end
 
+      it 'does not build the ZIP or record a download event for a Turbo prefetch GET' do
+        expect(ReleaseZipBuilder).not_to receive(:new)
+
+        expect do
+          get download_release_path(release), headers: { 'X-Sec-Purpose' => 'prefetch' }
+        end.not_to change(StatEvent.downloads, :count)
+
+        expect(response).to have_http_status(:ok)
+        expect(response.media_type).not_to eq('application/zip')
+      end
+
       it 'does not build the ZIP or record a download event for a HEAD request' do
         expect(ReleaseZipBuilder).not_to receive(:new)
 
@@ -150,6 +161,8 @@ RSpec.describe 'Release ZIP download', type: :request do
 
       link = Nokogiri::HTML(response.body).at_css('.release-download-link')
       expect(link['data-turbo-prefetch']).to eq('false')
+      expect(link['data-turbo']).to eq('false')
+      expect(link['download']).to be_present
 
       disabled = create(:release, :published, artist:, allow_zip_download: false)
       get release_path(disabled)

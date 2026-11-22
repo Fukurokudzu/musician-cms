@@ -22,12 +22,13 @@ class ReleasesController < ApplicationController
 
   private
 
-  # Turbo (and some CDNs) issue speculative GETs for visible links. They must
-  # not be counted as real downloads — otherwise a single click records two
-  # stat_events and every admin counter shows twice the real value.
+  # Turbo 8 sends "X-Sec-Purpose: prefetch" on speculative GETs; browsers and
+  # CDNs may use "Purpose"/"Sec-Purpose" instead. None of them is a real click,
+  # so they must not build the ZIP or create a download stat_event.
   def prefetch_request?
-    request.head? || request.headers['Purpose'].to_s.include?('prefetch') ||
-      request.headers['Sec-Purpose'].to_s.include?('prefetch')
+    request.head? || %w[Purpose Sec-Purpose X-Sec-Purpose].any? do |header|
+      request.headers[header].to_s.include?('prefetch')
+    end
   end
 
   def set_release

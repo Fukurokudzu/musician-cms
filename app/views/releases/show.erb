@@ -24,7 +24,8 @@
       <% if @release.allow_zip_download? %>
         <p class="release-download">
           <%= link_to download_release_path(@release), class: 'release-download-link',
-                      data: { turbo_prefetch: false },
+                      download: true,
+                      data: { turbo: false, turbo_prefetch: false },
                       title: t('release.show.download_zip').downcase do %>
             <i class="fas fa-download" aria-hidden="true"></i>
             <span><%= t('release.show.download_zip').downcase %></span>
