@@ -41,6 +41,7 @@ RSpec.describe 'Admin statistics export', type: :request do
     expect(export).to be_pending
 
     expect(response.body).to include('stats-export')
+    expect(response.body).to include('stats-export-status')
     expect(response.body).to include(export.id.to_s)
   end
 

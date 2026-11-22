@@ -51,8 +51,15 @@ export default class extends Controller {
     }
   }
 
+  // Fired on click of an export button: show the "report is being generated"
+  // hint right away, before the server swaps the panel in.
+  start() {
+    this.statusTarget.classList.remove("hidden")
+  }
+
   update(data) {
     if (data.status === "pending" || data.status === "running") {
+      this.statusTarget.classList.remove("hidden")
       this.progressTarget.classList.remove("hidden")
       this.errorTarget.classList.add("hidden")
       this.downloadTarget.classList.add("hidden")
@@ -64,6 +71,7 @@ export default class extends Controller {
     window.clearInterval(this.pollTimer)
 
     if (data.status === "done") {
+      this.statusTarget.classList.add("hidden")
       this.progressTarget.classList.add("hidden")
       this.errorTarget.classList.add("hidden")
       this.downloadTarget.classList.remove("hidden")
@@ -75,6 +83,7 @@ export default class extends Controller {
 
   showError(message) {
     const detail = message ? `: ${message}` : ""
+    this.statusTarget.classList.add("hidden")
     this.progressTarget.classList.add("hidden")
     this.downloadTarget.classList.add("hidden")
     this.errorTarget.textContent = `${this.errorPrefixValue}${detail}`
