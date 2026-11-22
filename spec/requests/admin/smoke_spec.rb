@@ -40,7 +40,7 @@ RSpec.describe 'Admin pages smoke test', type: :request do
 
     expect(response).to have_http_status(:ok)
     expect(response.body).to include('id="admin_body"')
-    expect(response.body).to include(release.title)
+    expect(response.body).to include(ERB::Util.html_escape(release.title))
     # the Releases tab must be the active one
     expect(response.body).to include('nav-link active')
     expect(response.body).not_to include('translation_missing')
